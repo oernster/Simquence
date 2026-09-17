@@ -87,9 +87,9 @@ It is for validating architectural decisions before they harden.
 
 LatencyLab exists to support design time reasoning about latency rather than post hoc analysis.
 
-The motivation, philosophy and trade offs behind the tool are described in more detail in the accompanying blog post:
+The motivation, philosophy and trade offs behind the tool are described in more detail on its site:
 
-[LatencyLab guide](https://www.crankthecode.com/posts/latencylab)
+[Why LatencyLab exists](https://ernster.dev/latencylab/why.html)
 
 Reading that is not required to use the tool. It explains why the tool exists and what kinds of problems it is intended to make visible.
 
