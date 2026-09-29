@@ -251,7 +251,7 @@ LatencyLab is free and stays free. There is no paid tier, no licence key and no
 feature held back behind a donation. If it has saved you time or simply been
 useful, a donation supports its maintenance and continued development.
 
-<a href="https://www.paypal.com/ncp/payment/HRHHWRAVPQPJ2"><img src="docs/donate.png" alt="Donate to LatencyLab" width="120"></a>
+<a href="https://www.paypal.com/ncp/payment/QAACJETHC5S9U"><img src="docs/donate.png" alt="Donate to LatencyLab" width="120"></a>
 
 ## Licence
 
