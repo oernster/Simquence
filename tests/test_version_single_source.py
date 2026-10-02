@@ -131,9 +131,7 @@ def test_version_assets_is_idempotent(tmp_path: Path) -> None:
     assert page.read_bytes() == first
 
 
-def test_main_versions_asset_links_then_becomes_a_no_op(
-    tmp_path: Path, capsys
-) -> None:
+def test_main_versions_asset_links_then_becomes_a_no_op(tmp_path: Path, capsys) -> None:
     import stamp_version
 
     docs = _linked_site(tmp_path, b"body{}\n")
