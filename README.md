@@ -169,10 +169,11 @@ Run the full test suite:
 python -m pytest
 ```
 
-This repository maintains **100% unit test coverage** and that is enforced by
-the command above: coverage reporting and the 100% threshold are configured in
+This repository maintains **100% line coverage** and that is enforced by the
+command above: coverage reporting and the 100% threshold are configured in
 `pyproject.toml`, so there is no separate command to remember and no way to run
-the suite without the gate.
+the suite without the gate. [TESTING.md](TESTING.md) covers the lint steps,
+what the floor leaves out and how a test is written.
 
 ## Build
 
@@ -208,18 +209,14 @@ python buildinstaller.py
 
 `build_flatpak.sh` builds the Linux Flatpak (and `clean_flatpak.sh` removes only
 what it produced), while `builddmg.py` builds the macOS disk image on macOS.
-
-`generate_icons.py` derives every platform asset from the single master
-`latencylab.png`, including the opaque macOS variants the Dock, Finder and the
-disk image need. If the mark itself has changed, run `render_master_icon.py`
-first: the published site SVG is the source and the master PNG is a render of
-it, never an independent drawing. The same script derives the donate button's
-artwork from its own master, `donate.png`, writing one small render into
-`assets/`; replace the master and rerun rather than scaling the render by hand.
+What each build does in order, the generated icons and cutting a release are in
+[DEVELOPMENT.md](DEVELOPMENT.md).
 
 ## Documentation
 
 - [ARCHITECTURE.md](ARCHITECTURE.md): the layers, the invariants and the tests that enforce them.
+- [DEVELOPMENT.md](DEVELOPMENT.md): running from source, each build in order and cutting a release.
+- [TESTING.md](TESTING.md): the checks, what the gate holds and how a test is written.
 - [TECH_DEBT.md](TECH_DEBT.md): the standing reference to what is still open, what is
   deliberately left and what only looks like debt.
 - [`DECISIONS-TRADEOFFS.md`](DECISIONS-TRADEOFFS.md) sets out the decisions LatencyLab rests on, with what each one gains and what it costs.

@@ -799,3 +799,8 @@ Rules for new executors:
 - May optimise execution of many independent runs.
 - May offer configuration to disable trace materialisation for speed.
 - Must honour the cancellation signal at the run boundary.
+
+---
+
+See also [README.md](README.md), [TESTING.md](TESTING.md) and
+[DEVELOPMENT.md](DEVELOPMENT.md).
