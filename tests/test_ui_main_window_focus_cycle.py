@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from latencylab_ui.donate_button import DONATE_BUTTON_NAME
 from latencylab_ui.theme_toggle import SUN
 
 
@@ -15,7 +16,7 @@ def _ensure_qapp():
 def _load_a_model(window) -> None:
     """Give the window a model so Run is a live ring stop.
 
-    Run is disabled, and therefore skipped by the ring, until a model is open.
+    Run is disabled (so the ring skips it) until a model is open.
     A traversal test with no model open is testing a shorter ring than the one
     the user sees the moment they have something to run.
     """
@@ -144,7 +145,7 @@ def test_focus_cycle_tab_order_and_arrow_keys(monkeypatch) -> None:
     # (not trap them inside menu navigation).
     _send(Qt.Key_Down)
     _send(Qt.Key_Tab)
-    # Export is disabled until first successful run, so focus skips it, and
+    # Export is disabled until first successful run, so focus skips it;
     # Guide is the first tray control that is always available.
     _wait_for_focus_text("guide_btn")
 
@@ -161,11 +162,15 @@ def test_focus_cycle_tab_order_and_arrow_keys(monkeypatch) -> None:
     _send(Qt.Key_Tab)
     _wait_for_focus_text("compose_model_btn")
 
-    # Edit follows it in the tray, and is reachable here because this test
+    # Edit follows it in the tray. It is reachable here because this test
     # loads a model first. With nothing loaded it is disabled and the ring
     # steps straight past it, like every other inert control.
     _send(Qt.Key_Tab)
     _wait_for_focus_text("edit_model_btn")
+
+    # Donate sits immediately left of the theme toggle, so it is reached first.
+    _send(Qt.Key_Tab)
+    _wait_for_focus_text(DONATE_BUTTON_NAME)
 
     # Theme toggle is a single focus stop; it is toggled with Space, not Tab.
     _send(Qt.Key_Tab)
@@ -213,6 +218,9 @@ def test_focus_cycle_tab_order_and_arrow_keys(monkeypatch) -> None:
 
     _send(Qt.Key_Tab)
     assert _focused_widget_text() == "edit_model_btn"
+
+    _send(Qt.Key_Tab)
+    assert _focused_widget_text() == DONATE_BUTTON_NAME
 
     _send(Qt.Key_Tab)
     assert _focused_widget_text() == SUN

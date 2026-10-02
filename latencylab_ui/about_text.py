@@ -27,6 +27,11 @@ APP_SUMMARY = (
 APP_AUTHOR = "Oliver Ernster"
 APP_URL = "https://ernster.dev/latencylab/"
 
+# Where the donate button sends a browser. The only payment address the
+# application knows; it is handed to the desktop rather than fetched, so
+# nothing here ever opens a connection of its own.
+DONATE_URL = "https://www.paypal.com/ncp/payment/Y275VZ7R2NUNW"
+
 LICENCE_SUMMARY = (
     "Distributed under the GNU General Public License version 3 (the model and "
     "the command line interface) and the GNU Lesser General Public License "

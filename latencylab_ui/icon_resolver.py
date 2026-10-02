@@ -54,6 +54,10 @@ AVAILABLE_PNG_SIZES = (16, 24, 32, 48, 64, 96, 128, 256, 512, 1024)
 # What the About badge and the installer window ask for.
 BADGE_PNG_SIZE = 256
 
+# The donate mark, derived by generate_icons.py from the donate.png master at
+# the repository root, so a build ships the small render and never the master.
+DONATE_PNG_NAME = "donate.png"
+
 
 def candidate_asset_dirs(
     *,
@@ -147,4 +151,16 @@ def get_app_icon_png_path(
         return None
 
     candidate = assets_dir / f"{PNG_STEM}_{nearest_available_size(size)}.png"
+    return candidate if candidate.is_file() else None
+
+
+def get_donate_png_path(assets_dir: Path | None = None) -> Path | None:
+    """The artwork for the donate button; None when it was never generated."""
+
+    if assets_dir is None:
+        assets_dir = find_assets_dir()
+    if assets_dir is None:
+        return None
+
+    candidate = assets_dir / DONATE_PNG_NAME
     return candidate if candidate.is_file() else None

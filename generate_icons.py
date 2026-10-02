@@ -5,11 +5,19 @@ render of the stopwatch mark the site uses. Everything under `assets/`
 is generated from it and nothing else, so the Windows executable, the installer
 window, the macOS bundle and the Flatpak hicolor set cannot drift apart.
 
-Run it after changing the master:
+It also derives the donate mark from its own master, `donate.png` at the
+repository root. That mark is a wide picture rather than a square icon, so it
+skips the squaring the app icon takes: it is cropped to its artwork and scaled
+by height alone, then written once into `assets/` for the app and once into
+`docs/` for the site, from the same render, so the two copies cannot drift.
+Both masters stay at the root, because every build ships `assets/` whole.
+
+Run it after changing either master:
 
     python generate_icons.py
 
-Pillow is the only dependency and it is already a dev dependency.
+Pillow does the drawing; the donate height is read from the top bar's own
+glyph size, so PySide6 must be importable too (it is a runtime dependency).
 """
 
 from __future__ import annotations
@@ -19,9 +27,19 @@ from pathlib import Path
 
 from PIL import Image, ImageDraw
 
+from latencylab_ui.icon_resolver import DONATE_PNG_NAME
+from latencylab_ui.top_bar_buttons import GLYPH_PX
+
 PROJECT_ROOT = Path(__file__).resolve().parent
 MASTER_PNG = PROJECT_ROOT / "latencylab.png"
 ASSETS_DIR = PROJECT_ROOT / "assets"
+
+# The donate master and every place its render goes. The top bar draws the mark
+# at its own glyph height; the render is this many times taller so it stays
+# crisp under display scaling.
+DONATE_MASTER = PROJECT_ROOT / DONATE_PNG_NAME
+DONATE_OUTPUTS = (ASSETS_DIR / DONATE_PNG_NAME, PROJECT_ROOT / "docs" / DONATE_PNG_NAME)
+DONATE_RENDER_SCALE = 4
 
 # Loose PNGs: the Flatpak hicolor set (16 to 512), the installer badge and the
 # crisp source the macOS icns is built from.
@@ -199,10 +217,33 @@ def write_icns(master: Image.Image, assets_dir: Path) -> Path:
     return path
 
 
+def donate_mark(master: Image.Image, height: int) -> Image.Image:
+    """The master cropped to its artwork, then scaled to `height`."""
+
+    art = master.convert("RGBA")
+    bounds = art.getchannel("A").getbbox()
+    if bounds is not None:
+        art = art.crop(bounds)
+    width = max(1, round(art.width * height / art.height))
+    return art.resize((width, height), RESAMPLE)
+
+
+def write_donate_marks(
+    master: Path = DONATE_MASTER, outputs: tuple[Path, ...] = DONATE_OUTPUTS
+) -> list[Path]:
+    """Write one render of the donate mark to every destination."""
+
+    mark = donate_mark(Image.open(master), GLYPH_PX * DONATE_RENDER_SCALE)
+    for path in outputs:
+        mark.save(path, format="PNG")
+    return list(outputs)
+
+
 def main() -> int:
-    if not MASTER_PNG.is_file():
-        sys.stderr.write(f"Master icon not found: {MASTER_PNG}\n")
-        return 1
+    for master in (MASTER_PNG, DONATE_MASTER):
+        if not master.is_file():
+            sys.stderr.write(f"Master image not found: {master}\n")
+            return 1
 
     ASSETS_DIR.mkdir(parents=True, exist_ok=True)
     master = load_master()
@@ -211,6 +252,7 @@ def main() -> int:
     written.extend(write_mac_pngs(master, ASSETS_DIR))
     written.append(write_ico(master, ASSETS_DIR))
     written.append(write_icns(master, ASSETS_DIR))
+    written.extend(write_donate_marks())
 
     for path in written:
         print(f"wrote {path.relative_to(PROJECT_ROOT)}")

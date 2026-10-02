@@ -252,7 +252,11 @@ LatencyLab is free and stays free. There is no paid tier, no licence key and no
 feature held back behind a donation. If it has saved you time or simply been
 useful, a donation supports its maintenance and continued development.
 
-<a href="https://www.paypal.com/ncp/payment/QAACJETHC5S9U"><img src="docs/donate.png" alt="Donate to LatencyLab" width="120"></a>
+The same link sits in the app's top bar, just left of the light and dark
+toggle. Pressing it hands the address to your browser; LatencyLab itself sends
+nothing and opens no connection of its own.
+
+<a href="https://www.paypal.com/ncp/payment/Y275VZ7R2NUNW"><img src="docs/donate.png" alt="Donate to LatencyLab" width="120"></a>
 
 ## Licence
 
