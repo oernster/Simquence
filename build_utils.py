@@ -11,6 +11,8 @@ gate, because what it does is only meaningful against a real toolchain.
 
 from __future__ import annotations
 
+import importlib.metadata
+import itertools
 import os
 import shutil
 import stat
@@ -30,11 +32,16 @@ FALLBACK_VERSION = "0.0.0-dev"
 PE_VERSION_PARTS = 4
 
 # Windows keeps files open behind the build: Explorer previews, the indexer and
-# antivirus all do it, and a scanner can hold a freshly written executable for
+# antivirus all do it. A scanner can hold a freshly written executable for
 # several seconds. Retrying beats failing a ten-minute build, so the window is
 # generous rather than token.
 UNLINK_RETRIES = 40
 UNLINK_DELAY_SECONDS = 0.25
+
+# The Nuitka the Windows builds are written against: the release Stellody moved
+# to on 2026-09-13. An older one left in the environment stops the build here,
+# rather than a release nobody chose compiling what ships.
+NUITKA_MINIMUM = (4, 2, 1)
 
 
 def read_version(version_file: Path = VERSION_FILE) -> str:
@@ -129,7 +136,7 @@ def remove_file(path: Path) -> None:
 def publish(built: Path, destination: Path) -> Path:
     """Move a freshly built artefact into place, over any previous copy.
 
-    Windows will not let a running executable be replaced, and the commonest
+    Windows will not let a running executable be replaced; the commonest
     reason a previous build cannot be overwritten is that the last one is still
     open on screen. That is worth saying, because the raw error is
     `PermissionError: [WinError 5] Access is denied` against a path, which
@@ -157,7 +164,7 @@ def publish(built: Path, destination: Path) -> Path:
                 f"Could not replace {destination}.\n\n"
                 f"{error}\n\n"
                 "The usual cause is that the previous build is still running: "
-                "close any open setup window, and any application it installed, "
+                "close any open setup window and any application it installed, "
                 "then run this again. Explorer's preview pane and a virus "
                 "scanner can also hold an executable open for a few seconds.\n\n"
                 f"The new build is ready at {built} and is not lost."
@@ -170,3 +177,31 @@ def publish(built: Path, destination: Path) -> Path:
 def require_windows() -> None:
     if sys.platform != "win32":
         raise SystemExit("This build script targets Windows.")
+
+
+def require_nuitka() -> None:
+    """Stop where Nuitka is missing or older than the build is written against."""
+
+    try:
+        installed = importlib.metadata.version("nuitka")
+    except importlib.metadata.PackageNotFoundError:
+        installed = None
+    if installed is not None and _release(installed) >= NUITKA_MINIMUM:
+        return
+    wanted = ".".join(str(number) for number in NUITKA_MINIMUM)
+    found = (
+        f"Nuitka {installed} is installed" if installed else "Nuitka is not installed"
+    )
+    raise SystemExit(
+        f"{found}; this build needs {wanted} or later:\n"
+        "    python -m pip install -e .[build]"
+    )
+
+
+def _release(version: str) -> tuple[int, ...]:
+    """The numeric release of a version string, '4.2.1rc1' reading as 4.2.1."""
+
+    return tuple(
+        int("".join(itertools.takewhile(str.isdigit, part)) or 0)
+        for part in version.split(".")
+    )

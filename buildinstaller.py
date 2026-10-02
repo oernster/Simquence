@@ -30,6 +30,7 @@ from build_utils import (
     read_version,
     remove_file,
     remove_tree,
+    require_nuitka,
     require_windows,
     run,
     section,
@@ -122,6 +123,7 @@ def _nuitka_command(version: str) -> list[str]:
 
 def main() -> int:
     require_windows()
+    require_nuitka()
 
     section("Stamping the version into the static documents")
     stamp_version.main()

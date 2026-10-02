@@ -13,7 +13,7 @@ who it is for is in [README.md](README.md); how it is put together is in
 | PySide6 | the desktop interface only; the core needs nothing | `requirements.txt` |
 | NumPy | the legacy v1 engine, so also the tests that use it as an oracle | the `legacy` extra, the `dev` extra or `requirements-dev.txt` |
 | pytest, pytest-cov, black, flake8 | the checks | the `dev` extra or `requirements-dev.txt` |
-| Pillow, Nuitka, PyInstaller | the desktop builds: icons, Windows, macOS | the `build` extra |
+| Pillow, Nuitka 4.2.1 or newer, PyInstaller | the desktop builds: icons, Windows, macOS | the `build` extra |
 | Xcode command-line tools, Homebrew, a Developer ID and notarization credentials | the macOS build | Apple; see Building |
 | flatpak, flatpak-builder | the Linux build | installed by `build_flatpak.sh` when missing |
 
@@ -69,7 +69,9 @@ python buildinstaller.py
 
 `buildexe.py`:
 
-1. stops unless it is running on Windows;
+1. stops unless it is running on Windows with Nuitka 4.2.1 or newer
+   installed (`require_nuitka` in `build_utils.py`), before anything is
+   touched;
 2. stamps the version into the site under `docs/` (`stamp_version.py`);
 3. clears the previous bundle and Nuitka's scratch;
 4. compiles the application with Nuitka;
@@ -81,7 +83,7 @@ Set `LATENCYLAB_BUILD_DEBUG=1` first to keep a console attached for tracebacks.
 
 `buildinstaller.py`:
 
-1. stops unless it is running on Windows;
+1. makes the same two checks;
 2. stamps the version again;
 3. zips the staged bundle as the setup program's payload;
 4. compiles the setup program with Nuitka as one executable carrying that zip;

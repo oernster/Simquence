@@ -27,6 +27,7 @@ from build_utils import (
     pe_version,
     read_version,
     remove_tree,
+    require_nuitka,
     require_windows,
     run,
     section,
@@ -143,7 +144,7 @@ def smoke_test(executable: Path) -> None:
     Survival is the whole assertion. A bundle that is still running after a few
     seconds has imported everything, constructed its QApplication and built its
     main window, which is precisely the stretch where a packaging fault shows
-    up. Nothing here inspects what it drew: this is a build script, and the
+    up. Nothing here inspects what it drew: this is a build script, while the
     behaviour of the application is the test suite's business.
     """
 
@@ -177,6 +178,7 @@ def smoke_test(executable: Path) -> None:
 
 def main() -> int:
     require_windows()
+    require_nuitka()
 
     section("Stamping the version into the static documents")
     stamp_version.main()
