@@ -8,7 +8,11 @@ delivery rather than just the logic.
 
 from __future__ import annotations
 
+import threading
 import time
+
+# Far longer than a check against a stand-in takes, so only a hang reaches it.
+WAIT_SECONDS = 5
 
 
 def _ensure_qapp():
@@ -278,3 +282,73 @@ def test_install_then_manual_check_reports() -> None:
     _spin_until(app, lambda: hasattr(window, "_update_report"))
     assert "could not reach GitHub" in window._update_report.text()
     window._update_report.close()
+
+
+class HeldSource:
+    """A release source that answers only once the test lets it."""
+
+    def __init__(self) -> None:
+        self.asked = threading.Event()
+        self.answer = threading.Event()
+        self.worker: threading.Thread | None = None
+
+    def latest_release(self) -> None:
+        """Say it has been asked, wait to be let go, then find no release."""
+        self.worker = threading.current_thread()
+        self.asked.set()
+        self.answer.wait(WAIT_SECONDS)
+
+
+def test_an_answer_whose_window_has_gone_is_dropped_not_raised(monkeypatch) -> None:
+    """The window is deleted while a check is out, taking the controller.
+
+    Hardening: a quit was measured to leave both alive, so no known path in the
+    application deletes them mid-check today. Should one appear, the answer has
+    nowhere to go; what must not happen is an exception escaping a thread this
+    application started.
+    """
+
+    _ensure_qapp()
+    import shiboken6
+
+    from latencylab_ui.update_core import UpdateService
+
+    escaped: list[BaseException | None] = []
+    monkeypatch.setattr(
+        threading, "excepthook", lambda raised: escaped.append(raised.exc_value)
+    )
+    source = HeldSource()
+    window, controller = _controller(UpdateService(source, "3.0.3", "windows"))
+    controller.check_manually()
+    assert source.asked.wait(WAIT_SECONDS), "the check never started"
+    shiboken6.delete(window)
+    source.answer.set()
+    source.worker.join(WAIT_SECONDS)
+    assert not source.worker.is_alive(), "the check never finished"
+    assert escaped == []
+
+
+def test_an_emit_failure_with_the_window_still_there_is_raised(monkeypatch) -> None:
+    """Only the answer with nowhere to go is dropped; any other failure shows."""
+
+    _ensure_qapp()
+    from latencylab_ui.update_core import UpdateService
+
+    class FailingSignal:
+        def emit(self, *_args) -> None:
+            raise RuntimeError("not a deleted receiver")
+
+    escaped: list[BaseException | None] = []
+    monkeypatch.setattr(
+        threading, "excepthook", lambda raised: escaped.append(raised.exc_value)
+    )
+    source = HeldSource()
+    source.answer.set()
+    # The window is held so the controller, its child, outlives the check.
+    _window, controller = _controller(UpdateService(source, "3.0.3", "windows"))
+    controller._result_ready = FailingSignal()
+    controller.check_manually()
+    assert source.asked.wait(WAIT_SECONDS), "the check never started"
+    source.worker.join(WAIT_SECONDS)
+    assert not source.worker.is_alive(), "the check never finished"
+    assert [str(error) for error in escaped] == ["not a deleted receiver"]

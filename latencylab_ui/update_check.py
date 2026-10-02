@@ -19,6 +19,7 @@ from __future__ import annotations
 
 import threading
 
+import shiboken6
 from PySide6.QtCore import QObject, QTimer, QUrl, Signal, Slot
 from PySide6.QtGui import QDesktopServices
 from PySide6.QtWidgets import (
@@ -143,7 +144,18 @@ class UpdateCheckController(QObject):
                 status = self._service.check(skipped_version)
             except Exception:  # noqa: BLE001 (any error reads as unreachable)
                 status = None
-            self._result_ready.emit(status, manual)
+            # Hardening: if the window is deleted while the question is out,
+            # this controller goes with it and the emit raises on a thread
+            # nothing would catch it on. A quit was measured not to do that, so
+            # no known path reaches it today. Nobody would be left to tell, so
+            # that answer is dropped. Asking first whether the controller still
+            # exists would not do: it can go between the asking and the emit.
+            # Anything else the emit raises is still raised.
+            try:
+                self._result_ready.emit(status, manual)
+            except RuntimeError:
+                if shiboken6.isValid(self):
+                    raise
 
         threading.Thread(
             target=_run, daemon=True, name="latencylab-update-check"
