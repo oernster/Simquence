@@ -240,6 +240,16 @@ section.alt {
 .panel li { color: var(--muted); margin-bottom: 8px; font-size: 15px; }
 .panel li b { color: var(--text); font-weight: 600; }
 .panel p { margin: 16px 0 0; font-size: 15px; font-weight: 600; }
+/* The Features hub's gateway panels each lead to a page of their own, so the
+   button sits at the panel's foot and the three line up whatever the length
+   above them. */
+.gateways .panel { display: flex; flex-direction: column; }
+.gateways .panel p { margin-top: auto; padding-top: 16px; }
+
+/* Where a detail page sits: the Features hub, then itself. The section after
+   it gives up most of its top padding, since the trail already opens the page. */
+.crumb { padding-top: 32px; color: var(--muted); font-size: 14px; }
+.crumb + section { padding-top: 32px; }
 
 .shots { display: grid; gap: 44px; }
 .shot figure { margin: 0; }
@@ -367,10 +377,11 @@ footer {
 .footer-inner strong { color: var(--text); }
 .footer-links { display: flex; gap: 22px; flex-wrap: wrap; }
 
+/* The bar holds three links, which fit a phone once the gaps and type close
+   up a little; none needs hiding. */
 @media (max-width: 640px) {
-  .nav-links { gap: 16px; }
-  .nav-links a:nth-child(1),
-  .nav-links a:nth-child(2) { display: none; }
+  .nav-links { gap: 14px; }
+  .nav-links a { font-size: 14px; }
 }
 
 /* Long-form prose (the Why this exists page). */
