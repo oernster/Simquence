@@ -25,7 +25,6 @@ BUILD_SCRIPTS = frozenset(
     {
         "generate_icons.py",
         "render_master_icon.py",
-        "generate_scripts.py",
         "stamp_version.py",
         "buildexe.py",
         "buildinstaller.py",
