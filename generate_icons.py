@@ -8,9 +8,10 @@ window, the macOS bundle and the Flatpak hicolor set cannot drift apart.
 It also derives the donate mark from its own master, `donate.png` at the
 repository root. That mark is a wide picture rather than a square icon, so it
 skips the squaring the app icon takes: it is cropped to its artwork and scaled
-by height alone, then written once into `assets/` for the app and once into
-`docs/` for the site, from the same render, so the two copies cannot drift.
-Both masters stay at the root, because every build ships `assets/` whole.
+by height alone, then written into `assets/` for the app. The site's
+`docs/donate.png` is not written here: it is the small mark every project
+site shares byte for byte. Both masters stay at the root, because every build
+ships `assets/` whole.
 
 Run it after changing either master:
 
@@ -34,11 +35,11 @@ PROJECT_ROOT = Path(__file__).resolve().parent
 MASTER_PNG = PROJECT_ROOT / "latencylab.png"
 ASSETS_DIR = PROJECT_ROOT / "assets"
 
-# The donate master and every place its render goes. The top bar draws the mark
-# at its own glyph height; the render is this many times taller so it stays
-# crisp under display scaling.
+# The donate master and where its render goes. The top bar draws the mark at
+# its own glyph height; the render is this many times taller so it stays crisp
+# under display scaling.
 DONATE_MASTER = PROJECT_ROOT / DONATE_PNG_NAME
-DONATE_OUTPUTS = (ASSETS_DIR / DONATE_PNG_NAME, PROJECT_ROOT / "docs" / DONATE_PNG_NAME)
+DONATE_OUTPUTS = (ASSETS_DIR / DONATE_PNG_NAME,)
 DONATE_RENDER_SCALE = 4
 
 # Loose PNGs: the Flatpak hicolor set (16 to 512), the installer badge and the

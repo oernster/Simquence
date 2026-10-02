@@ -221,6 +221,20 @@ asks for from the Help menu always answers.
   version stays declined.
 - **Costs:** the skip lives in a settings file in the user's home folder.
 
+### Donations go through the browser
+
+The top bar carries a donate button beside the theme toggle. Pressing it hands
+one fixed address to the desktop's browser; the application fetches nothing
+itself. If the desktop declines, the application says so and shows the
+address. Nothing is held back behind a donation.
+
+- **Rather than:** a band of its own at the foot of the window; a payment page
+  inside the application.
+- **Gains:** the ask sits in the tray that already exists; the update check
+  stays the application's only outbound request.
+- **Costs:** one more control on a crowded bar; a picture that needs its
+  tooltip to say it leaves the application.
+
 ## The interface
 
 ### Run is inert until there is a model

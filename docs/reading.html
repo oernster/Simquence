@@ -74,7 +74,7 @@
       <p>Load <b>Examples &rarr; Checkout</b> and press <b>Run</b>. The model:
         a click fires <code>user.checkout_clicked</code>, a UI task handles it
         and emits <code>checkout.started</code>, which fans out to four backend
-        tasks at once. Two of them (<code>db.load_cart</code> and
+        tasks, three of them at once. Two of those (<code>db.load_cart</code> and
         <code>db.load_saved_cards</code>) share a database context with
         concurrency 1, so one always queues behind the other. A fixed 150&nbsp;ms
         delay sits on the wiring to <code>net.fetch_promotions</code>: a
@@ -140,7 +140,7 @@
   <div class="container footer-inner">
     <div>
       <strong>LatencyLab</strong>: design-time latency exploration for event-driven systems<br>
-      (c) Oliver Ernster · Local-first · GPL-3.0 + LGPL-3.0 · v<!--VERSION-->3.1.0<!--/VERSION-->
+      (c) Oliver Ernster · Local-first · GPL-3.0 + LGPL-3.0 · v<!--VERSION-->3.2.0<!--/VERSION-->
     </div>
     <div class="footer-links">
       <a href="./">Home</a>

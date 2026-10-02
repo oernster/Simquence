@@ -56,10 +56,10 @@ The intent is to keep the core deterministic, stdlib-only and testable, while ke
 ### GUI package (`latencylab_ui/`)
 
 - **Entry points**
-  - `python -m latencylab_ui` -> [`latencylab_ui.__main__.main()`](latencylab_ui/__main__.py:6) -> [`latencylab_ui.app.run_app()`](latencylab_ui/app.py:14)
+  - `python -m latencylab_ui` -> [`latencylab_ui.__main__.main()`](latencylab_ui/__main__.py:6) -> [`latencylab_ui.app.run_app()`](latencylab_ui/app.py:30)
   - `python runner.py` is a repo-root shim onto the same entry point and is what the frozen build starts at.
 - **Main window and widgets**
-  - Top-level window -> [`latencylab_ui.main_window.MainWindow`](latencylab_ui/main_window.py:46)
+  - Top-level window -> [`latencylab_ui.main_window.MainWindow`](latencylab_ui/main_window.py:61)
 - **Threaded run lifecycle**
   - Controller -> [`latencylab_ui.run_controller.RunController`](latencylab_ui/run_controller.py:103)
   - Worker object -> [`latencylab_ui.run_controller.RunWorker`](latencylab_ui/run_controller.py:55)
@@ -69,7 +69,7 @@ The intent is to keep the core deterministic, stdlib-only and testable, while ke
 The GUI code is intentionally split into smaller modules to keep individual files small and readable.
 
 - Main window composition and behaviour:
-  - Window class -> [`latencylab_ui.main_window.MainWindow`](latencylab_ui/main_window.py:46)
+  - Window class -> [`latencylab_ui.main_window.MainWindow`](latencylab_ui/main_window.py:61)
   - Panel policies (opening the composer, toggling Distributions) ->
     [`latencylab_ui.main_window_dock_switching`](latencylab_ui/main_window_dock_switching.py:1)
   - File IO (open model / export last outputs) ->
@@ -87,13 +87,13 @@ The GUI code is intentionally split into smaller modules to keep individual file
 - Theme and style hardening:
   - Semantic colour tokens, one set per theme -> [`latencylab_ui.theme_tokens`](latencylab_ui/theme_tokens.py:1)
   - Apply theme (palette plus generated stylesheet) ->
-    [`latencylab_ui.theme.apply_theme()`](latencylab_ui/theme.py:79)
+    [`latencylab_ui.theme.apply_theme()`](latencylab_ui/theme.py:88)
   - One stylesheet template, built from the tokens -> [`latencylab_ui.theme_stylesheet`](latencylab_ui/theme_stylesheet.py:1)
   - Light/dark switch -> [`latencylab_ui.theme_toggle`](latencylab_ui/theme_toggle.py:1)
   - QComboBox popup hardening (palette plus per-item roles, reasserted on popup show) ->
-    [`latencylab_ui.qt_style_helpers.harden_combobox_popup()`](latencylab_ui/qt_style_helpers.py:163)
+    [`latencylab_ui.qt_style_helpers.harden_combobox_popup()`](latencylab_ui/qt_style_helpers.py:166)
   - Table height, row heights and column widths derived from the contents ->
-    [`latencylab_ui.qt_style_helpers.size_table_to_rows()`](latencylab_ui/qt_style_helpers.py:276)
+    [`latencylab_ui.qt_style_helpers.size_table_to_rows()`](latencylab_ui/qt_style_helpers.py:282)
 
 - Keyboard navigation (one explicit focus ring, not natural Tab order):
   - Traversal controller and ring order -> [`latencylab_ui.focus_cycle`](latencylab_ui/focus_cycle.py:1)
@@ -120,8 +120,8 @@ The GUI code is intentionally split into smaller modules to keep individual file
   - Pane assembly and dialog sizing -> [`latencylab_ui.model_composer_panes`](latencylab_ui/model_composer_panes.py:1)
   - Editors:
     - System -> [`latencylab_ui.model_composer_system_editor.SystemEditor`](latencylab_ui/model_composer_system_editor.py:9)
-    - Contexts -> [`latencylab_ui.model_composer_contexts_editor.ContextsEditor`](latencylab_ui/model_composer_contexts_editor.py:22)
-    - Tasks -> [`latencylab_ui.model_composer_tasks_editor.TasksEditor`](latencylab_ui/model_composer_tasks_editor.py:127)
+    - Contexts -> [`latencylab_ui.model_composer_contexts_editor.ContextsEditor`](latencylab_ui/model_composer_contexts_editor.py:26)
+    - Tasks -> [`latencylab_ui.model_composer_tasks_editor.TasksEditor`](latencylab_ui/model_composer_tasks_editor.py:155)
     - Wiring -> [`latencylab_ui.model_composer_wiring_editor.WiringEditor`](latencylab_ui/model_composer_wiring_editor.py:30)
 
 - Bundled-data lookup (one search, two callers):
@@ -373,7 +373,7 @@ Important trace causality fields:
 
 #### Task metadata (measurement-only)
 
-Tasks may include optional `meta` parsed by [`latencylab.model.TaskMeta.from_json()`](latencylab/model.py:34) into [`latencylab.model.TaskMeta`](latencylab/model.py:27) and stored on [`latencylab.model.TaskDef.meta`](latencylab/model.py:54).
+Tasks may include optional `meta` parsed by [`latencylab.model.TaskMeta.from_json()`](latencylab/model.py:34) into [`latencylab.model.TaskMeta`](latencylab/model.py:27) and stored on [`latencylab.model.TaskDef.meta`](latencylab/model.py:59).
 
 Invariant: metadata must never affect scheduling; it is only surfaced in summary output.
 
@@ -381,7 +381,7 @@ Invariant: metadata must never affect scheduling; it is only surfaced in summary
 
 ### Run lifecycle
 
-- The user clicks Run in [`latencylab_ui.main_window.MainWindow`](latencylab_ui/main_window.py:46), which builds a [`latencylab_ui.run_controller.RunRequest`](latencylab_ui/run_controller.py:22) and calls [`latencylab_ui.run_controller.RunController.start()`](latencylab_ui/run_controller.py:142).
+- The user clicks Run in [`latencylab_ui.main_window.MainWindow`](latencylab_ui/main_window.py:61), which builds a [`latencylab_ui.run_controller.RunRequest`](latencylab_ui/run_controller.py:22) and calls [`latencylab_ui.run_controller.RunController.start()`](latencylab_ui/run_controller.py:142).
 - The controller constructs a [`PySide6.QtCore.QThread`](latencylab_ui/run_controller.py:152) and moves a [`latencylab_ui.run_controller.RunWorker`](latencylab_ui/run_controller.py:55) onto it, together with the cancel flag the core will be asked about.
 - The worker:
   - reads JSON -> [`latencylab.model.Model.from_json()`](latencylab/model.py:75)
@@ -489,17 +489,17 @@ outside the row and was never painted; its number sat against the bottom of
 what remained and read as badly aligned. That last one is one fault reported as
 two, the same way the wheel and the focus were.
 
-[`size_table_to_rows()`](latencylab_ui/qt_style_helpers.py:276) fixes the height
+[`size_table_to_rows()`](latencylab_ui/qt_style_helpers.py:282) fixes the height
 to the rows present, capped at `MAX_VISIBLE_TABLE_ROWS` so a large model cannot
 push the rest of the panel out of reach;
-[`stretch_table_columns()`](latencylab_ui/qt_style_helpers.py:224) gives the name
+[`stretch_table_columns()`](latencylab_ui/qt_style_helpers.py:230) gives the name
 column the slack; and
-[`fit_rows_to_contents()`](latencylab_ui/qt_style_helpers.py:244) lets a row be
+[`fit_rows_to_contents()`](latencylab_ui/qt_style_helpers.py:250) lets a row be
 as tall as the tallest thing in it, so the control metrics decide the row rather
 than the row silently cropping the control.
 
 The height is measured with
-[`_settled_row_height()`](latencylab_ui/qt_style_helpers.py:259) rather than
+[`_settled_row_height()`](latencylab_ui/qt_style_helpers.py:265) rather than
 `rowHeight()`, because a header on `ResizeToContents` recalculates lazily and the
 old value is still being reported at the moment a row is filled. Measuring is
 also deliberately called at the END of each mutator rather than bound to the
@@ -653,7 +653,7 @@ it reads as the same stopwatch in a different ink instead of a blob of its
 outline.
 
 **A panel button says whether the panel is up.** Distributions is a toggle
-([`toggle_distributions()`](latencylab_ui/main_window_dock_switching.py:47)), not
+([`toggle_distributions()`](latencylab_ui/main_window_dock_switching.py:44)), not
 an opener: a control that only ever opens leaves the dock's own close cross as
 the only way to undo one press. It is deliberately NOT the mirror of Compose.
 Compose carries a switch-to policy because it is going somewhere, away from
@@ -738,7 +738,7 @@ The wheel is the library. The desktop application is delivered separately, one e
 | `buildinstaller.py` | `dist-installer/LatencyLabSetup.exe`: the payload zipped, then wrapped in the bespoke installer as a Nuitka onefile. |
 | `build_flatpak.sh` / `clean_flatpak.sh` | The Linux Flatpak, manifest generated rather than committed, wheels pre-downloaded and installed offline in-sandbox. Its finish-args now grant `--share=network` so the update check can reach GitHub. |
 | `builddmg.py` | The macOS disk image, with the stray `*.o` strip, codesign, notarise and staple flow. |
-| `generate_icons.py` | Every platform icon asset, from the single master `latencylab.png`; also the donate mark, from its own master `donate.png`, written from one render to `assets/` and `docs/`. |
+| `generate_icons.py` | Every platform icon asset, from the single master `latencylab.png`; also the donate button's mark, from its own master `donate.png`, into `assets/`. |
 | `stamp_version.py` | The version tokens in the GitHub Pages site under `docs/`. |
 
 The installer itself is an application, not a script: [`installer/`](installer/app.py:1) is a themed PySide6 GUI installer, per-user and no-admin, extracting to `%LOCALAPPDATA%`, writing the HKCU uninstall key and offering Desktop and Start Menu shortcuts. It is held to the same 400-line cap as the rest of the codebase, which is the distinction the size test encodes: the recipe that invokes Nuitka is a script, the window it produces is a program. Coverage is where it parts company with the application: [`.coveragerc`](.coveragerc) omits `installer/` along with the delivery scripts, since what they do only means anything against a real toolchain, filesystem and registry; a build proves them and the suite cannot.
@@ -771,7 +771,7 @@ Three delivery findings are load-bearing and are recorded here so they are not r
 - The mark is the amber-cased stopwatch. Its origin is the SVG published on the profile site at `assets/latencylab.svg`; the repository-root `latencylab.png` is a 1024x1024 RGBA raster of that SVG rather than an independent drawing. Its case is deliberately warm against the cool `primary` fill it is drawn on, rather than a shade of it: the two used to be the same colour; the case disappeared.
 - **The direction is one-way.** A change to the mark is made to the site SVG first, then `latencylab.png` is re-rendered from it by `render_master_icon.py` (no new dependency: it uses `QSvgRenderer` and PySide6 is already what the front end is built on), then `generate_icons.py` derives the platform set from that PNG. Editing the PNG directly leaves the two silently disagreeing, which is the failure this note exists to prevent. The renderer is a script rather than a documented habit for the same reason the version stamp is: a remembered step that nothing checks is one that eventually does not happen; a forgotten re-render leaves the site showing one mark and the application another.
 - `latencylab.png` is the single master every platform asset derives from, via `generate_icons.py`: the PNG size set, the multi-size Windows `.ico`, the macOS `.icns` and the Flatpak hicolor set. Nothing paints an icon at runtime; the application asks [`latencylab_ui.icon_resolver`](latencylab_ui/icon_resolver.py:1) where the assets landed for the packaging it is running under.
-- **The donate mark has a master of its own and skips the squaring.** `donate.png` at the repository root is a wide picture rather than an icon, so `generate_icons.py` crops it to its artwork and scales it by height alone, to four times the top bar's glyph height (`GLYPH_PX` in [`top_bar_buttons`](latencylab_ui/top_bar_buttons.py:1)) so it stays crisp under display scaling. One render goes to `assets/donate.png` for the app and to `docs/donate.png` for the site, so the two cannot drift. The master sits at the root beside `latencylab.png` rather than in `assets/`, because every build ships `assets/` whole and the master would otherwise ride along at a hundred times the render's size.
+- **The donate mark has a master of its own and skips the squaring.** `donate.png` at the repository root is a wide picture rather than an icon, so `generate_icons.py` crops it to its artwork and scales it by height alone, to four times the top bar's glyph height (`GLYPH_PX` in [`top_bar_buttons`](latencylab_ui/top_bar_buttons.py:1)) so it stays crisp under display scaling, then writes it to `assets/donate.png` for the app. The site's `docs/donate.png` is deliberately not generated: it is the small donate mark every project site shares byte for byte, so it is copied rather than derived. The master sits at the root beside `latencylab.png` rather than in `assets/`, because every build ships `assets/` whole and the master would otherwise ride along at a hundred times the render's size.
 - **The donate button takes a seat in the existing top bar.** The window has a tray of icon buttons already, so a band of chrome carrying one control would cost more than it buys. The button sits immediately left of the theme toggle, in the row and in the declared ring alike, because those two are the only controls about the application rather than the model. As a member of the tray it is drawn at the tray's own glyph height, keeping the mark's aspect. Its one address is `DONATE_URL` beside the rest of the identity in [`about_text`](latencylab_ui/about_text.py:1), handed to the desktop through the [`links`](latencylab_ui/links.py:1) seam: the application never fetches the page. The picture says nothing about leaving the application, so the tooltip does. The window has no status bar, so a desktop that refuses says so in an information box naming the address. Conformance: [`tests/test_ui_donate_button.py`](tests/test_ui_donate_button.py:1).
 - **The macOS assets are opaque; every other platform's are transparent.** The master has a transparent canvas and a transparent dial face, which is correct for the Windows taskbar, the Flatpak hicolor set and the in-application badge, all of which sit on a surface the mark is not supposed to occlude. macOS is the exception: the Dock, Finder and the mounted disk image composite the icon straight onto the desktop, so the transparent version reads as a red ring and a yellow hand floating on the pale grey of the default light appearance, with no icon visible at all. `generate_icons.py` therefore draws the macOS outputs on an opaque black tile (`MAC_BACKGROUND_RGBA`) and writes them under a separate `latencylab_icon_mac` stem, leaving the shared set untouched: the `.icns` the bundle and PyInstaller consume, `latencylab_icon_mac_1024.png` as the source `builddmg.py` hands to `dmg_icon.png_to_icns` for the volume and file icons, then `latencylab_icon_mac.png` as the Dock icon at runtime. `icon_resolver.app_icon_names` is what makes the last one macOS-only; the in-application badge goes on resolving through `get_app_icon_png_path` and stays transparent, because it is drawn on the application's own background.
 - **The macOS tile follows Apple's icon grid, not the full canvas.** A full-bleed square renders visibly larger than every system application beside it in the Dock, with hard corners where everything around it is rounded. `mac_icon` in `generate_icons.py` therefore insets the black tile to 824 of the 1024 point canvas (`MAC_TILE_FRACTION`) with a 185.4 point corner radius (`MAC_TILE_RADIUS_FRACTION`), leaving the canvas around it transparent, then sizes the mark to `MAC_MARK_FRACTION` of the tile so it keeps the interior margin system icons keep. The corner mask is drawn at `MAC_MASK_SUPERSAMPLE` times the target size and scaled back down, because Pillow's `rounded_rectangle` does not antialias and an aliased corner is obvious against the desktop. This shaping is macOS-only: Windows and Flatpak apply their own framing and want the square master.

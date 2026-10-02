@@ -213,7 +213,9 @@ what it produced), while `builddmg.py` builds the macOS disk image on macOS.
 `latencylab.png`, including the opaque macOS variants the Dock, Finder and the
 disk image need. If the mark itself has changed, run `render_master_icon.py`
 first: the published site SVG is the source and the master PNG is a render of
-it, never an independent drawing.
+it, never an independent drawing. The same script derives the donate button's
+artwork from its own master, `donate.png`, writing one small render into
+`assets/`; replace the master and rerun rather than scaling the render by hand.
 
 ## Documentation
 

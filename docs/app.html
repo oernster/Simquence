@@ -73,9 +73,9 @@
             running one model 200 times: the histogram counts runs by how long
             the whole flow took and the chart on the right counts how often each
             chain of work was the bottleneck. The model is the shipped
-            checkout example: a user clicks, four back ends are asked at once, two
+            checkout example: a user clicks, three back ends are asked at once, two
             of them queue behind a database that serves one caller at a time and
-            a short debounce sits on a fifth. Most people predict the slowest back
+            a short debounce sits on a fourth. Most people predict the slowest back
             end dominates perceived latency. They are usually wrong. The debounce,
             added so the interface would feel calm, is the critical path in most
             runs; the critical-path frequency on the right names the work and the
@@ -152,7 +152,7 @@
   <div class="container footer-inner">
     <div>
       <strong>LatencyLab</strong>: design-time latency exploration for event-driven systems<br>
-      (c) Oliver Ernster · Local-first · GPL-3.0 + LGPL-3.0 · v<!--VERSION-->3.1.0<!--/VERSION-->
+      (c) Oliver Ernster · Local-first · GPL-3.0 + LGPL-3.0 · v<!--VERSION-->3.2.0<!--/VERSION-->
     </div>
     <div class="footer-links">
       <a href="./">Home</a>
