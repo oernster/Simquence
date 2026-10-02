@@ -220,6 +220,7 @@ it, never an independent drawing.
 - [ARCHITECTURE.md](ARCHITECTURE.md): the layers, the invariants and the tests that enforce them.
 - [TECH_DEBT.md](TECH_DEBT.md): the standing reference to what is still open, what is
   deliberately left and what only looks like debt.
+- [`DECISIONS-TRADEOFFS.md`](DECISIONS-TRADEOFFS.md) sets out the decisions LatencyLab rests on, with what each one gains and what it costs.
 
 ## UI (GUI)
 
