@@ -751,7 +751,7 @@ Three delivery findings are load-bearing and are recorded here so they are not r
 - The only real version string in the repository is the root `VERSION` file.
 - Runtime reads it through [`latencylab.version.read_version()`](latencylab/version.py:24), which falls back to `0.0.0-dev` when no source tree is present. `latencylab_ui` re-exports the same value and the About dialog renders it.
 - Packaging metadata declares the version dynamic and reads the same file.
-- The GitHub Pages site under `docs/` cannot read `VERSION` at render time, so it carries `<!--VERSION-->x.y.z<!--/VERSION-->` tokens rewritten by the repo-root `stamp_version.py`. That script targets `docs/` only and is idempotent.
+- The GitHub Pages site under `docs/` cannot read `VERSION` at render time, so it carries `<!--VERSION-->x.y.z<!--/VERSION-->` tokens rewritten by the repo-root `stamp_version.py`. That script targets `docs/` only and is idempotent. It also puts a content hash on every local stylesheet and script link in the site (`styles.css?v=<hash>`) so a browser cannot pair a fresh page with a stale cached stylesheet.
 - Enforced by [`tests/test_version_single_source.py`](tests/test_version_single_source.py:1), which asserts the core version, the UI version and the `VERSION` file agree.
 
 ### Licence split
