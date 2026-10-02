@@ -736,7 +736,7 @@ The wheel is the library. The desktop application is delivered separately, one e
 | `generate_icons.py` | Every platform icon asset, from the single master `latencylab.png`. |
 | `stamp_version.py` | The version tokens in the GitHub Pages site under `docs/`. |
 
-The installer itself is an application, not a script: [`installer/`](installer/app.py:1) is a themed PySide6 GUI installer, per-user and no-admin, extracting to `%LOCALAPPDATA%`, writing the HKCU uninstall key and offering Desktop and Start Menu shortcuts. It is held to the same size and coverage rules as the rest of the codebase, which is the distinction the size test encodes: the recipe that invokes Nuitka is a script, the window it produces is a program.
+The installer itself is an application, not a script: [`installer/`](installer/app.py:1) is a themed PySide6 GUI installer, per-user and no-admin, extracting to `%LOCALAPPDATA%`, writing the HKCU uninstall key and offering Desktop and Start Menu shortcuts. It is held to the same 400-line cap as the rest of the codebase, which is the distinction the size test encodes: the recipe that invokes Nuitka is a script, the window it produces is a program. Coverage is where it parts company with the application: [`.coveragerc`](.coveragerc) omits `installer/` along with the delivery scripts, since what they do only means anything against a real toolchain, filesystem and registry; a build proves them and the suite cannot.
 
 Every path stages the same three things beside the application: the generated icons, the shipped `examples/` and the licence texts. The Flatpak additionally exports `LATENCYLAB_ASSETS_DIR` and `LATENCYLAB_EXAMPLES_DIR`, which are the same override hooks the tests use.
 
@@ -778,7 +778,7 @@ Three delivery findings are load-bearing and are recorded here so they are not r
   - Enforced by [`tests/test_codebase_size_limits.py`](tests/test_codebase_size_limits.py:1).
 - Unit test coverage is enforced at 100%. The `--cov` flags and `--cov-fail-under=100` live in the `addopts` of [`pyproject.toml`](pyproject.toml), so a bare `python -m pytest` enforces the gate and there is no way to run the suite without it. The measured source set is scoped by [`.coveragerc`](.coveragerc).
 - Version consistency: the core version, the UI version and the root `VERSION` file must agree (see [`tests/test_version_single_source.py`](tests/test_version_single_source.py:1)).
-- Formatting and linting are assertions, not a separate habit: `black --check` and `flake8` run inside the suite.
+- Formatting and linting are the exception to this section's heading: no test runs `black --check` or `flake8`. Both are installed by the `dev` extra and run separately.
 
 ## Future extension points
 
