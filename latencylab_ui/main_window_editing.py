@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-"""Opening the loaded model in the composer, and keeping it in step.
+"""Opening the loaded model in the composer; keeping it in step.
 
 Composing and editing are the same surface reached from two ends, so there is
 no second composer here: editing is the compose action with the loaded model put
@@ -9,8 +9,7 @@ panel policies do, which is that the window is at its size limit and this is
 one cohesive job with a rule worth stating.
 """
 
-import json
-
+from latencylab.io import read_model_json
 from latencylab_ui.main_window_dock_switching import open_model_composer
 
 
@@ -43,7 +42,7 @@ def load_into_composer(window) -> bool:
     if loaded is None:
         return False
 
-    raw = json.loads(loaded.path.read_text(encoding="utf-8"))
+    raw = read_model_json(loaded.path)
     window._model_composer.load_raw_model(  # noqa: SLF001
         raw, model_name=loaded.path.stem
     )
@@ -53,11 +52,11 @@ def load_into_composer(window) -> bool:
 def refresh_open_editor(window) -> None:
     """Keep an open editor in step with the model that was just opened.
 
-    An editor showing a model is a view of that model, and a view that keeps
+    An editor showing a model is a view of that model; a view that keeps
     displaying the previous one after another file is opened is simply wrong.
 
     It follows only while it is BOTH open and showing a loaded model. A
-    composer holding something typed from scratch is the user's own work, and
+    composer holding something typed from scratch is the user's own work;
     replacing that would be data loss rather than a refresh.
     """
 

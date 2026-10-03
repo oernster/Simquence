@@ -31,7 +31,12 @@ def _sample_ms(rng: random.Random, dist: DurationDist) -> float:
     if name == "lognormal":
         mu = float(p["mu"])
         sigma = float(p["sigma"])
-        return float(math.exp(rng.gauss(mu=mu, sigma=sigma)))
+        try:
+            return float(math.exp(rng.gauss(mu=mu, sigma=sigma)))
+        except OverflowError:
+            # A draw past the float range; NumPy's lognormal returns inf for
+            # the same draw on the v1 path, so the engines agree.
+            return math.inf
     raise AssertionError(f"unhandled dist: {name}")
 
 

@@ -26,8 +26,8 @@ three and read the exit code of each. A default-rules `ruff check` reports a
 backlog here; ruff has not been adopted, so its findings are a reading rather
 than a regression ([TECH_DEBT.md](TECH_DEBT.md) says why).
 
-**A full run takes under half a minute.** Measured on 2026-10-03: 559 tests
-passed in 22 seconds on Windows.
+**A full run takes under half a minute.** Measured on 2026-10-03: 612 tests
+passed in 19 seconds on Windows.
 
 **Read the exit code, never the text.** The run prints the coverage table then
 one summary line. A search of the output for a result word is still not safe,
@@ -80,7 +80,7 @@ lines measured".
 
 ## Where the tests live
 
-All 79 files sit flat in `tests/`. They fall into three kinds:
+All 81 files sit flat in `tests/`. They fall into three kinds:
 
 | Kind | What it tests | Against |
 |---|---|---|
@@ -105,7 +105,7 @@ for code nobody has written yet.
 | Guard | Holds |
 |---|---|
 | `test_ui_dependency_boundaries.py` | the core imports no Qt and never references the interface package |
-| `test_core_boundaries_and_packaging.py` | the pure core modules never touch the filesystem; `io` stays the module that loads; the wheel contains only the headless core |
+| `test_core_boundaries_and_packaging.py` | the pure core modules (`model`, `types`, `validate`) import only an exact allowlist and call no `open`, `__import__`, `exec` or `eval`, proved by planting each escape the old denylist missed; `io` stays the module that loads; the wheel contains only the headless core |
 | `test_codebase_size_limits.py` | the 400 line cap, the danger band below it and no stale entry in the build-script exemption |
 | `test_version_single_source.py` | the core and the interface report the number in `VERSION` and the site stamping behaves; it does not scan other files for a stray version |
 

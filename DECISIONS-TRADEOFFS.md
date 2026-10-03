@@ -104,7 +104,9 @@ The same model on the same seed gives the same result, which a test holds.
 
 Models declaring schema version 1 run on the original NumPy engine, kept
 unchanged and pinned by a golden snapshot. Version 2 runs on a standard library
-engine that adds delayed wiring. Validation accepts only those two.
+engine that adds delayed wiring. Validation accepts only those two; a version 1
+model that declares a delay is refused, because the version 1 engine would run
+it without the delay and say nothing.
 
 - **Rather than:** migrating old models to the new engine; dropping version 1.
 - **Gains:** an old model still means exactly what it meant; the snapshot makes
@@ -177,7 +179,8 @@ application reports that count.
 
 The distributions panel draws a histogram of how long each run took, binned by
 the Freedman-Diaconis rule, plus how often each critical path occurred. It
-reads the runs already made.
+reads the runs already made. The bins are widened when that rule would need
+more than 200 of them, which one heavy tail can: it once asked for millions.
 
 - **Rather than:** resimulating, smoothing or fitting a curve.
 - **Gains:** every bar is a count of real runs.

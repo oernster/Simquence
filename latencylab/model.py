@@ -4,6 +4,17 @@ from dataclasses import dataclass
 from typing import Any
 
 
+def _integral_version(raw: Any) -> int:
+    """The schema version as an int, refusing what `int()` would truncate.
+
+    `int(2.9)` is 2, so a model declaring 2.9 used to run as version 2. A bool
+    is an int to Python and is refused for the same reason.
+    """
+    if isinstance(raw, bool) or (isinstance(raw, float) and not raw.is_integer()):
+        raise ValueError(f"Model schema version must be an integer (got {raw!r})")
+    return int(raw)
+
+
 @dataclass(frozen=True)
 class ContextDef:
     concurrency: int
@@ -82,10 +93,10 @@ class Model:
         else:
             raise ValueError(
                 "Model is missing schema version. Expected 'schema_version' "
-                "(preferred), or legacy aliases 'version'/'model_version'."
+                "(preferred) or one of the legacy aliases 'version'/'model_version'."
             )
 
-        version = int(version_raw)
+        version = _integral_version(version_raw)
         entry_event = str(obj["entry_event"])
 
         contexts: dict[str, ContextDef] = {}

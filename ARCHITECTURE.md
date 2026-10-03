@@ -36,6 +36,7 @@ The intent is to keep the core deterministic, stdlib-only and testable, while ke
 - **Entry points**
   - `python -m latencylab` -> [`latencylab.__main__`](latencylab/__main__.py:1) -> [`latencylab.cli.main()`](latencylab/cli.py:35)
 - **Model**
+  - Reading a model file (duplicate keys refused) -> [`latencylab.io.read_model_json()`](latencylab/io.py:1)
   - JSON parsing -> [`latencylab.model.Model.from_json()`](latencylab/model.py:75)
   - Validation -> [`latencylab.validate.validate_model()`](latencylab/validate.py:10)
 - **Simulation facade** (stdlib-only)
@@ -256,8 +257,16 @@ Durations (and delay distributions) are represented by [`latencylab.model.Durati
 Supported dists:
 
 - `fixed`: `{ "dist": "fixed", "value": <>=0 }`
-- `normal`: `{ "dist": "normal", "mean": <>, "std": <>=0, "min": <>=0? }`
-- `lognormal`: `{ "dist": "lognormal", "mu": <>, "sigma": <>=0 }`
+- `normal`: `{ "dist": "normal", "mean": <>=0, "std": <>=0, "min": <>=0, optional, default 0 }`. Every draw below `min` is raised to `min`, so the default of 0 shifts a distribution whose spread reaches below zero.
+- `lognormal`: `{ "dist": "lognormal", "mu": <=log(largest float), "sigma": <>=0 }`. Past that `mu` the median duration is infinite.
+
+Every parameter must be a finite number. Python's JSON reader accepts the `NaN` and `Infinity` literals and NaN passes every `< 0` comparison, so the check is explicit: a NaN duration once hung the v1 engine forever, because a completion time of NaN is never equal to itself and is never popped. A single lognormal draw past the float range is infinite in both engines (NumPy returns it; the v2 engine catches the overflow and returns it too).
+
+Names: no task or event name may contain `>`. Critical paths are identified by task names joined with `>`; event names reach that string through the synthetic `delay(event->task)` node, so a name containing it would merge two different chains into one count.
+
+The schema version must be an integer: `2.9` used to be truncated to 2 and run.
+
+Model files are read through one loader, [`latencylab.io.read_model_json()`](latencylab/io.py:1), shared by the CLI, the run worker, the window's Open and the editor. It refuses a key that appears twice in one JSON object, which plain `json.loads` resolves by keeping the last: a copy-pasted task that was not renamed (or a second `wiring` object) used to replace the first without a word. The CLI reports any unreadable or invalid model on stderr and exits with status 2 rather than a traceback.
 
 Note: there is **no** implemented "v1 lognormal.mean" migration/conversion in this codebase. Both engines sample lognormal via `mu/sigma` (see [`latencylab.sim_v2._sample_ms()`](latencylab/sim_v2.py:21) and [`latencylab.sim_legacy._sample_duration_ms()`](latencylab/sim_legacy.py:65)).
 
@@ -277,6 +286,8 @@ Listener forms accepted by [`latencylab.model.Model.from_json()`](latencylab/mod
 - `{ "task": "task_name", "delay_ms": <number | dist> }`
 
 If `delay_ms` is a number, it is parsed as `fixed` with that value (see parsing helper inside [`latencylab.model.Model.from_json()`](latencylab/model.py:118)).
+
+`delay_ms` is a version 2 feature. The v1 engine walks the flat `wiring` map, which carries no delay, so validation refuses a version 1 model that declares one rather than letting it run as though the delay were not there.
 
 ### Worked examples
 

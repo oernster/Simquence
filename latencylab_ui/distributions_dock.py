@@ -160,18 +160,27 @@ class _MakespanHistogramWidget(QWidget):
         p.setPen(Qt.PenStyle.NoPen)
         p.setBrush(bar_color)
 
-        n = len(self._bins)
-        bar_w = max(1, int(plot.width() / max(1, n)))
-        for i, b in enumerate(self._bins):
-            h = int(round((b.count / max_count) * plot.height()))
-            x = plot.left() + i * bar_w
-            y = plot.bottom() - h
-            p.drawRect(QRect(x, y, bar_w - 1, h))
-
-        # Marker lines.
         data_lo = self._bins[0].lo
         data_hi = self._bins[-1].hi
         span = max(1e-9, data_hi - data_lo)
+
+        def x_for(value: float) -> int:
+            # The ONE value-to-pixel mapping: bar edges and percentile markers
+            # both go through it, so a marker always sits over the bar that
+            # holds its value. Bars used to be laid out at a whole-pixel width
+            # each, which spans less than the plot and drifts from the markers.
+            x = plot.left() + int(round(((value - data_lo) / span) * plot.width()))
+            return max(plot.left(), min(plot.right(), x))
+
+        for b in self._bins:
+            h = int(round((b.count / max_count) * plot.height()))
+            x0 = x_for(b.lo)
+            width = max(1, x_for(b.hi) - x0)
+            # Leave a one-pixel gap between bars when there is room for one.
+            drawn = width - 1 if width > 1 else width
+            p.drawRect(QRect(x0, plot.bottom() - h, drawn, h))
+
+        # Marker lines.
 
         # Percentile marker pen: red, deterministic.
         marker_pen = QPen(QColor(220, 60, 60))
@@ -199,9 +208,7 @@ class _MakespanHistogramWidget(QWidget):
         marker_xs: list[tuple[_Marker, int]] = []
         # Keep deterministic order: as provided (p50, p90, p95, p99).
         for m in self._markers:
-            x = plot.left() + int(round(((m.value - data_lo) / span) * plot.width()))
-            x = max(plot.left(), min(plot.right(), x))
-            marker_xs.append((m, x))
+            marker_xs.append((m, x_for(m.value)))
 
         # Marker lines stay within the plot area.
         for _idx, (_m, x) in enumerate(marker_xs, start=1):

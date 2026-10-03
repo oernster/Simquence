@@ -6,6 +6,32 @@ from pathlib import Path
 from typing import Any
 
 from latencylab.types import RunResult, TaskInstance
+from latencylab.validate import ModelValidationError
+
+
+def _refuse_duplicate_keys(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
+    out: dict[str, Any] = {}
+    for key, value in pairs:
+        if key in out:
+            raise ModelValidationError(
+                f"duplicate key '{key}' in model JSON; only one can be meant"
+            )
+        out[key] = value
+    return out
+
+
+def parse_model_json(text: str) -> Any:
+    """Parse model JSON, refusing a key that appears twice in one object.
+
+    Plain `json.loads` keeps the last of two equal keys, so a task block pasted
+    and not renamed (or a second `wiring` object) silently replaced the first.
+    """
+    return json.loads(text, object_pairs_hook=_refuse_duplicate_keys)
+
+
+def read_model_json(path: Path) -> Any:
+    """Read and parse a model file: the one loader every caller shares."""
+    return parse_model_json(path.read_text(encoding="utf-8"))
 
 
 def write_summary_json(path: Path, summary: dict[str, Any]) -> None:

@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import json
 import threading
 import time
 import traceback
@@ -11,6 +10,7 @@ from typing import Any
 from PySide6.QtCore import QObject, QThread, Signal, Slot
 
 from latencylab.cancellation import RunCancelled
+from latencylab.io import read_model_json
 from latencylab.metrics import add_task_metadata, aggregate_runs
 from latencylab.model import Model
 from latencylab.sim import simulate_many
@@ -38,7 +38,7 @@ class CancelFlag:
     """The cancellation signal, shared across the thread boundary.
 
     A `threading.Event` rather than a plain bool: it is set on the interface
-    thread and read on the worker thread, and an Event is the primitive that
+    thread and read on the worker thread; an Event is the primitive that
     makes that safe without a lock at either end.
     """
 
@@ -69,7 +69,7 @@ class RunWorker(QObject):
     @Slot()
     def run(self) -> None:
         try:
-            raw = json.loads(self._request.model_path.read_text(encoding="utf-8"))
+            raw = read_model_json(self._request.model_path)
             model = Model.from_json(raw)
             validate_model(model)
 
@@ -89,7 +89,7 @@ class RunWorker(QObject):
                 self._run_token, RunOutputs(model=model, runs=runs, summary=summary)
             )
         except RunCancelled as cancelled:
-            # Its own signal, not a failure: the user asked for this, and a
+            # Its own signal, not a failure: the user asked for this; a
             # traceback in a message box is not the answer to a button press.
             self.cancelled.emit(self._run_token, cancelled.completed_runs)
         except ModelValidationError as e:
@@ -106,7 +106,7 @@ class RunController(QObject):
     Cancellation genuinely stops the work. The simulator is CPU-bound and
     cannot be interrupted from outside, so it is ASKED to stop, at the boundary
     between one run and the next. The worst case is therefore one run's worth of
-    delay, and no run is ever left half simulated.
+    delay; no run is ever left half simulated.
     """
 
     started = Signal(int)  # run_token

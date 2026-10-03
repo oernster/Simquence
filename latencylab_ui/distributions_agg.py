@@ -5,8 +5,9 @@ from __future__ import annotations
 This module is intentionally Qt-free.
 
 Design constraints:
-- No resimulation, inference, or smoothing.
-- Makespan histogram bin width uses the Freedman-Diaconis rule.
+- No resimulation, inference or smoothing.
+- Makespan histogram bin width uses the Freedman-Diaconis rule, widened when
+  that would need more than MAX_HISTOGRAM_BINS bins.
 - Critical-path frequencies match the ordering rules in
   [`latencylab.metrics.aggregate_runs()`](latencylab/metrics.py:37).
 """
@@ -16,6 +17,13 @@ from collections import Counter
 from dataclasses import dataclass
 
 from latencylab.types import RunResult
+
+# The most bins the makespan histogram will build. The dock's minimum width
+# leaves a plot of roughly 500 pixels, so this keeps every bar at least two
+# pixels wide and drawn on screen. Freedman-Diaconis alone has no ceiling: one
+# heavy tail asked for 190,000 bins at 200 runs and 350 million in the worst
+# measured case, which exhausted memory on the GUI thread.
+MAX_HISTOGRAM_BINS = 200
 
 
 @dataclass(frozen=True)
@@ -52,7 +60,7 @@ def _percentile_sorted(values_sorted: list[float], p: float) -> float:
     """Percentile with linear interpolation between closest ranks.
 
     This matches the algorithm used by the core in
-    [`latencylab.metrics._percentile_sorted()`](latencylab/metrics.py:11), but is
+    [`latencylab.metrics._percentile_sorted()`](latencylab/metrics.py:11); it is
     duplicated here to keep the UI layer independent of private core helpers.
     """
 
@@ -85,7 +93,7 @@ def freedman_diaconis_bins(values: list[float]) -> list[HistogramBin]:
       single bin spanning [min, max]. This is deterministic and explainable.
     """
 
-    # `values` is typed as list[float], but we still accept mixed inputs from
+    # `values` is typed as list[float]; we still accept mixed inputs from
     # callers defensively.
     xs = [float(v) for v in values if v is not None and math.isfinite(float(v))]
     if not xs:
@@ -113,7 +121,10 @@ def freedman_diaconis_bins(values: list[float]) -> list[HistogramBin]:
     if not math.isfinite(width) or width <= 0:  # pragma: no cover
         return [HistogramBin(lo=lo, hi=hi, count=len(xs_sorted))]  # pragma: no cover
 
-    bin_count = int(math.ceil(span / width))
+    # Widen the bins rather than build more than can be drawn. The count is
+    # capped before the division can produce a huge float, so no list is ever
+    # allocated past the ceiling.
+    bin_count = int(math.ceil(min(span / width, MAX_HISTOGRAM_BINS)))
     bin_count = max(1, bin_count)
 
     # Recompute width to ensure the final edge covers the max value.

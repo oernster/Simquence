@@ -1,14 +1,34 @@
 from __future__ import annotations
 
 import argparse
-import json
+import sys
 from pathlib import Path
 
-from latencylab.io import write_runs_csv, write_summary_json, write_trace_csv
+from latencylab.io import (
+    read_model_json,
+    write_runs_csv,
+    write_summary_json,
+    write_trace_csv,
+)
 from latencylab.metrics import add_task_metadata, aggregate_runs
 from latencylab.model import Model
 from latencylab.sim import simulate_many
 from latencylab.validate import validate_model
+
+# The exit status for a model that cannot be read or is not valid; argparse
+# already uses the same status for a command line it cannot parse.
+EXIT_BAD_MODEL = 2
+
+# What reading, parsing and validating a malformed model raises. JSON syntax
+# errors and ModelValidationError are both ValueError; a missing field is a
+# KeyError; a list where an object belongs is an AttributeError or TypeError.
+_BAD_MODEL_ERRORS = (OSError, ValueError, KeyError, TypeError, AttributeError)
+
+
+def _describe(exc: BaseException) -> str:
+    if isinstance(exc, KeyError):
+        return f"missing field {exc}"
+    return str(exc)
 
 
 def _build_parser() -> argparse.ArgumentParser:
@@ -37,9 +57,15 @@ def main(argv: list[str] | None = None) -> int:
     args = p.parse_args(argv)
 
     if args.cmd == "simulate":
-        raw = json.loads(args.model.read_text(encoding="utf-8"))
-        model = Model.from_json(raw)
-        validate_model(model)
+        try:
+            model = Model.from_json(read_model_json(args.model))
+            validate_model(model)
+        except _BAD_MODEL_ERRORS as exc:
+            print(
+                f"latencylab: cannot use model {args.model}: {_describe(exc)}",
+                file=sys.stderr,
+            )
+            return EXIT_BAD_MODEL
 
         runs, traces = simulate_many(
             model=model,

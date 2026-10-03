@@ -1,11 +1,11 @@
 from __future__ import annotations
 
-import json
 import zipfile
 from pathlib import Path
 
 from PySide6.QtWidgets import QFileDialog, QMessageBox
 
+from latencylab.io import read_model_json
 from latencylab.model import Model
 from latencylab.validate import ModelValidationError, validate_model
 from latencylab_ui.outputs_view import format_summary_text
@@ -31,7 +31,7 @@ def export_runs(window) -> bool:
 
     Returns:
         True if an export was successfully written.
-        False if the user cancelled, there were no outputs, or an error occurred.
+        False if the user cancelled, there were no outputs or an error occurred.
     """
 
     # Export all runs as a zip of per-run text files.
@@ -111,7 +111,7 @@ def on_save_log_clicked(window) -> None:
 
 def load_model(window, path: Path) -> None:
     try:
-        raw = json.loads(path.read_text(encoding="utf-8"))
+        raw = read_model_json(path)
         model = Model.from_json(raw)
         validate_model(model)
     except ModelValidationError as e:
