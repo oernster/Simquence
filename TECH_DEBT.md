@@ -14,7 +14,7 @@ Nothing is open. The two sections below record the standing decisions that keep 
 - The `main_window_*.py` family (`actions`, `dock_switching`, `editing`, `file_io`, `menus`, `panels`, `run`, `top_bar`) and the `model_composer_*.py` family look like two classes shattered across many files. That is the 400-line cap doing its job and each part is cohesive.
 - The `test_*_coverage.py` and `test_*_remaining_coverage.py` files are named after the gate rather than after behaviour. Ugly, honest and harmless; renaming them changes nothing that runs.
 - `sim.py` at 32 lines is a facade that only dispatches. That is the executor seam working, not an anaemic module.
-- `runner.py` at root is a shim launcher. It is two lines of convenience and does not need a home in a package.
+- `runner.py` at root is a shim launcher. Its body is one import and one call and it does not need a home in a package.
 
 ## Not debt (do not "fix" these)
 

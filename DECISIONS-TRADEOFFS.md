@@ -431,12 +431,14 @@ running. The work happens on the interface thread.
 The macOS disk image is built with PyInstaller, signed, notarised and stapled,
 both the image and the application inside it. The build refuses to run without
 notarisation credentials unless a local test build is asked for explicitly;
-that output is labelled unreleasable. Credentials come from a keychain profile.
+that output is labelled unreleasable. Credentials come from a per-app keychain
+profile unless an account and app-specific password are supplied for a machine
+with no keychain.
 
 - **Rather than:** skipping notarisation when credentials were missing, which
   shipped images that would not open on any other machine.
-- **Gains:** a released image opens offline; no secret sits in the environment
-  or in process arguments.
+- **Gains:** a released image opens offline; on the keychain route no secret
+  sits in the environment or in process arguments.
 - **Costs:** an Apple developer account; a different packager from Windows.
 
 ### The Flatpak builds offline, Kerberos included

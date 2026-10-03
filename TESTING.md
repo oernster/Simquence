@@ -26,8 +26,8 @@ three and read the exit code of each. A default-rules `ruff check` reports a
 backlog here; ruff has not been adopted, so its findings are a reading rather
 than a regression ([TECH_DEBT.md](TECH_DEBT.md) says why).
 
-**A full run takes about fifteen seconds.** Measured on 2026-10-02: 559 tests
-passed in 14 seconds on Windows.
+**A full run takes under half a minute.** Measured on 2026-10-03: 559 tests
+passed in 22 seconds on Windows.
 
 **Read the exit code, never the text.** The run prints the coverage table then
 one summary line. A search of the output for a result word is still not safe,
@@ -51,7 +51,8 @@ Outside the floor:
 | `installer/*` | the setup program, for the same reason: it acts on a real filesystem and a real registry |
 | `generate_scripts.py` | a local helper, not part of the product |
 
-Then any line marked `# pragma: no cover`. Counted on 2026-10-02: 48 of them,
+Then any line marked `# pragma: no cover`. Counted on 2026-10-03: 48 of them
+outside `tests/`,
 most in the interface (16 in `latencylab_ui/focus_cycle.py`), 7 in the
 installer's operations and 3 in the legacy engine. Read 100% as "100% of the
 lines measured".
@@ -106,7 +107,7 @@ for code nobody has written yet.
 | `test_ui_dependency_boundaries.py` | the core imports no Qt and never references the interface package |
 | `test_core_boundaries_and_packaging.py` | the pure core modules never touch the filesystem; `io` stays the module that loads; the wheel contains only the headless core |
 | `test_codebase_size_limits.py` | the 400 line cap, the danger band below it and no stale entry in the build-script exemption |
-| `test_version_single_source.py` | `VERSION` is the only declared version and the stamping behaves |
+| `test_version_single_source.py` | the core and the interface report the number in `VERSION` and the site stamping behaves; it does not scan other files for a stray version |
 
 **A guard is not trusted until it has been seen to fail.** A new guard is
 proved by planting the violation it exists to catch and reading the failure,

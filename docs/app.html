@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>The LatencyLab application: explicit models, seeded runs and literal output</title>
-<meta name="description" content="The LatencyLab desktop application and CLI: explicit models of tasks, events, queues and contention, many seeded runs, critical paths and percentiles, with screenshots and the plain-file outputs every run writes.">
+<meta name="description" content="The LatencyLab desktop application and CLI: explicit models of tasks, events, queues and contention, many seeded runs, critical paths and percentiles, with screenshots and the plain files the CLI writes.">
 <meta name="author" content="Oliver Ernster">
 <meta name="robots" content="index, follow">
 <meta name="theme-color" content="#181818">
@@ -51,7 +51,7 @@
         <div class="feature"><div class="fnum">01</div><h3>Explicit models</h3><p>A model is your architecture written down: tasks, the events that trigger them and the resources they queue behind. Nothing is inferred and nothing is hidden. The model is what you reason about.</p></div>
         <div class="feature"><div class="fnum">02</div><h3>Many seeded runs</h3><p>One run tells you nothing; the spread across hundreds is the finding. Every run is seeded, so behaviour stays reproducible across versions. At scale the dominant behaviours become clearer, not noisier.</p></div>
         <div class="feature"><div class="fnum">03</div><h3>Critical paths and percentiles</h3><p>The critical path is the chain of tasks and waits that decided how long the user waited in one run. Concrete critical paths name the work; percentiles are split for UI events and overall makespan because they answer different questions: UI-event percentiles describe when the interface responded to the user; makespan percentiles describe when the whole piece of work finished.</p></div>
-        <div class="feature"><div class="fnum">04</div><h3>Yours, on your machine</h3><p>The model is a plain JSON file and every output is a plain file beside it. A local CLI plus an optional desktop UI. No account, no server, no instrumentation of production code. Your models and results never leave your machine; the desktop app's one outbound call is an anonymous daily check of GitHub releases for a newer version, with an update prompt you can download, skip or defer.</p></div>
+        <div class="feature"><div class="fnum">04</div><h3>Yours, on your machine</h3><p>The model is a plain JSON file and every result is plain text: JSON and CSV from the CLI, a zip of text files from the desktop app. A local CLI plus an optional desktop UI. No account, no server, no instrumentation of production code. Your models and results never leave your machine; the desktop app's one outbound call is an anonymous daily check of GitHub releases for a newer version, with an update prompt you can download, skip or defer.</p></div>
       </div>
     </div>
   </section>
@@ -125,8 +125,10 @@
         <a class="btn btn-ghost" href="guide.html">Read the guide first</a>
       </div>
       <p class="section-sub">Underneath the desktop application is a Python
-        library with a CLI in front of it, reading a JSON execution model. Every
-        run writes plain files you can plot or diff, whichever way you drove it.</p>
+        library with a CLI in front of it, reading a JSON execution model. The CLI
+        writes the three plain files below, ready to plot or diff; the desktop
+        application exports the same results as one zip holding a text summary
+        and one text file per run.</p>
       <div class="outputs">
         <div class="output"><code>summary.json</code><p>Aggregate latency and contention statistics for the whole run.</p></div>
         <div class="output"><code>runs.csv</code><p>Per-run metrics, suitable for analysis or plotting.</p></div>

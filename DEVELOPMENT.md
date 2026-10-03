@@ -102,7 +102,10 @@ python builddmg.py
 Checks for PyInstaller, `create-dmg`, the Xcode signing tools, every runtime
 dependency and the notarization credentials before building anything, then
 stamps, builds the bundle with PyInstaller, signs it, notarizes it and writes
-`latencylab.dmg`. `APPLE_ID` and `APPLE_APP_PASSWORD` must both be set;
+`latencylab.dmg`. Notarization uses the keychain profile `LatencyLab`, stored
+once with `xcrun notarytool store-credentials`; `APPLE_KEYCHAIN_PROFILE` names a
+different profile. Setting both `APPLE_ID` and `APPLE_APP_PASSWORD` (an
+app-specific password) uses that pair instead, for a machine with no keychain.
 `DEVELOPER_ID_APPLICATION` names the signing identity. `ALLOW_UNNOTARIZED=1`
 builds without notarizing, for local testing only.
 
@@ -136,7 +139,8 @@ python generate_icons.py
 ## Versioning
 
 `VERSION` at the repository root is the only place a version is written; a
-structural test fails if another file declares one. The runtime and
+test fails if the version the core or the interface reports differs from it.
+Nothing scans other files for a stray version string. The runtime and
 `pyproject.toml` read it; `stamp_version.py` writes it into the delimited tokens
 of the site under `docs/`. The Windows and macOS build scripts stamp before they
 build. Run `python stamp_version.py` by hand after a bump otherwise.

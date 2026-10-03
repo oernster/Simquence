@@ -26,7 +26,7 @@ The intent is to keep the core deterministic, stdlib-only and testable, while ke
    - The refusal lives in [`latencylab.cancellation.RunCancelled`](latencylab/cancellation.py:29) and is covered by [`tests/test_cancellation.py`](tests/test_cancellation.py:1).
 7. **Every shipped example validates.** The examples are discovered from disk rather than named, so adding one to `examples/` opts it into the check automatically.
    - Enforced by [`tests/test_validation.py`](tests/test_validation.py:70).
-8. **One version string exists in the repository**, the root `VERSION` file.
+8. **Every version the code reports is read from the root `VERSION` file.** The core and the interface must both report the number that file holds.
    - Enforced by [`tests/test_version_single_source.py`](tests/test_version_single_source.py:1).
 
 ## High-level component map
@@ -73,7 +73,7 @@ The GUI code is intentionally split into smaller modules to keep individual file
   - Panel policies (opening the composer, toggling Distributions) ->
     [`latencylab_ui.main_window_dock_switching`](latencylab_ui/main_window_dock_switching.py:1)
   - File IO (open model / export last outputs) ->
-    [`latencylab_ui.main_window_file_io.export_runs()`](latencylab_ui/main_window_file_io.py:28)
+    [`latencylab_ui.main_window_file_io.export_runs()`](latencylab_ui/main_window_file_io.py:29)
   - Top bar construction and its reading order ->
     [`latencylab_ui.main_window_top_bar.build_top_bar()`](latencylab_ui/main_window_top_bar.py:80)
   - Each kind of top bar button and deterministic button sizing ->
@@ -115,8 +115,8 @@ The GUI code is intentionally split into smaller modules to keep individual file
   - Critical-path frequency chart -> [`latencylab_ui.critical_path_frequency_widget`](latencylab_ui/critical_path_frequency_widget.py:1)
 
 - Model Composer (authoring UI, a modal two-pane dialog):
-  - Dialog and model state -> [`latencylab_ui.model_composer_dialog.ModelComposerDialog`](latencylab_ui/model_composer_dialog.py:59)
-  - Left pane, what the model is made of -> [`latencylab_ui.model_composer_tree.ComposerTree`](latencylab_ui/model_composer_tree.py:47)
+  - Dialog and model state -> [`latencylab_ui.model_composer_dialog.ModelComposerDialog`](latencylab_ui/model_composer_dialog.py:60)
+  - Left pane, what the model is made of -> [`latencylab_ui.model_composer_tree.ComposerTree`](latencylab_ui/model_composer_tree.py:46)
   - Pane assembly and dialog sizing -> [`latencylab_ui.model_composer_panes`](latencylab_ui/model_composer_panes.py:1)
   - Editors:
     - System -> [`latencylab_ui.model_composer_system_editor.SystemEditor`](latencylab_ui/model_composer_system_editor.py:9)
@@ -523,7 +523,7 @@ were eleven. Everything past the second task was found by scrolling and then
 remembering where it was.
 
 A model is not a document. It is a handful of named things, so
-[`ComposerTree`](latencylab_ui/model_composer_tree.py:47) lists them on the left
+[`ComposerTree`](latencylab_ui/model_composer_tree.py:46) lists them on the left
 and the right pane shows the one that is selected. The sections are fixed,
 because they are the parts a model HAS rather than anything the user creates;
 only Tasks has children, because tasks are the only part there can be many of
@@ -543,7 +543,7 @@ It is a modal dialog rather than a dock, because composing is something you
 go and do rather than keep half an eye on. That removed a policy rather than
 moving one: the composer and Distributions used to share the right-hand area, so
 opening either was a question about the other. Opening the composer is now
-[`open_model_composer()`](latencylab_ui/main_window_dock_switching.py:10), which
+[`open_model_composer()`](latencylab_ui/main_window_dock_switching.py:12), which
 asks nothing about layout. It is `show()` rather than `exec()`: both are modal,
 because the dialog says it is; the difference is that `exec` also starts a
 nested event loop and does not return until the dialog closes, which turns
