@@ -11,9 +11,12 @@ built, so a missing one costs a second rather than a failed ten-minute run.
 Signing uses DEVELOPER_ID_APPLICATION if set. Notarisation is mandatory: a
 Developer ID signature alone is not enough, because since macOS 10.15 Gatekeeper
 rejects signed-but-unnotarised apps with "Apple could not verify ... is free of
-malware". APPLE_ID and APPLE_APP_PASSWORD must both be set or the build stops
-before anything is built. Set ALLOW_UNNOTARIZED=1 for a local test build; the
-result must never be published as a release artifact.
+malware". notarytool authenticates with the keychain profile LatencyLab by
+default (APPLE_KEYCHAIN_PROFILE names a different one). When APPLE_ID and
+APPLE_APP_PASSWORD are both set, that pair is used instead; a password that is
+not app-specific in shape stops the build before anything is built. Set
+ALLOW_UNNOTARIZED=1 for a local test build; the result must never be published
+as a release artifact.
 
 This is a build script. It is exempt from the size cap and from the coverage
 gate.
@@ -86,7 +89,7 @@ APPLE_TEAM_ID = os.environ.get("APPLE_TEAM_ID", "W7K465GKFJ")
 #     --apple-id <id> --team-id <team> --password <app-specific>
 # One profile per app means a leaked credential can be revoked for a single
 # app. Stated explicitly rather than derived from a display name: the profile
-# is a fact registered with Apple, and deriving it would silently change which
+# is a fact registered with Apple; deriving it would silently change which
 # credential the build looks for if that name were ever edited.
 # APPLE_KEYCHAIN_PROFILE overrides it.
 NOTARY_PROFILE = os.environ.get("APPLE_KEYCHAIN_PROFILE", "") or "LatencyLab"
@@ -98,7 +101,7 @@ APP_SPECIFIC_PASSWORD_RE = re.compile(r"^[a-z]{4}-[a-z]{4}-[a-z]{4}-[a-z]{4}$")
 
 # Escape hatch for local test builds. Distribution builds must never set this:
 # an unnotarised DMG is rejected by Gatekeeper on every machine but the one that
-# signed it, and the failure is invisible at build time.
+# signed it; the failure is invisible at build time.
 ALLOW_UNNOTARIZED = os.environ.get("ALLOW_UNNOTARIZED", "") == "1"
 # Notarisation is the default and the keychain profile always resolves, so the
 # only way to skip it is to ask for that explicitly.
@@ -328,8 +331,8 @@ def require_notarisation_credentials() -> None:
                 "An Apple account password is rejected by the notary service with\n"
                 "'HTTP status code: 401. Invalid credentials'.\n"
                 "Generate one at https://appleid.apple.com (Sign-In and Security,\n"
-                "App-Specific Passwords), or leave both variables unset and store\n"
-                f"the credential in the keychain as profile {NOTARY_PROFILE}."
+                "App-Specific Passwords). Alternatively leave both variables unset\n"
+                f"and store the credential in the keychain as profile {NOTARY_PROFILE}."
             )
         print(f"Notarising as {APPLE_ID} (team {APPLE_TEAM_ID})")
         return
@@ -434,7 +437,7 @@ def check_runtime_dependencies() -> None:
 def redact(cmd: list[str]) -> str:
     """Render a command with the value after --password masked.
 
-    run() echoes every command it runs, and CalledProcessError repeats the whole
+    run() echoes every command it runs; CalledProcessError repeats the whole
     argument list in its traceback. Both would otherwise copy the app-specific
     password into build logs and CI output.
     """
