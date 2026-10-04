@@ -14,9 +14,20 @@ surface needs a different speed, the speed is wrong everywhere.
 They are also PIXELS, which is a real constraint on what this can be attached
 to. A QTextEdit or QTextBrowser scrolls in pixels; a QPlainTextEdit scrolls in
 LINES, so the same "one unit" that reads as a gentle drift on one becomes a
-whole line jumping on the other, and the fast rewind becomes fifteen lines a
+whole line jumping on the other; the fast rewind becomes fifteen lines a
 tick. Measured on the same three hundred lines of text: 4348 units of travel
 against 293. Attach this to pixel-scrolling surfaces only.
+
+Two later corrections, Stellody's, ported through postal-gambit:
+
+- A dialog that focuses something inside the surface as it opens is not a
+  reader taking hold; the long opening stillness would silently become the
+  short manual one. Focus arrivals are ignored until the start hold is spent;
+  the flag clears the moment that hold runs out rather than on the first
+  movement, so a reader arriving in between is not missed.
+- A surface frozen under a modal ignores INPUT as well as time. A frozen
+  surface has no reader by definition, so the suspension itself is gated on
+  the freeze rather than each watcher.
 """
 
 from enum import Enum, auto
@@ -66,6 +77,7 @@ class AutoScroller(QObject):
         self._phase = Phase.PAUSE_TOP
         self._wait_ms = START_HOLD_MS
         self._ticks_to_step = TICKS_PER_DESCENT
+        self._opening = True
 
         area.viewport().installEventFilter(self)
         area.installEventFilter(self)
@@ -89,9 +101,12 @@ class AutoScroller(QObject):
         """Hand the surface to the reader, for a while.
 
         Never a disable: taking over by hand must not switch the feature off for
-        the rest of the surface's life.
+        the rest of the surface's life. Gated on the freeze, so nothing reaching
+        a surface beneath a modal can corrupt the state the freeze preserves.
         """
 
+        if self._is_frozen():
+            return
         self._phase = Phase.MANUAL
         self._wait_ms = MANUAL_RESUME_MS
 
@@ -110,8 +125,11 @@ class AutoScroller(QObject):
         A child taking focus never sees the surface's own event filter, so the
         application-wide signal plus an ancestry test is the only way to catch
         it. This is also what stops the cycle fighting keyboard navigation.
+        Ignored through the start hold: opening focus is not a reader.
         """
 
+        if self._opening:
+            return
         if new is not None and (new is self._area or self._area.isAncestorOf(new)):
             self._suspend()
 
@@ -144,6 +162,8 @@ class AutoScroller(QObject):
             self._wait_ms -= TICK_MS
             if self._wait_ms > 0:
                 return
+            # The opening stillness is over, so focus now means a reader.
+            self._opening = False
             self._phase = self._phase_after_wait(bar)
             return
 

@@ -42,7 +42,9 @@ class AutoScroller(QObject):
 
     Holds still on open, descends slowly, holds at the end, rewinds fast and
     repeats. Manual input suspends it, never disables it; a modal above the
-    surface freezes it in place.
+    surface freezes it in place and a frozen surface takes no input. Focus
+    arriving during the start hold is the dialog opening, not a reader, so it
+    is ignored until that hold is spent.
     """
 
     def __init__(self, area: QAbstractScrollArea) -> None:
@@ -51,6 +53,7 @@ class AutoScroller(QObject):
         self._phase = Phase.PAUSE_TOP
         self._wait_ms = START_HOLD_MS
         self._ticks_to_step = TICKS_PER_DESCENT
+        self._opening = True
 
         area.viewport().installEventFilter(self)
         area.installEventFilter(self)
@@ -69,6 +72,9 @@ class AutoScroller(QObject):
         self._timer.start(TICK_MS)
 
     def _suspend(self) -> None:
+        """Hand the surface to the reader for a while; never while frozen."""
+        if self._is_frozen():
+            return
         self._phase = Phase.MANUAL
         self._wait_ms = MANUAL_RESUME_MS
 
@@ -82,6 +88,8 @@ class AutoScroller(QObject):
         return super().eventFilter(watched, event)
 
     def _on_focus_changed(self, _old: QWidget | None, new: QWidget | None) -> None:
+        if self._opening:
+            return
         if new is not None and (new is self._area or self._area.isAncestorOf(new)):
             self._suspend()
 
@@ -102,6 +110,7 @@ class AutoScroller(QObject):
             self._wait_ms -= TICK_MS
             if self._wait_ms > 0:
                 return
+            self._opening = False
             self._phase = self._phase_after_wait(bar)
             return
 

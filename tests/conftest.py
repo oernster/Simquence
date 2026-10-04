@@ -6,6 +6,10 @@ from pathlib import Path
 
 import pytest
 
+# The scroller tests import their shared harness before loading it as a plugin;
+# marking it here first keeps its assertions rewritten (and imports no Qt).
+pytest.register_assert_rewrite("scroller_harness")
+
 
 @pytest.fixture(scope="session", autouse=True)
 def _qt_offscreen() -> None:

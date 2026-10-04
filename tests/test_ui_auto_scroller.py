@@ -1,63 +1,63 @@
+"""The reading cycle, driven tick by tick, over BOTH copies of the scroller.
+
+The fixtures and helpers live in `scroller_harness`, shared with the tests of
+the two later corrections in `test_ui_auto_scroller_corrections.py`.
+"""
+
 from __future__ import annotations
 
-import pytest
+from PySide6.QtCore import QEvent
+from PySide6.QtWidgets import (
+    QPlainTextEdit,
+    QTextBrowser,
+    QTextEdit,
+    QVBoxLayout,
+    QWidget,
+)
+from scroller_harness import (
+    DESCENT_TICKS,
+    FITS_SIZE,
+    HAND_POSITION,
+    LONG_TEXT,
+    PANE_H,
+    PANE_W,
+    app_scroller,
+    attach,
+    hand_events,
+    installer_scroller,
+    reading,
+    run_ticks,
+    ticks_for,
+)
 
-from PySide6.QtWidgets import QApplication, QDialog, QPlainTextEdit, QWidget
+pytest_plugins = ["scroller_harness"]
 
-from latencylab_ui import auto_scroller
-from latencylab_ui.auto_scroller import AutoScroller, Phase, attach
-
-# Enough text that the pane must overflow whatever the offscreen metrics are.
-LONG_TEXT = "\n".join(f"line {n}" for n in range(400))
-
-PANE_W = 200
-PANE_H = 80
+# How far below a pixel surface a line surface travels, at the least.
+PIXELS_PER_LINE_FLOOR = 5
 
 
-@pytest.fixture()
-def app() -> QApplication:
-    return QApplication.instance() or QApplication([])
+def test_the_constants_are_kept_identical_in_both_copies() -> None:
+    names = (
+        "TICK_MS",
+        "START_HOLD_MS",
+        "DESCENT_PX",
+        "TICKS_PER_DESCENT",
+        "BOTTOM_HOLD_MS",
+        "REWIND_PX",
+        "TOP_HOLD_MS",
+        "MANUAL_RESUME_MS",
+    )
+    for name in names:
+        assert getattr(app_scroller, name) == getattr(installer_scroller, name)
 
 
-@pytest.fixture()
-def pane(app: QApplication) -> QPlainTextEdit:
-    widget = QPlainTextEdit()
-    widget.setReadOnly(True)
-    widget.setPlainText(LONG_TEXT)
-    widget.resize(PANE_W, PANE_H)
-    widget.show()
-    app.processEvents()
-    yield widget
-    widget.close()
+def test_every_reading_surface_scrolls_in_pixels(qt_app) -> None:
+    """A QPlainTextEdit counts LINES, so the pixel pace would race on it.
 
-
-def _run_ticks(scroller: AutoScroller, count: int) -> None:
-    """Drive the cycle by hand.
-
-    Real time is never waited on: a five-second hold would be five seconds of
-    test, and a test that sleeps is a test nobody runs.
+    The same one-unit step that reads as a gentle drift on a pixel-scrolling
+    widget becomes a whole line jumping; the fast rewind becomes fifteen lines
+    a tick. That is how three of these dialogs once shipped, reported as jerky.
     """
-
-    for _ in range(count):
-        scroller._tick()
-
-
-def _ticks_for(milliseconds: int) -> int:
-    return milliseconds // auto_scroller.TICK_MS
-
-
-def test_every_reading_surface_scrolls_in_pixels(app) -> None:
-    """The pace constants are pixels, so a line-scrolling surface breaks them.
-
-    A QPlainTextEdit's scrollbar counts LINES: the same one-unit step that
-    reads as a gentle drift on a pixel-scrolling widget becomes a whole line
-    jumping, and the fast rewind becomes fifteen lines a tick. That is exactly
-    how three of these dialogs shipped before it was reported as jerky. The
-    two are indistinguishable by eye in code, so the difference is measured.
-    """
-
-    from PySide6.QtWidgets import QTextEdit, QVBoxLayout, QWidget
-
     from latencylab_ui.about_dialog import AboutDialog, AboutDialogContent
     from latencylab_ui.how_to_read_dialog import HowToReadDialog
     from latencylab_ui.licence_dialog import LicenceDialog
@@ -66,272 +66,169 @@ def test_every_reading_surface_scrolls_in_pixels(app) -> None:
     host = QWidget()
     QVBoxLayout(host)
     host.show()
-    app.processEvents()
-
+    qt_app.processEvents()
+    content = AboutDialogContent(title="LatencyLab", body="<p>x</p>")
     dialogs = [
         HowToReadDialog(host),
         LicenceDialog(host),
         MainLicenceDialog(host),
-        AboutDialog(
-            host, content=AboutDialogContent(title="LatencyLab", body="<p>x</p>")
-        ),
+        AboutDialog(host, content=content),
     ]
-
     for dialog in dialogs:
         panes = dialog.findChildren(QTextEdit)
         assert panes, f"{type(dialog).__name__} has no pixel-scrolling pane"
-        for pane in panes:
-            assert not isinstance(pane, QPlainTextEdit)
+        for found in panes:
+            assert not isinstance(found, QPlainTextEdit)
         dialog.close()
-
     host.close()
-    app.processEvents()
+    qt_app.processEvents()
 
 
-def test_a_pixel_surface_travels_far_further_than_a_line_surface(app) -> None:
+def test_a_pixel_surface_travels_far_further_than_a_line_surface(qt_app) -> None:
     """The measurement behind the rule above, so the number is not folklore."""
-
-    from PySide6.QtWidgets import QTextBrowser
-
     by_lines = QPlainTextEdit()
     by_lines.setPlainText(LONG_TEXT)
-    by_lines.resize(PANE_W, PANE_H)
-    by_lines.show()
-
     by_pixels = QTextBrowser()
     by_pixels.setPlainText(LONG_TEXT)
-    by_pixels.resize(PANE_W, PANE_H)
-    by_pixels.show()
-    app.processEvents()
-
-    assert by_pixels.verticalScrollBar().maximum() > (
-        by_lines.verticalScrollBar().maximum() * 5
-    )
-
-    by_lines.close()
-    by_pixels.close()
+    for widget in (by_lines, by_pixels):
+        widget.resize(PANE_W, PANE_H)
+        widget.show()
+    qt_app.processEvents()
+    lines = by_lines.verticalScrollBar().maximum()
+    assert by_pixels.verticalScrollBar().maximum() > lines * PIXELS_PER_LINE_FLOOR
+    for widget in (by_lines, by_pixels):
+        widget.close()
 
 
-def test_a_fresh_surface_holds_still_before_it_reads(pane, app) -> None:
-    """The reader orients before anything moves."""
-
-    scroller = attach(pane)
-    bar = pane.verticalScrollBar()
-    assert bar.maximum() > 0, "the pane must overflow for any of this to apply"
-
-    _run_ticks(scroller, _ticks_for(auto_scroller.START_HOLD_MS) - 1)
+def test_a_fresh_surface_holds_still_before_it_reads(
+    scroller_module, long_pane
+) -> None:
+    module = scroller_module
+    scroller = attach(module, long_pane)
+    bar = long_pane.verticalScrollBar()
+    run_ticks(scroller, ticks_for(module, module.START_HOLD_MS) - 1)
     assert bar.value() == 0
-    assert scroller._phase is Phase.PAUSE_TOP
+    assert scroller._phase is module.Phase.PAUSE_TOP
+    run_ticks(scroller, 1)
+    assert scroller._phase is module.Phase.DOWN
+    assert bar.value() == 0
 
-    _run_ticks(scroller, 2)
-    assert scroller._phase is Phase.DOWN
 
+def test_the_descent_is_half_pace_and_the_rewind_is_not(
+    scroller_module, long_pane
+) -> None:
+    module = scroller_module
+    scroller = reading(module, long_pane)
+    bar = long_pane.verticalScrollBar()
+    run_ticks(scroller, DESCENT_TICKS)
+    assert bar.value() == DESCENT_TICKS // module.TICKS_PER_DESCENT
 
-def test_the_descent_is_half_pace_and_the_rewind_is_not(pane, app) -> None:
-    """Reading and repositioning are different jobs at different speeds."""
-
-    scroller = attach(pane)
-    bar = pane.verticalScrollBar()
-
-    _run_ticks(scroller, _ticks_for(auto_scroller.START_HOLD_MS) + 1)
-    assert scroller._phase is Phase.DOWN
-
-    start = bar.value()
-    _run_ticks(scroller, 20)
-    descended = bar.value() - start
-    assert descended == 20 // auto_scroller.TICKS_PER_DESCENT
-
-    # The rewind covers far more ground per tick than the descent does. Started
-    # from the bottom so the step has room: from ten pixels down it would clamp
-    # at zero and measure the clamp rather than the pace.
-    scroller._phase = Phase.UP
+    # From the bottom, so the step has room rather than clamping at zero.
+    scroller._phase = module.Phase.UP
     bar.setValue(bar.maximum())
     before = bar.value()
-    _run_ticks(scroller, 1)
-    assert before - bar.value() == auto_scroller.REWIND_PX
-    assert auto_scroller.REWIND_PX > auto_scroller.DESCENT_PX
+    run_ticks(scroller, 1)
+    assert before - bar.value() == module.REWIND_PX
 
 
-def test_the_cycle_turns_round_at_both_ends(pane, app) -> None:
-    scroller = attach(pane)
-    bar = pane.verticalScrollBar()
-
-    scroller._phase = Phase.DOWN
-    scroller._wait_ms = 0
+def test_the_cycle_turns_round_at_both_ends(scroller_module, long_pane) -> None:
+    module = scroller_module
+    scroller = reading(module, long_pane)
+    bar = long_pane.verticalScrollBar()
     bar.setValue(bar.maximum())
-    _run_ticks(scroller, auto_scroller.TICKS_PER_DESCENT)
-    assert scroller._phase is Phase.PAUSE_BOTTOM
+    run_ticks(scroller, module.TICKS_PER_DESCENT)
+    assert scroller._phase is module.Phase.PAUSE_BOTTOM
 
-    _run_ticks(scroller, _ticks_for(auto_scroller.BOTTOM_HOLD_MS) + 1)
-    assert scroller._phase is Phase.UP
+    run_ticks(scroller, ticks_for(module, module.BOTTOM_HOLD_MS) - 1)
+    assert bar.value() == bar.maximum(), "the tail is held for reading"
+    run_ticks(scroller, 1)
+    assert scroller._phase is module.Phase.UP
 
-    bar.setValue(bar.minimum())
-    _run_ticks(scroller, 1)
-    assert scroller._phase is Phase.PAUSE_TOP
+    run_ticks(scroller, bar.maximum() // module.REWIND_PX + 1)
+    assert bar.value() == bar.minimum()
+    run_ticks(scroller, 1)
+    assert scroller._phase is module.Phase.PAUSE_TOP
 
-    _run_ticks(scroller, _ticks_for(auto_scroller.TOP_HOLD_MS) + 1)
-    assert scroller._phase is Phase.DOWN
+    run_ticks(scroller, ticks_for(module, module.TOP_HOLD_MS))
+    assert scroller._phase is module.Phase.DOWN
 
 
-def test_reading_by_hand_suspends_and_then_resumes_in_place(pane, app) -> None:
-    """Taking over must never switch the feature off, nor rewind to the top."""
-
-    scroller = attach(pane)
-    bar = pane.verticalScrollBar()
-
-    scroller._phase = Phase.DOWN
-    scroller._wait_ms = 0
-    bar.setValue(50)
-
+def test_reading_by_hand_suspends_then_resumes_in_place(
+    scroller_module, long_pane
+) -> None:
+    """Taking over never switches the feature off, nor rewinds to the top."""
+    module = scroller_module
+    scroller = reading(module, long_pane)
+    bar = long_pane.verticalScrollBar()
+    bar.setValue(HAND_POSITION)
     scroller._suspend()
-    assert scroller._phase is Phase.MANUAL
+    assert scroller._phase is module.Phase.MANUAL
 
-    held = bar.value()
-    _run_ticks(scroller, _ticks_for(auto_scroller.MANUAL_RESUME_MS) - 1)
-    assert bar.value() == held, "nothing moves while the reader has it"
+    run_ticks(scroller, ticks_for(module, module.MANUAL_RESUME_MS) - 1)
+    assert bar.value() == HAND_POSITION, "nothing moves while the reader has it"
+    run_ticks(scroller, 1)
+    assert scroller._phase is module.Phase.DOWN
+    run_ticks(scroller, module.TICKS_PER_DESCENT)
+    assert bar.value() == HAND_POSITION + module.DESCENT_PX
 
-    _run_ticks(scroller, 2)
-    assert scroller._phase is Phase.DOWN
-    assert bar.value() == held, "and it carries on from there, not from the top"
 
-
-def test_a_manual_pause_at_the_very_bottom_rewinds(pane, app) -> None:
-    """Continuing downwards is not available, so the only way on is back."""
-
-    scroller = attach(pane)
-    bar = pane.verticalScrollBar()
-
+def test_a_manual_pause_at_the_very_bottom_rewinds(scroller_module, long_pane) -> None:
+    module = scroller_module
+    scroller = reading(module, long_pane)
+    bar = long_pane.verticalScrollBar()
     bar.setValue(bar.maximum())
     scroller._suspend()
-    _run_ticks(scroller, _ticks_for(auto_scroller.MANUAL_RESUME_MS) + 1)
-
-    assert scroller._phase is Phase.UP
-
-
-def test_focus_arriving_anywhere_inside_counts_as_reading_by_hand(pane, app) -> None:
-    """Otherwise the cycle fights the keyboard the moment someone tabs in."""
-
-    scroller = attach(pane)
-    scroller._phase = Phase.DOWN
-    scroller._wait_ms = 0
-
-    scroller._on_focus_changed(None, pane)
-    assert scroller._phase is Phase.MANUAL
-
-    scroller._phase = Phase.DOWN
-    scroller._on_focus_changed(None, None)
-    assert scroller._phase is Phase.DOWN
-
-    scroller._on_focus_changed(None, QWidget())
-    assert scroller._phase is Phase.DOWN, "an unrelated widget is not our business"
+    run_ticks(scroller, ticks_for(module, module.MANUAL_RESUME_MS))
+    assert scroller._phase is module.Phase.UP
 
 
-def test_a_wheel_or_a_keypress_on_the_surface_suspends_it(pane, app) -> None:
-    """The filter watches the viewport AND the widget, because they see
-    different halves of it: the viewport gets the wheel and the clicks, the
-    widget gets the keys.
-    """
+def test_wheel_click_and_key_suspend_and_nothing_else_does(
+    scroller_module, long_pane
+) -> None:
+    """The viewport sees the wheel and clicks; the widget sees the keys."""
+    module = scroller_module
+    scroller = reading(module, long_pane)
+    for watched, event in hand_events(long_pane):
+        scroller._phase = module.Phase.DOWN
+        assert scroller.eventFilter(watched, event) is False
+        assert scroller._phase is module.Phase.MANUAL
 
-    from PySide6.QtCore import QEvent, QPoint, QPointF, Qt
-    from PySide6.QtGui import QKeyEvent, QWheelEvent
-
-    scroller = attach(pane)
-
-    scroller._phase = Phase.DOWN
-    wheel = QWheelEvent(
-        QPointF(0, 0),
-        QPointF(0, 0),
-        QPoint(0, 0),
-        QPoint(0, -120),
-        Qt.MouseButton.NoButton,
-        Qt.KeyboardModifier.NoModifier,
-        Qt.ScrollPhase.NoScrollPhase,
-        False,
-    )
-    scroller.eventFilter(pane.viewport(), wheel)
-    assert scroller._phase is Phase.MANUAL
-
-    scroller._phase = Phase.DOWN
-    key = QKeyEvent(
-        QEvent.Type.KeyPress, Qt.Key.Key_Down, Qt.KeyboardModifier.NoModifier
-    )
-    scroller.eventFilter(pane, key)
-    assert scroller._phase is Phase.MANUAL
-
-    # Anything else passes straight through and leaves the cycle alone.
-    scroller._phase = Phase.DOWN
-    scroller.eventFilter(pane, QEvent(QEvent.Type.Show))
-    assert scroller._phase is Phase.DOWN
+    scroller._phase = module.Phase.DOWN
+    scroller.eventFilter(long_pane, QEvent(QEvent.Type.Show))
+    assert scroller._phase is module.Phase.DOWN
 
 
-def test_a_surface_that_fits_costs_nothing(app) -> None:
-    """Attaching to a pane with nothing to scroll is free rather than wrong."""
+def test_the_scrollbar_counts_as_reading_by_hand(scroller_module, long_pane) -> None:
+    module = scroller_module
+    scroller = reading(module, long_pane)
+    bar = long_pane.verticalScrollBar()
+    for signal in (bar.sliderPressed, bar.sliderReleased):
+        scroller._phase = module.Phase.DOWN
+        signal.emit()
+        assert scroller._phase is module.Phase.MANUAL
+    scroller._phase = module.Phase.DOWN
+    bar.sliderMoved.emit(HAND_POSITION)
+    assert scroller._phase is module.Phase.MANUAL
 
-    short = QPlainTextEdit()
+
+def test_a_surface_that_fits_costs_nothing(scroller_module, qt_app) -> None:
+    module = scroller_module
+    short = QTextBrowser()
     short.setPlainText("one line")
-    short.resize(400, 400)
+    short.resize(FITS_SIZE, FITS_SIZE)
     short.show()
-    app.processEvents()
-
-    scroller = attach(short)
+    qt_app.processEvents()
+    scroller = attach(module, short)
     assert short.verticalScrollBar().maximum() == 0
-
-    _run_ticks(scroller, _ticks_for(auto_scroller.START_HOLD_MS) * 2)
-    assert scroller._phase is Phase.PAUSE_TOP, "the hold was never even consumed"
-    assert short.verticalScrollBar().value() == 0
-
+    run_ticks(scroller, ticks_for(module, module.START_HOLD_MS) * 2)
+    assert scroller._phase is module.Phase.PAUSE_TOP, "the hold was never consumed"
+    assert scroller._wait_ms == module.START_HOLD_MS
     short.close()
 
 
-def test_a_modal_above_the_surface_freezes_it_rather_than_suspending_it(
-    pane, app
-) -> None:
-    """Frozen, not suspended: the hold that was running must still be running.
-
-    Two surfaces reading at once compete for the eye, so whatever sits beneath a
-    modal stops dead and resumes exactly where it was, with the same phase, the
-    same position and the same remaining wait.
-    """
-
-    scroller = attach(pane)
-    scroller._phase = Phase.DOWN
-    scroller._wait_ms = 0
-    pane.verticalScrollBar().setValue(30)
-
-    modal = QDialog()
-    modal.setModal(True)
-    modal.show()
-    app.processEvents()
-
-    if QApplication.activeModalWidget() is not modal:
-        modal.close()
-        pytest.skip("the offscreen platform did not make the dialog modal")
-
-    assert scroller._is_frozen() is True
-
-    position = pane.verticalScrollBar().value()
-    _run_ticks(scroller, 50)
-    assert pane.verticalScrollBar().value() == position
-    assert scroller._phase is Phase.DOWN
-
-    modal.close()
-    app.processEvents()
-    assert scroller._is_frozen() is False
-
-
-def test_a_modal_that_owns_the_surface_does_not_freeze_it(pane, app) -> None:
-    """The modal's OWN surfaces are exactly the ones that should still read."""
-
-    dialog = QDialog()
-    inner = QPlainTextEdit(dialog)
-    inner.setPlainText(LONG_TEXT)
-    dialog.setModal(True)
-    dialog.show()
-    app.processEvents()
-
-    scroller = attach(inner)
-    if QApplication.activeModalWidget() is dialog:
-        assert scroller._is_frozen() is False
-
-    dialog.close()
-    app.processEvents()
+def test_the_scroller_changes_no_focus_policy(scroller_module, qt_app) -> None:
+    """Focus is the reading pane's business; the scroller only watches it."""
+    area = QTextBrowser()
+    policies = (area.focusPolicy(), area.viewport().focusPolicy())
+    attach(scroller_module, area)
+    assert (area.focusPolicy(), area.viewport().focusPolicy()) == policies
