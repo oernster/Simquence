@@ -32,6 +32,7 @@ INSTALLER_MODULES = (
     "installer_bundle",
     "installer_lifecycle",
     "installer_theme",
+    "installer_reading_pane",
     "installer_widgets",
     "installer_window",
     "app",

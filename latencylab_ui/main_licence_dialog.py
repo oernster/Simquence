@@ -13,6 +13,7 @@ from PySide6.QtWidgets import (
 
 from latencylab_ui.auto_scroller import attach
 from latencylab_ui.first_stop_dialog import FirstStopDialog
+from latencylab_ui.pane_focus import follow_overflow
 
 from latencylab_ui.licence_dialog import LICENCE_UNAVAILABLE
 
@@ -45,6 +46,7 @@ class MainLicenceDialog(FirstStopDialog):
         text.setPlainText(_read_main_license_text())
         root.addWidget(text, 1)
         attach(text)
+        follow_overflow(text)
 
         buttons = QDialogButtonBox(QDialogButtonBox.StandardButton.Ok)
         buttons.accepted.connect(self.accept)

@@ -1,9 +1,9 @@
 from __future__ import annotations
 
-"""Assembling the composer's two panes, and sizing the window they sit in.
+"""Assembling the composer's two panes; sizing the window they sit in.
 
 Split out of the dialog for the reason every other composer module was: the
-dialog holds the model's state and the rules around it, and this holds where
+dialog holds the model's state and the rules around it; this holds where
 things are put. Neither is improved by being read through the other.
 """
 
@@ -19,6 +19,7 @@ from PySide6.QtWidgets import (
 )
 
 from latencylab_ui.model_composer_tree import SECTIONS
+from latencylab_ui.pane_focus import as_pane
 
 # What a page's content is inset by, matching the old column so the editors are
 # not suddenly tighter against an edge than they were.
@@ -69,6 +70,9 @@ def scrolling_page(inner: QWidget) -> QScrollArea:
     """
 
     area = QScrollArea()
+    # Chrome round a page of controls: the controls are the stops and Tab into
+    # one scrolls it into view, so the page itself never is one.
+    as_pane(area)
     area.setWidgetResizable(True)
     area.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
 

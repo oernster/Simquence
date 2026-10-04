@@ -13,6 +13,7 @@ from PySide6.QtWidgets import (
 
 from latencylab_ui.auto_scroller import attach
 from latencylab_ui.first_stop_dialog import FirstStopDialog
+from latencylab_ui.pane_focus import follow_overflow
 
 # Shown when a packaged build did not stage the licence text beside the module
 # that reads it. Also imported by main_licence_dialog, so both dialogs degrade
@@ -59,6 +60,7 @@ class LicenceDialog(FirstStopDialog):
         text.setPlainText(_read_lgpl3_text())
         root.addWidget(text, 1)
         attach(text)
+        follow_overflow(text)
 
         buttons = QDialogButtonBox(QDialogButtonBox.StandardButton.Ok)
         buttons.accepted.connect(self.accept)

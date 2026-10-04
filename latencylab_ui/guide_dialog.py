@@ -3,8 +3,8 @@ from __future__ import annotations
 """The Guide: how to use the application, in the order you would need it.
 
 Distinct from How to Read, which is about interpreting output and says nothing
-about which button to press. This one is the other half: press this, then this,
-and here is why you would pick that setting rather than the other one.
+about which button to press. This one is the other half: press this, then this;
+here is why you would pick that setting rather than the other one.
 
 Non-modal, like How to Read and for the same reason: guidance you cannot keep
 open beside the thing it describes is guidance you have to memorise first.
@@ -19,9 +19,10 @@ from PySide6.QtWidgets import QDialogButtonBox, QTextBrowser, QVBoxLayout, QWidg
 from latencylab_ui.auto_scroller import attach
 from latencylab_ui.first_stop_dialog import FirstStopDialog
 from latencylab_ui.guide_text import GUIDE_HTML, GUIDE_TITLE
+from latencylab_ui.pane_focus import follow_overflow
 
 # Wider than How to Read, because this one carries numbered steps and bold run
-# ins that wrap badly in a narrow column, and tall enough that a step and its
+# ins that wrap badly in a narrow column. Tall enough that a step and its
 # reason are on screen together.
 DIALOG_W = 680
 DIALOG_H = 760
@@ -53,6 +54,7 @@ class GuideDialog(FirstStopDialog):
         text.setHtml(GUIDE_HTML)
         root.addWidget(text, 1)
         attach(text)
+        follow_overflow(text)
 
         buttons = QDialogButtonBox(QDialogButtonBox.StandardButton.Ok)
         buttons.accepted.connect(self.accept)

@@ -86,3 +86,34 @@ def test_about_dialog_opens_without_a_badge_when_the_assets_are_absent(
 
     dlg.close()
     app.processEvents()
+
+
+def test_about_dialog_is_tall_enough_to_show_its_whole_text() -> None:
+    """Help | About shows every line of its text with no scrolling."""
+
+    app = _ensure_qapp()
+
+    from PySide6.QtWidgets import QTextBrowser, QWidget
+
+    from latencylab_ui.about_dialog import AboutDialog, AboutDialogContent
+    from latencylab_ui.main_window_menus import _about_text
+    from latencylab_ui.theme import Theme, tokens_for
+    from latencylab_ui.theme_stylesheet import build_stylesheet
+
+    previous = app.styleSheet()
+    # The real sheet: its min-height used to replace the body's own minimum.
+    app.setStyleSheet(build_stylesheet(tokens_for(Theme.DARK)))
+    try:
+        parent = QWidget()
+        dlg = AboutDialog(
+            parent, content=AboutDialogContent(title="X", body=_about_text())
+        )
+        dlg.show()
+        app.processEvents()
+        body = dlg.findChild(QTextBrowser, "about_body")
+        assert body.verticalScrollBar().maximum() == 0
+        assert body.document().size().height() <= body.viewport().height()
+        dlg.close()
+    finally:
+        app.setStyleSheet(previous)
+        app.processEvents()

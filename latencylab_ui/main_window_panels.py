@@ -17,6 +17,7 @@ from PySide6.QtWidgets import (
 
 from latencylab_ui import main_window_actions as actions
 from latencylab_ui.outputs_view import OutputsView
+from latencylab_ui.pane_focus import follow_overflow
 
 # How many runs a fresh window offers. Enough that a distribution has a shape,
 # few enough that the first run returns while the user is still watching.
@@ -101,6 +102,7 @@ def build_left_panel(window) -> QWidget:
         "distribution and the chain of work that caused it, from a simulated "
         "architecture, in under a minute."
     )
+    follow_overflow(window._summary_text)
     summary_layout.addWidget(window._summary_text)
 
     crit_box = QGroupBox("Critical path")
@@ -129,6 +131,7 @@ def build_left_panel(window) -> QWidget:
     window._critical_path_text.setHorizontalScrollBarPolicy(
         Qt.ScrollBarPolicy.ScrollBarAlwaysOff
     )
+    follow_overflow(window._critical_path_text)
     crit_layout.addWidget(window._critical_path_text)
 
     window._outputs_view = OutputsView(

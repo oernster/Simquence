@@ -30,7 +30,7 @@ from latencylab_ui.theme_tokens import DARK_TOKENS, LIGHT_TOKENS, ThemeTokens
 
 _TEMPLATE = """
 /* `outline: none` removes Qt's own dotted focus rectangle around a control's
-   text. The ring IS the focus indicator, and two indicators read as a bug. */
+   text. The ring IS the focus indicator; two indicators read as a bug. */
 QWidget {{
   font-size: 13px;
   outline: none;
@@ -83,7 +83,7 @@ QPushButton:disabled {{
 }}
 
 /* A control that has just become usable, saying so. The same green as hover
-   and focus on purpose: all three mean "you can use this", and a fourth colour
+   and focus on purpose: all three mean "you can use this"; a fourth colour
    would be a fourth thing to learn. Driven by `attention_flash`, which only
    ever sets this on an enabled control, so it cannot argue with the red. */
 QPushButton[flash="true"] {{
@@ -110,7 +110,7 @@ QPushButton[role="theme-toggle"] {{
   padding: 2px 8px;
 }}
 
-/* Compose keeps the icon buttons' height, and its CHECKED state is the visible
+/* Compose keeps the icon buttons' height; its CHECKED state is the visible
    answer to "is the composer open". Object-name specificity means these ring
    rules have to be repeated here or the button shows none. */
 QPushButton#compose_model_btn {{
@@ -139,7 +139,7 @@ QPushButton#compose_model_btn:disabled {{
 
 /* The distributions toggle answers the same question from the other side: the
    two docks share the right-hand area, so at most one of this pair is checked.
-   It carries the application's own mark rather than a drawn glyph, and a
+   It carries the application's own mark rather than a drawn glyph; a
    picture cannot be recoloured on check the way a stroke can, so the fill and
    the ink do all of the saying here. Declaring only those two leaves the
    generic ring rules in force rather than overriding them by id. */
@@ -151,8 +151,8 @@ QPushButton#distributions_btn:checked {{
 /* Inputs carry the same 2px transparent border as the buttons so that gaining
    a ring never moves them either.
 
-   `QAbstractSpinBox` rather than `QSpinBox`, and `QLineEdit` named explicitly.
-   A Qt type selector matches a class and its SUBCLASSES, and QDoubleSpinBox is
+   `QAbstractSpinBox` rather than `QSpinBox`; `QLineEdit` named explicitly.
+   A Qt type selector matches a class and its SUBCLASSES. QDoubleSpinBox is
    a sibling of QSpinBox rather than a subclass, so a rule written for the one
    never reached the other: measured in the composer, a QSpinBox stood 51px tall
    beside a QDoubleSpinBox at 19px and a QLineEdit at 22px, three controls doing
@@ -184,19 +184,19 @@ QComboBox QLineEdit {{
   padding: 0;
 }}
 
+/* Controls only. A text view (the run output, a licence, the Guide) is a pane
+   holding words, not a control, so it keeps its resting border in every state:
+   focus, hover and disabled alike. A ring round the whole page after a Tab or
+   a click told the reader nothing they could act on. */
 QAbstractSpinBox:enabled:focus,
 QComboBox:enabled:focus,
-QLineEdit:enabled:focus,
-QPlainTextEdit:enabled:focus,
-QTextBrowser:enabled:focus {{
+QLineEdit:enabled:focus {{
   border-color: {ring};
 }}
 
 QAbstractSpinBox:disabled,
 QComboBox:disabled,
-QLineEdit:disabled,
-QPlainTextEdit:disabled,
-QTextBrowser:disabled {{
+QLineEdit:disabled {{
   background-color: {panel};
   color: {muted_text};
   border: 2px solid {danger};
@@ -228,7 +228,7 @@ QWidget#top_tray {{
   border-bottom: 1px solid {border};
 }}
 
-/* The menu bar is part of the window, so it shares its colour, and a rule of
+/* The menu bar is part of the window, so it shares its colour. A rule of
    its own is still needed: without the bottom border the bar and the content
    below it are one undivided field. */
 QMenuBar {{
@@ -270,7 +270,7 @@ QMenu::separator {{
 }}
 
 /* A menu item that cannot be chosen is muted rather than ringed: the red ring
-   belongs to controls the user aimed at, and every entry under an open menu is
+   belongs to controls the user aimed at; every entry under an open menu is
    passed over on the way to another. */
 QMenu::item:disabled {{
   color: {muted_text};
@@ -278,8 +278,8 @@ QMenu::item:disabled {{
 
 /* A highlighted menu title or item is the keyboard ring passing through the
    menu bar, so it wears the same green. The fill lifts to the elevated surface
-   as well, so the highlight survives a display where the ring is hard to see,
-   and so a highlighted title matches the menu that drops from it. */
+   as well, so the highlight survives a display where the ring is hard to see;
+   a highlighted title then also matches the menu that drops from it. */
 QMenuBar::item:selected,
 QMenu::item:selected {{
   background-color: {elevated_hover};

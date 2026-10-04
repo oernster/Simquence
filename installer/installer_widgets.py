@@ -22,6 +22,7 @@ import installer_bundle as bundle
 import installer_logic as logic
 import installer_ops as ops
 import installer_theme as theme
+from installer_reading_pane import reading_pane
 
 APP_DISPLAY_NAME = logic.APP_DISPLAY_NAME
 
@@ -79,8 +80,6 @@ class LicenceDialog(QDialog):
         layout.setContentsMargins(margin, margin, margin, margin)
         layout.setSpacing(theme.BUTTON_GAP)
 
-        self._start = NeutralStart(self)
-        layout.addWidget(self._start)
         self._started = False
 
         view = QTextEdit()
@@ -89,6 +88,7 @@ class LicenceDialog(QDialog):
         view.setLineWrapMode(QTextEdit.LineWrapMode.NoWrap)
         view.setPlainText(licence_text)
         layout.addWidget(view)
+        reading_pane(view)
 
         view_width = licence_view_width(view, licence_text)
         view.setMinimumWidth(view_width)
@@ -97,16 +97,24 @@ class LicenceDialog(QDialog):
         close = QPushButton("Close")
         close.setObjectName("SecondaryAction")
         close.clicked.connect(self.accept)
+        self._close = close
         row = QHBoxLayout()
         row.addStretch()
         row.addWidget(close)
         layout.addLayout(row)
 
     def showEvent(self, event) -> None:
+        """Open on Close, never on the text.
+
+        A dialog opened to read a licence has one thing to act on, so it opens
+        there, as the application's dialogs do. The text is a reading pane: a
+        stop only by Tab and only while it overflows, never focused on open.
+        """
+
         super().showEvent(event)
         if not self._started:
             self._started = True
-            self._start.setFocus()
+            self._close.setFocus(Qt.FocusReason.TabFocusReason)
 
 
 class AppRunningDialog(QDialog):

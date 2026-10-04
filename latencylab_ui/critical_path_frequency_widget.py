@@ -21,6 +21,7 @@ from PySide6.QtWidgets import (
 )
 
 from latencylab_ui.distributions_agg import CriticalPathBar
+from latencylab_ui.pane_focus import follow_overflow
 
 
 @dataclass(frozen=True)
@@ -54,6 +55,7 @@ class CriticalPathFrequencyWidget(QWidget):
         self._content_layout.setContentsMargins(0, 0, 0, 0)
         self._content_layout.setSpacing(4)
         self._scroll.setWidget(self._content)
+        follow_overflow(self._scroll)
 
         root_layout.addWidget(self._scroll, 1)
 

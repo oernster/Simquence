@@ -80,7 +80,7 @@ lines measured".
 
 ## Where the tests live
 
-All 81 files sit flat in `tests/`. They fall into three kinds:
+All 84 files sit flat in `tests/`. They fall into three kinds:
 
 | Kind | What it tests | Against |
 |---|---|---|
@@ -108,6 +108,8 @@ for code nobody has written yet.
 | `test_core_boundaries_and_packaging.py` | the pure core modules (`model`, `types`, `validate`) import only an exact allowlist and call no `open`, `__import__`, `exec` or `eval`, proved by planting each escape the old denylist missed; `io` stays the module that loads; the wheel contains only the headless core |
 | `test_codebase_size_limits.py` | the 400 line cap, the danger band below it and no stale entry in the build-script exemption |
 | `test_version_single_source.py` | the core and the interface report the number in `VERSION` and the site stamping behaves; it does not scan other files for a stray version |
+| `test_ui_focus_ring_selectors.py` | no stylesheet in the application or the installer puts a focus, hover or disabled border on a text view, an item view, a container class or `*`; a text view keeps its resting border in every state |
+| `test_ui_panes_are_not_stops.py` | on every window and dialog of the application and the installer, walked from the window itself: no pane is a stop, a reading pane is one only by Tab and only while it overflows, a click never focuses one and no dialog opens on one. Offscreen never activates a window, so a dialog that leaves its opening focus to the platform is read as opening on its first stop, which is what Windows does |
 
 **A guard is not trusted until it has been seen to fail.** A new guard is
 proved by planting the violation it exists to catch and reading the failure,
