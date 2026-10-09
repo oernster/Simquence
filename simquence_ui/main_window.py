@@ -22,11 +22,9 @@ from simquence_ui import main_window_run as run_lifecycle
 from simquence_ui.attention_flash import AttentionFlash
 from simquence_ui.distributions_dock import DistributionsDock
 from simquence_ui.focus_cycle import FocusCycleController
-from simquence_ui.main_window_dock_switching import (
-    open_model_composer,
-    toggle_distributions,
-)
+from simquence_ui.main_window_dock_switching import toggle_distributions
 from simquence_ui.main_window_editing import (
+    compose_new_model,
     open_loaded_model_for_editing,
     refresh_open_editor,
 )
@@ -229,7 +227,7 @@ class MainWindow(QMainWindow):
     def _on_toggle_model_composer_clicked(self) -> None:
         # The composer is a held attribute owned by this window, so there is no
         # deleted-object case to guard against here.
-        open_model_composer(self)
+        compose_new_model(self)
 
     def _on_edit_model_clicked(self) -> None:
         open_loaded_model_for_editing(self)
@@ -300,8 +298,8 @@ class MainWindow(QMainWindow):
         self._model_valid_label.setText("OK")
         self._refresh_actions()
         refresh_open_editor(self)
-        # After the refresh, never before: Run is only enabled by that call, and
-        # the flash declines to point at a control that is still disabled.
+        # After the refresh, never before: Run is only enabled by that call; the
+        # flash declines to point at a control that is still disabled.
         self._run_flash.start()
 
     def _on_run_clicked(self) -> None:

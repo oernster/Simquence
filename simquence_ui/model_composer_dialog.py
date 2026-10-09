@@ -8,9 +8,9 @@ alone accounting for 3,647, so it was a narrow window onto a very tall document
 and everything past the second task was found by scrolling and remembering.
 
 A model is not a document. It is a handful of named things, so the left pane
-lists them and the right pane shows the one that is selected, and nothing has to
+lists them and the right pane shows the one that is selected; nothing has to
 be scrolled past to reach anything else. Modal, because composing is a thing you
-go and do rather than something you keep half an eye on, and because the main
+go and do rather than something you keep half an eye on; also because the main
 window behind it has nothing to offer while a model is being written.
 """
 
@@ -33,6 +33,7 @@ from simquence_ui.first_stop_dialog import FirstStopDialog
 from simquence_ui.model_composer_contexts_editor import ContextsEditor
 from simquence_ui.model_composer_export import export_model, export_stress_variant
 from simquence_ui.model_composer_load import load_raw_model
+from simquence_ui.model_composer_mode import remember_fresh_model, show_mode
 from simquence_ui.model_composer_panes import build_panes, initial_size, page_index
 from simquence_ui.model_composer_system_editor import SystemEditor
 from simquence_ui.model_composer_tasks_editor import TasksEditor
@@ -46,8 +47,6 @@ from simquence_ui.model_composer_tree import (
 )
 from simquence_ui.model_composer_types import ComposerState, build_raw_model_dict
 from simquence_ui.model_composer_wiring_editor import WiringEditor
-
-TITLE = "Model Composer"
 
 # The stress variant's default multiplier: twice as slow, which is the question
 # people actually ask of a model they have just written.
@@ -63,9 +62,8 @@ class ModelComposerDialog(FirstStopDialog):
     def __init__(self, parent: QWidget) -> None:
         super().__init__(parent)
         self.setObjectName("model_composer_dialog")
-        self.setWindowTitle(TITLE)
         self.setModal(True)
-        # A model with many tasks wants the whole screen, and the person editing
+        # A model with many tasks wants the whole screen; the person editing
         # it is the one who knows whether this is that model.
         self.setWindowFlag(Qt.WindowType.WindowMaximizeButtonHint, True)
         size = initial_size(parent)
@@ -113,6 +111,7 @@ class ModelComposerDialog(FirstStopDialog):
         self._refresh_wiring_events()
         self._refresh_task_rows()
         self._tree.select_section(SYSTEM)
+        remember_fresh_model(self)
 
     # ----- The two panes -----
 
@@ -228,6 +227,7 @@ class ModelComposerDialog(FirstStopDialog):
         load_raw_model(self, raw, model_name=model_name)
         self._showing_loaded_model = True
         self._refresh_task_rows()
+        show_mode(self, editing=model_name)
 
     def is_showing_loaded_model(self) -> bool:
         """Whether these editors are a view of a model that was opened.
@@ -235,7 +235,7 @@ class ModelComposerDialog(FirstStopDialog):
         The difference matters when another model is opened. A composer that is
         showing a loaded model is stale the moment a different one loads and
         has to follow it. A composer holding something typed from scratch is
-        the user's own work, and replacing that would be data loss rather than
+        the user's own work; replacing that would be data loss rather than
         a refresh, so it is left alone.
         """
 

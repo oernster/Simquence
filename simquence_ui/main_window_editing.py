@@ -9,8 +9,51 @@ panel policies do, which is that the window is at its size limit and this is
 one cohesive job with a rule worth stating.
 """
 
+from PySide6.QtWidgets import QMessageBox
+
 from simquence.io import read_model_json
 from simquence_ui.main_window_dock_switching import open_model_composer
+from simquence_ui.model_composer_mode import holds_own_work, start_new_model
+
+REPLACE_TITLE = "Replace your new model?"
+
+
+def replace_question(new_name: str, loaded_name: str) -> str:
+    return (
+        f"The composer holds your unfinished new model '{new_name}'. Editing "
+        f"'{loaded_name}' replaces it; export it first to keep it."
+    )
+
+
+def compose_new_model(window) -> None:
+    """Open the composer on a new model: the user's own, else a blank one.
+
+    A view of an opened model is emptied first; the file it showed is on disk,
+    so nothing is lost. An unfinished new model of the user's own is reopened
+    as it was left. See `model_composer_mode` for the rules.
+    """
+
+    composer = window._model_composer  # noqa: SLF001
+    if composer.is_showing_loaded_model():
+        start_new_model(composer)
+    open_model_composer(window)
+
+
+def _may_replace_own_work(window) -> bool:
+    composer = window._model_composer  # noqa: SLF001
+    if not holds_own_work(composer):
+        return True
+    answer = QMessageBox.question(
+        window,
+        REPLACE_TITLE,
+        replace_question(
+            composer.state.model_name,
+            window._loaded_model.path.stem,  # noqa: SLF001
+        ),
+        QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.Cancel,
+        QMessageBox.StandardButton.Cancel,
+    )
+    return answer == QMessageBox.StandardButton.Yes
 
 
 def open_loaded_model_for_editing(window) -> None:
@@ -19,12 +62,18 @@ def open_loaded_model_for_editing(window) -> None:
     Silent when nothing is loaded. The control that reaches this is disabled
     and wearing a red ring that says why, so there is nothing left to tell.
 
+    An unfinished new model of the user's own is replaced only once they say
+    so; Cancel, the default, leaves it exactly as it was.
+
     Filling comes first and opening second, so the composer is never on screen
     showing the previous model for the instant it takes to load the new one.
     """
 
-    if not load_into_composer(window):
+    if window._loaded_model is None:  # noqa: SLF001
         return
+    if not _may_replace_own_work(window):
+        return
+    load_into_composer(window)
     if not window._model_composer.isVisible():  # noqa: SLF001
         open_model_composer(window)
 
