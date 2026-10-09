@@ -296,7 +296,7 @@ focused; a dialog opens on its first usable control.
 
 - **Rather than:** the toolkit's natural tab order.
 - **Gains:** the whole application works from the keyboard in one predictable
-  order, including the centred mark on the toolbar.
+  order, including the centred chart button on the toolbar.
 - **Costs:** Left and Right are taken by the ring. That is why Examples is a
   menu of its own rather than a submenu of File.
 
@@ -310,6 +310,18 @@ file name. The test that validates the examples walks the same folder.
   once; a fresh install has something to run.
 - **Costs:** labels are derived from file names rather than written as
   captions.
+
+### Toolbar actions wear pictures, not emoji
+
+Every action on the toolbar wears a supplied picture. A disabled action is
+drawn grey and faded, keeping none of its colour; a missing picture falls back
+to the action's name in words.
+
+- **Rather than:** emoji or glyphs drawn in code.
+- **Gains:** the bar looks the same on every machine, since an emoji is
+  whatever font happens to be installed; a disabled action never reads as
+  half-available.
+- **Costs:** the pictures ship as files beside the application.
 
 ### The distributions switch sits centre
 
@@ -474,15 +486,33 @@ content, with line endings folded so Windows and GitHub agree.
 - **Gains:** a new page is never paired with an old cached stylesheet.
 - **Costs:** none recorded.
 
-### The mark flows one way, from the site
+### One master picture for every icon
 
-The site's SVG is the origin of the mark. A script renders the master PNG from
-it; another derives every platform icon from that master. The macOS icons sit
-on an opaque tile; the others stay transparent.
+A single PNG is the origin of the application icon. One script derives every
+platform's icon from it and the site's logo too. The macOS icons sit on an
+opaque tile; the others stay transparent.
 
-- **Rather than:** editing the PNG or the platform icons by hand.
+- **Rather than:** platform icons drawn or exported separately; a site logo
+  kept apart from the application's.
 - **Gains:** the site and the application cannot show two different marks.
-- **Costs:** a change to the mark is two scripts to run in order.
+- **Costs:** the master is shipped inside every build, since every build ships
+  the assets folder whole.
+
+### A renamed product clears up after its old name, only when asked
+
+Simquence was LatencyLab. Its new name is a new identity on every platform, so
+an update would otherwise stand beside the old install. On Windows, setup looks
+for the old install, lists exactly what it would remove and removes it only on
+the user's say. It removes only what it can show is the old install's own;
+anything else is reported and left.
+
+- **Rather than:** keeping the old identity under a new name; removing the old
+  install silently; leaving two installs side by side.
+- **Gains:** one program, one Apps entry and one set of shortcuts, with nothing
+  taken that the user was not shown.
+- **Costs:** the old settings file is not carried over, which costs at most one
+  repeated update prompt. On macOS and Linux the old application stays until
+  the user removes it.
 
 ## Engineering
 

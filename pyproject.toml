@@ -30,6 +30,8 @@ dev = [
   "pytest-cov>=5",
   "black>=24",
   "flake8>=7",
+  # The packaging test asks setuptools what the wheel would contain.
+  "setuptools",
   # Legacy v1 compat for exact-output regression tests.
   "numpy>=1.26",
 ]

@@ -1,8 +1,8 @@
-# <img width="64" height="64" alt="simquence" src="https://github.com/user-attachments/assets/cb5045c5-8ba7-4d01-889b-944ccc336001" /> Simquence
+# <img width="64" height="64" alt="Simquence" src="docs/assets/simquence.png" /> Simquence
 
 Simulate your architecture's latency before you build it.
 
-Simquence is a design-time latency simulator. You describe a planned (or existing) software architecture as a small, explicit model: the units of work, the events that trigger them and the shared resources they queue behind. Simquence executes that model thousands of times with realistic timing variation. Out come the numbers you cannot get from a whiteboard: how long the flow takes across percentiles, which chain of work actually held each run up and how often each chain is the culprit. It works on the design, not the code, so it applies to any event-driven software: web backends, desktop and mobile UIs, microservices and embedded pipelines. Change the model, run again on the same seed and you can see exactly what an architectural decision costs before a line of it is written.
+Simquence is a design-time latency simulator. You describe a software architecture as a small, explicit model: the units of work, the events that trigger them and the shared resources they queue behind. Simquence runs that model thousands of times with realistic timing variation and reports how long the flow takes across percentiles, which chain of work held each run up and how often each chain is the culprit. It works on the design rather than the code, so it applies to any event-driven software.
 
 It is not a profiler, tracer or runtime observer. It exists to prevent confident people from shipping bad architecture.
 
@@ -10,29 +10,20 @@ It is not a profiler, tracer or runtime observer. It exists to prevent confident
 
 ## The workflow
 
-The workflow is a loop: model, run, read, change one thing, run again on the same seed, compare. If the dominant critical path moved or the percentiles shifted, that difference is the cost or benefit of your design change, isolated from luck, because the randomness was identical.
+Model, run, read, change one thing, run again on the same seed, compare. The randomness is identical between the two runs, so any shift in the percentiles or the dominant critical path is the cost or benefit of the design change rather than luck.
 
-Each run answers questions that usually get postponed until it is too late:
-
-- where perceived latency actually comes from  
-- which causal paths dominate latency most often  
-- how execution contexts and contention affect responsiveness  
-- which architectural changes help before code is written  
-
-If this output surprises you, that is the point.
+Each run records the **makespan** (how long the whole flow took, which is how long the user waited) and the **critical path** (the chain of tasks and waits that set the finish time; expensive work off that chain delayed nobody). One run tells you nothing; the spread across runs is the finding.
 
 ## What is a model?
 
-A model is your architecture written down small enough to argue about. It has four parts:
+Your architecture written down small enough to argue about, in four parts:
 
-- **System.** A name and the entry event that kicks off a run (for the shipped example, `user.checkout_clicked`).
-- **Contexts.** The things work runs on: a thread pool, a database connection, a browser main thread, a worker queue. Each has one property, **concurrency**: how many things it can genuinely do at once. Concurrency 1 means everything sent to it waits in line, which is exactly what a single database connection or a UI thread is. This is where queueing (and therefore most surprising latency) comes from.
-- **Tasks.** The units of work: which context each runs on, how long it takes (as a distribution, not a single number, because real durations vary) and which event it emits when it finishes.
-- **Wiring.** Which events trigger which tasks, optionally after a delay (debounces, retry backoffs, poll intervals). The wiring is the architecture.
+- **System:** a name and the entry event that starts a run.
+- **Contexts:** what work runs on (a thread pool, a database connection, a UI thread), each with a **concurrency**: how many things it can genuinely do at once. Concurrency 1 means everything waits in line; that is where most surprising latency comes from.
+- **Tasks:** units of work, each with a context, a duration distribution and the events it emits when it finishes.
+- **Wiring:** which events trigger which tasks, optionally after a delay (debounces, backoffs, poll intervals). The wiring is the architecture.
 
-You are not modelling your code. You are modelling the shape of the design: what happens, what waits for what and what competes for what. A useful model is often 10 to 20 tasks. Models are plain JSON; the desktop app's Composer builds them without hand-writing any.
-
-This excerpt from the shipped [Checkout example](examples/checkout.json) is a complete round trip through all four parts (the full model has ten tasks):
+A useful model is often 10 to 20 tasks. Models are plain JSON; the desktop app's Composer builds them without hand-writing any. An excerpt of the shipped [Checkout example](examples/checkout.json) (the full model has ten tasks):
 
 ```json
 {
@@ -69,12 +60,7 @@ This excerpt from the shipped [Checkout example](examples/checkout.json) is a co
 
 ## Who this is for
 
-Simquence is for anyone making structural decisions about event-driven software: senior engineers, architects and CTOs, at the point where those decisions are still cheap to change. It is domain-agnostic: because it simulates the design rather than instrumenting code, the same tool models a web checkout, a desktop app's UI thread, a fan-out of microservice calls or an embedded event pipeline.
-
-If you have ever said "we will profile it later", this is what later should have looked like.
-
-Simquence is not for tuning code.  
-It is for validating architectural decisions before they harden.
+Senior engineers, architects and CTOs making structural decisions about event-driven software while those decisions are still cheap to change: a web checkout, a desktop UI thread, a microservice fan-out, an embedded pipeline. If you have ever said "we will profile it later", this is what later should have looked like. The reasoning behind it is on the site: [Why Simquence exists](https://ernster.dev/Simquence/why.html).
 
 ## Who this is not for
 
@@ -83,122 +69,66 @@ It is for validating architectural decisions before they harden.
 - Anyone expecting generated recommendations. It will not tell you how to make a function faster.
 - Anyone unwilling to commit to explicit structure. The model has to be written down before it can be run.
 
-## Context
+## Capabilities
 
-Simquence exists to support design time reasoning about latency rather than post hoc analysis.
+The core is a CLI that reads a JSON model and writes `summary.json` (aggregate latency and contention statistics), `runs.csv` (per-run metrics) and an optional `trace.csv` (per-task-instance timing and causality).
 
-The motivation, philosophy and trade offs behind the tool are described in more detail on its site:
+The PySide6 desktop application adds inspection rather than capability; every number it shows comes from the same engine:
 
-[Why Simquence exists](https://ernster.dev/Simquence/why.html)
+- **Examples menu.** Every shipped model, so a fresh install has something to run. Start with **Checkout**, where a 150 ms debounce added for politeness turns out to own the median.
+- **Model Composer.** A two-pane dialog: the four parts of a model on the left, the editor for the selected one on the right. Edit opens the loaded model in the same dialog.
+- **Guide and How to Read.** Six numbered steps to a first run, then a companion on reading the output. Both read themselves at a pace you can follow and hand control back the moment you touch them.
+- **Distributions.** A makespan histogram binned by the Freedman-Diaconis rule (capped at 200 bins) plus a critical-path frequency chart. No resimulation, smoothing or inference. The chart button in the middle of the toolbar opens it.
+- **Cancel that cancels.** Stopping takes effect between one run and the next and reports how many completed; a partial set is never aggregated.
+- **Full keyboard navigation.** One focus ring: Tab and Right forward, Shift+Tab and Left back, wrapping at both ends. A disabled control is skipped and wears a red ring.
+- **Light and dark themes** from one token set.
+- **Update check.** Shortly after launch, then daily, the app asks GitHub anonymously whether a newer published release exists (also Help > Check for Updates). You choose Download, Skip This Version or Later. A failed check stays silent.
+- **No other connections.** Models and results never leave your machine. Open and Export start in your Downloads folder.
 
-Reading that is not required to use the tool. It explains why the tool exists and what kinds of problems it is intended to make visible.
-
-## What running it actually does
-
-Simquence executes the model as a simulation: the entry event fires, tasks run on their contexts, queues form where concurrency is exhausted and durations are drawn from the distributions you chose. It does this hundreds or thousands of times, each run seeded, so the whole experiment is reproducible bit for bit. One run tells you nothing; the spread across runs is the finding.
-
-For every run it records the **makespan** (how long the whole flow took, which is how long the user waited) and the **critical path** (the specific chain of tasks and waits that prevented the run finishing sooner; expensive work off that chain delayed nobody).
-
-This is how you find the latency problem before it is politically expensive.
-
-## Core outputs
-
-The primary interface is a CLI that reads a JSON execution model and produces:
-
-- `summary.json` containing aggregate latency and contention statistics  
-- `runs.csv` containing per run metrics suitable for analysis or plotting  
-- `trace.csv` containing optional per task instance timing and causality data  
-
-## Desktop application
-
-The same engine is available behind a PySide6 desktop front end, which adds inspection rather than capability: every number it shows comes from the same run the CLI would have produced.
-
-- **Examples menu.** Every model the application ships with is on it, so a fresh install has something to run before you have written a model of your own. Start with **Checkout**: a storefront checkout where a 150ms debounce added for politeness turns out to own the median.
-- **Model Composer.** Author a model in the app rather than by hand and export it as JSON. It is a two-pane dialog: the four parts of a model down the left, the editor for the selected one on the right. Edit opens the loaded model in the same dialog, so composing and changing are one surface rather than two.
-- **Guide and information panels.** The Guide is the shortest path to a first run: six numbered steps, then the reasons. The information panel is the companion on reading the output. Both read themselves at a pace you can follow and hand control straight back the moment you touch them.
-- **Distributions.** A makespan histogram binned by the Freedman-Diaconis rule (widened to at most 200 bins when a heavy tail would ask for more), plus a critical-path frequency chart. No resimulation, no smoothing, no inference. The chart button in the middle of the toolbar opens it.
-- **Cancel that cancels.** Stopping a run stops the work at the boundary between one run and the next, then reports how many runs completed. It never aggregates a partial set.
-- **Full keyboard navigation.** One explicit focus ring: Tab and Right forward, Shift+Tab and Left back, wrapping at both ends. A disabled control is skipped and wears a red ring rather than lighting up.
-- **Light and dark themes**, both built from one token set.
-- **Update check.** Shortly after launch and once a day while running, the application asks GitHub anonymously whether a newer published release exists; Help > Check for Updates runs the same check on demand. If one is found you choose Download, Skip This Version or Later; a skipped version never prompts again. Only formally published releases count and a failed check stays silent.
-- Open and Export both start in your Downloads folder.
+On Windows, setup installs per user with no administrator rights. If it finds an install from when the product was called LatencyLab, it lists exactly what it would remove and removes it only when you say so.
 
 ## Stack
 
 | Concern | Choice |
 |---|---|
 | Language | Python 3.10 or newer |
-| Core engine | Standard library only, no Qt and no third party runtime dependency |
-| Legacy v1 engine | NumPy, optional and lazily imported; the live execution path for `schema_version: 1` models and the frozen oracle the snapshot test pins |
+| Core engine | Standard library only, no Qt and no third-party runtime dependency |
+| Legacy v1 engine | NumPy, optional and lazily imported; runs `schema_version: 1` models and is the frozen oracle the snapshot test pins |
 | Desktop UI | PySide6, a client of the headless core |
 | Tests | pytest with pytest-cov, gate configured in `pyproject.toml` |
 | Style | black and flake8 at 88 columns |
 | Packaging | setuptools, version read from the root `VERSION` file |
-| Delivery | Nuitka plus a bespoke installer (Windows), Flatpak (Linux), disk image (macOS) |
+| Delivery | Nuitka plus a bespoke installer (Windows), disk image (macOS), Flatpak (Linux) |
 | Licence | core GPL-3.0, UI LGPL-3.0 |
 
-## Install (dev)
+## Install and run
 
 ```bash
 python -m pip install -e .[dev]
 python -m pip install -r requirements.txt
+python -m simquence_ui
 ```
 
-`requirements.txt` brings in PySide6, which only the desktop UI needs. The
-simulation core has no runtime dependency at all.
+`requirements.txt` brings in PySide6, which only the desktop UI needs; the simulation core has no runtime dependency. `python runner.py` is the same launch through the shim the frozen build starts at. The UI is deliberately not part of the published wheel, so run it from a clone or install a desktop build.
 
-### The legacy extra
-
-Models declaring `schema_version: 1` execute on a frozen NumPy-backed engine
-kept as a behavioural oracle, so NumPy is needed to run them and nothing else.
-It is deliberately not a runtime dependency:
-
-```bash
-python -m pip install -e .[legacy]
-```
-
-Without it, a v1 model fails with a message naming this extra. Models at
-`schema_version: 2` never touch it. The `dev` extra already includes it, because
-the golden-snapshot test needs the oracle.
+Models at `schema_version: 1` run on a frozen NumPy engine, installed with `python -m pip install -e .[legacy]` (the `dev` extra already includes it). Without it a v1 model fails with a message naming the extra; `schema_version: 2` never needs it.
 
 ## Tests
-
-Run the full test suite:
 
 ```bash
 python -m pytest
 ```
 
-This repository maintains **100% line coverage** and that is enforced by the
-command above: coverage reporting and the 100% threshold are configured in
-`pyproject.toml`, so there is no separate command to remember and no way to run
-the suite without the gate. [TESTING.md](TESTING.md) covers the lint steps,
-what the floor leaves out and how a test is written.
+The 100% line coverage gate is configured in `pyproject.toml`, so this command enforces it and there is no way to run the suite without it. See [TESTING.md](TESTING.md).
 
 ## Build
-
-The distributable is the headless CLI core. The desktop UI is deliberately left
-out of it (see the packaging notes in [ARCHITECTURE.md](ARCHITECTURE.md)), so a
-built wheel contains `simquence/` and nothing else.
 
 ```bash
 python -m pip install build
 python -m build
 ```
 
-The version comes from the root `VERSION` file, which is the only place in the
-repository that holds a version string. After changing it, refresh the site:
-
-```bash
-python stamp_version.py
-```
-
-### Desktop builds
-
-Each platform has one entry point at the repository root. All of them stage the
-generated icons and the shipped examples beside the application. The toolchain
-they need is the `build` extra, kept out of `dev` so running the suite does not
-install a compiler.
+The wheel contains the headless core `simquence/` and nothing else. The desktop builds need the `build` extra, kept out of `dev` so running the suite does not install a compiler:
 
 ```bash
 python -m pip install -e .[build]
@@ -207,66 +137,27 @@ python buildexe.py
 python buildinstaller.py
 ```
 
-`build_flatpak.sh` builds the Linux Flatpak (and `clean_flatpak.sh` removes only
-what it produced), while `builddmg.py` builds the macOS disk image on macOS.
-What each build does in order, the generated icons and cutting a release are in
-[DEVELOPMENT.md](DEVELOPMENT.md).
+`builddmg.py` builds the macOS disk image on macOS; `build_flatpak.sh` builds the Linux Flatpak. Each build in order, the generated assets and cutting a release are in [DEVELOPMENT.md](DEVELOPMENT.md).
 
 ## Documentation
 
 - [ARCHITECTURE.md](ARCHITECTURE.md): the layers, the invariants and the tests that enforce them.
 - [DEVELOPMENT.md](DEVELOPMENT.md): running from source, each build in order and cutting a release.
 - [TESTING.md](TESTING.md): the checks, what the gate holds and how a test is written.
-- [TECH_DEBT.md](TECH_DEBT.md): the standing reference to what is still open, what is
-  deliberately left and what only looks like debt.
-- [`DECISIONS-TRADEOFFS.md`](DECISIONS-TRADEOFFS.md) sets out the decisions Simquence rests on, with what each one gains and what it costs.
-
-## UI (GUI)
-
-The GUI lives in [`simquence_ui/`](simquence_ui/__init__.py:1).
-
-Note: the UI is intentionally **not packaged** into the published distribution (see the
-packaging notes in [`ARCHITECTURE.md`](ARCHITECTURE.md)). Run it from a clone of this
-repository or install one of the desktop builds above.
-
-Launch via the module entry point:
-
-```bash
-python -m simquence_ui
-```
-
-There is also a small repo-root convenience shim, which is what the frozen build
-starts at too:
-
-```bash
-python runner.py
-```
-
-If you see an error about `PySide6` missing, install the GUI dependency via
-[`requirements.txt`](requirements.txt:1) (or `pip install PySide6`).
+- [TECH_DEBT.md](TECH_DEBT.md): what is still open, what is deliberately left and what only looks like debt.
+- [DECISIONS-TRADEOFFS.md](DECISIONS-TRADEOFFS.md): the decisions Simquence rests on, with what each gains and costs.
 
 ## Supporting the project
 
-Simquence is free and stays free. There is no paid tier, no licence key and no
-feature held back behind a donation. If it has saved you time or simply been
-useful, a donation supports its maintenance and continued development.
-
-The same link sits in the app's top bar, just left of the light and dark
-toggle. Pressing it hands the address to your browser; Simquence itself sends
-nothing and opens no connection of its own.
+Simquence is free and stays free. There is no paid tier, no licence key and no feature held back behind a donation. If it has saved you time, a donation supports its maintenance and continued development. The same link sits in the app's top bar; pressing it hands the address to your browser and Simquence itself opens no connection.
 
 <a href="https://www.paypal.com/ncp/payment/Y275VZ7R2NUNW"><img src="docs/donate.png" alt="Donate to Simquence" width="120"></a>
 
 ## Licence
 
-Licensed by component, which is what the running application shows under
-Help:
+Licensed by component, as the running application shows under Help:
 
-- The simulation core in `simquence/` (and therefore the published
-  distribution) is **GPL-3.0**. The full text is in [LICENSE](LICENSE).
-- The PySide6 desktop front end in `simquence_ui/` is **LGPL-3.0**. The full
-  text is in [`simquence_ui/LGPL3.txt`](simquence_ui/LGPL3.txt).
+- The simulation core in `simquence/` (and so the published wheel) is **GPL-3.0**: [LICENSE](LICENSE).
+- The PySide6 desktop front end in `simquence_ui/` is **LGPL-3.0**: [`simquence_ui/LGPL3.txt`](simquence_ui/LGPL3.txt).
 
-A commercial licence for my own code is also available, separately from the
-open-source licences: see
-[commercial licensing](https://ernster.dev/commercial-licensing.html).
+A commercial licence for my own code is also available, separately from the open-source licences: see [commercial licensing](https://ernster.dev/commercial-licensing.html).
