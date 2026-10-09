@@ -129,21 +129,22 @@ def test_the_guide_does_not_block_the_thing_it_describes(
     dialog.deleteLater()
 
 
-def test_the_button_sits_immediately_left_of_the_info_button(
+def test_the_button_sits_right_of_the_theme_toggle(
     app: QApplication, window: MainWindow
 ) -> None:
-    """The pair is one idea in two halves: which button to press, then what the
-    output means."""
+    """Help sits at the far edge of the bar, after the light and dark switch,
+    apart from the controls that act on a model."""
 
     guide = window._guide_btn
-    info = window._how_to_read_btn
+    toggle = window._theme_toggle
 
     assert guide.objectName() == "guide_btn"
     assert guide.toolTip() == GUIDE_TITLE
-    # A drawn glyph rather than a caption, like the rest of the tray.
+    # A picture rather than a caption, like the rest of the tray.
     assert guide.text() == ""
     assert guide.icon().isNull() is False
-    assert guide.x() < info.x()
+    assert guide.x() > toggle.x()
+    assert window._top_bar.ring_stops()[-1] is guide
 
 
 def test_the_button_opens_the_guide(app: QApplication, window: MainWindow) -> None:

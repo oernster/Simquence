@@ -146,12 +146,7 @@ def test_focus_cycle_tab_order_and_arrow_keys(monkeypatch) -> None:
     _send(Qt.Key_Down)
     _send(Qt.Key_Tab)
     # Export is disabled until first successful run, so focus skips it;
-    # Guide is the first tray control that is always available.
-    _wait_for_focus_text("guide_btn")
-
-    # How to Read sits immediately right of it: the pair is one idea in two
-    # halves, which button to press and then what the output means.
-    _send(Qt.Key_Tab)
+    # How to Read is the first tray control that is always available.
     _wait_for_focus_text("how_to_read_btn")
 
     # Distributions button exists but is disabled until a successful run
@@ -175,6 +170,10 @@ def test_focus_cycle_tab_order_and_arrow_keys(monkeypatch) -> None:
     # Theme toggle is a single focus stop; it is toggled with Space, not Tab.
     _send(Qt.Key_Tab)
     _wait_for_focus_text(SUN)
+
+    # The Guide sits at the far right, after the theme toggle.
+    _send(Qt.Key_Tab)
+    _wait_for_focus_text("guide_btn")
 
     _send(Qt.Key_Tab)
     assert _focused_widget_text() == "Open model…"
@@ -208,9 +207,6 @@ def test_focus_cycle_tab_order_and_arrow_keys(monkeypatch) -> None:
     assert w.menuBar().activeAction().text() == "Help"
 
     _send(Qt.Key_Tab)
-    assert _focused_widget_text() == "guide_btn"
-
-    _send(Qt.Key_Tab)
     assert _focused_widget_text() == "how_to_read_btn"
 
     _send(Qt.Key_Tab)
@@ -224,6 +220,9 @@ def test_focus_cycle_tab_order_and_arrow_keys(monkeypatch) -> None:
 
     _send(Qt.Key_Tab)
     assert _focused_widget_text() == SUN
+
+    _send(Qt.Key_Tab)
+    assert _focused_widget_text() == "guide_btn"
 
     # Ensure a Help menu exists (covered earlier: File -> Help).
 

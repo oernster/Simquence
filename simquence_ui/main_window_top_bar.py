@@ -159,18 +159,6 @@ def build_top_bar(
     save_log_btn.setObjectName("save_log_btn")
     layout.addWidget(save_log_btn, 0, Qt.AlignmentFlag.AlignTop)
 
-    # Immediately left of the info button, because the pair is one idea in two
-    # halves: this one says which button to press, that one says what the
-    # output means.
-    guide_btn = artwork_button(
-        GUIDE_ART,
-        fallback="Guide",
-        tooltip=GUIDE_TITLE,
-        on_clicked=on_show_guide_clicked,
-    )
-    guide_btn.setObjectName("guide_btn")
-    layout.addWidget(guide_btn, 0, Qt.AlignmentFlag.AlignTop)
-
     how_to_read_btn = artwork_button(
         OUTPUT_INFO_ART,
         fallback="How to Read",
@@ -202,14 +190,25 @@ def build_top_bar(
 
     layout.addStretch(1)
 
-    # Immediately left of the theme toggle: the two are the only controls about
-    # the application rather than the model, so they sit together at the edge.
+    # Donate, the theme toggle and the Guide are the controls about the
+    # application rather than the model, so they sit together at the edge.
     donate_btn = build_donate_button(parent)
     layout.addWidget(donate_btn, 0, Qt.AlignmentFlag.AlignTop)
 
     theme_toggle = ThemeToggle(default=Theme.DARK, parent=parent)
     theme_toggle.theme_changed.connect(on_theme_changed)
     layout.addWidget(theme_toggle, 0, Qt.AlignmentFlag.AlignTop)
+
+    # At the far right, after the theme toggle: help sits at the edge of the
+    # bar, apart from the controls that act on a model.
+    guide_btn = artwork_button(
+        GUIDE_ART,
+        fallback="Guide",
+        tooltip=GUIDE_TITLE,
+        on_clicked=on_show_guide_clicked,
+    )
+    guide_btn.setObjectName("guide_btn")
+    layout.addWidget(guide_btn, 0, Qt.AlignmentFlag.AlignTop)
 
     distributions_btn = build_centre_mark(
         top_bar,
@@ -226,21 +225,21 @@ def build_top_bar(
     )
 
     # Left to right as the bar is drawn: the action group, then the mark in the
-    # middle, then the donate button and the theme toggle on the far right.
-    # Stated here because this is the one place every control is in hand at
-    # once. It is asserted against the band's real children by a test, so adding
-    # a button and forgetting this line fails the suite rather than quietly
-    # dropping it off the ring.
+    # middle, then the donate button, the theme toggle and the Guide on the far
+    # right. Stated here because this is the one place every control is in hand
+    # at once. It is asserted against the band's real children by a test, so
+    # adding a button and forgetting this line fails the suite rather than
+    # quietly dropping it off the ring.
     top_bar.set_ring_stops(
         (
             save_log_btn,
-            guide_btn,
             how_to_read_btn,
             compose_btn,
             edit_btn,
             distributions_btn,
             donate_btn,
             theme_toggle,
+            guide_btn,
         ),
         centre=distributions_btn,
     )
