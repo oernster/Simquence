@@ -31,6 +31,8 @@ INSTALLER_MODULES = (
     "installer_ops",
     "installer_bundle",
     "installer_lifecycle",
+    "installer_legacy",
+    "installer_legacy_dialog",
     "installer_theme",
     "installer_reading_pane",
     "installer_widgets",
@@ -233,6 +235,16 @@ def test_install_target_prefers_localappdata(tmp_path: Path) -> None:
 def test_install_target_falls_back_to_the_home_directory(tmp_path: Path) -> None:
     target = logic.install_target(None, tmp_path)
     assert target.parts[-3:] == ("Local", "Programs", logic.APP_NAME)
+
+
+def test_paths_and_key_can_be_named_for_another_product(tmp_path: Path) -> None:
+    """The old product's install is found with the same rules, not a copy."""
+
+    assert logic.install_target(str(tmp_path), Path.home(), "Old").name == "Old"
+    assert logic.desktop_link(tmp_path, "Old").name == "Old.lnk"
+    assert logic.start_menu_link(str(tmp_path), "Old").name == "Old.lnk"
+    assert logic.uninstall_key("Old").endswith("\\Old")
+    assert logic.UNINSTALL_KEY == logic.uninstall_key(logic.APP_NAME)
 
 
 def test_start_menu_link_is_none_without_appdata() -> None:

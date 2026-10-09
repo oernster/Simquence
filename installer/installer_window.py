@@ -34,10 +34,12 @@ from PySide6.QtWidgets import (
 
 import installer_bundle as bundle
 import installer_header as header
+import installer_legacy as legacy
 import installer_lifecycle as lifecycle
 import installer_logic as logic
 import installer_ops as ops
 import installer_theme as theme
+from installer_legacy_dialog import LegacyCleanupDialog
 from installer_widgets import AppRunningDialog, NeutralStart, UninstallDialog
 
 APP_DISPLAY_NAME = logic.APP_DISPLAY_NAME
@@ -202,8 +204,53 @@ class InstallerWindow(QWidget):
         # to leave behind when it does.
         self._refresh_after_change()
         self._status.setText(f"Installed to {exe_path.parent}.")
+        if not self._offer_legacy_cleanup():
+            return
         if self._launch_on_finish.isChecked():
             self._launch_and_front(exe_path)
+
+    def _offer_legacy_cleanup(self) -> bool:
+        """Offer to remove the install left under the product's old name.
+
+        Answers False when there is something the user must read (removal
+        failed or was stopped because the old program is running), so the
+        caller does not launch and close the window over it.
+        """
+
+        try:
+            plan = lifecycle.find_legacy()
+        except Exception as error:  # noqa: BLE001 - surfaced as a status message
+            self._status.setText(
+                f"Installed; checking for {legacy.LEGACY_APP_NAME} failed: {error}"
+            )
+            return False
+        if plan is None:
+            return True
+        if LegacyCleanupDialog(plan, self).exec() != QDialog.DialogCode.Accepted:
+            return True
+        if ops.is_app_running(legacy.LEGACY_EXE_NAME):
+            dialog = AppRunningDialog(
+                "removal",
+                self,
+                app_name=legacy.LEGACY_APP_NAME,
+                exe_name=legacy.LEGACY_EXE_NAME,
+            )
+            if dialog.exec() != QDialog.DialogCode.Accepted:
+                self._status.setText(
+                    f"Installed. {legacy.LEGACY_APP_NAME} is still running, "
+                    "so it was not removed."
+                )
+                return False
+        try:
+            lifecycle.remove_legacy(plan)
+        except Exception as error:  # noqa: BLE001 - surfaced as a status message
+            self._status.setText(
+                f"Installed; {legacy.LEGACY_APP_NAME} could not be fully "
+                f"removed: {error}. Its entry in Apps is still there to finish it."
+            )
+            return False
+        self._status.setText(f"Installed. {legacy.LEGACY_APP_NAME} has been removed.")
+        return True
 
     def _launch_and_front(self, exe_path: Path) -> None:
         """Launch the app, wait for its window, front it, then close.
@@ -213,7 +260,7 @@ class InstallerWindow(QWidget):
         the installer still owns the foreground.
 
         Nothing here closes the installer except a window that actually
-        appeared. A launch that fails, or one whose window never arrives, leaves
+        appeared. A launch that fails or whose window never arrives leaves
         the installer open and says so: closing on failure is indistinguishable
         from success and hides the only evidence the user has.
         """
@@ -221,7 +268,7 @@ class InstallerWindow(QWidget):
         process = ops.launch(exe_path)
         if process is None:
             self._status.setText(
-                f"Installed, but {APP_DISPLAY_NAME} could not be started from "
+                f"Installed; {APP_DISPLAY_NAME} could not be started from "
                 f"{exe_path}."
             )
             return

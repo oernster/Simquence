@@ -230,10 +230,21 @@ def _app_surfaces() -> list[QWidget]:
 
 def _installer_surfaces(monkeypatch: pytest.MonkeyPatch) -> list[QWidget]:
     monkeypatch.syspath_prepend(str(INSTALLER_DIR))
+    import installer_legacy as legacy
     import installer_lifecycle as lifecycle
     import installer_logic as logic
+    from installer_legacy_dialog import LegacyCleanupDialog
     from installer_widgets import AppRunningDialog, LicenceDialog, UninstallDialog
     from installer_window import InstallerWindow
+
+    def plan(*, removes: bool) -> legacy.LegacyPlan:
+        return legacy.LegacyPlan(
+            version="3.3.2",
+            folder=Path("C:/Programs/LatencyLab") if removes else None,
+            registration=removes,
+            shortcuts=(),
+            left_alone=() if removes else ("The folder C:/Elsewhere",),
+        )
 
     # Never read the registry: a fixed state that shows every action button.
     monkeypatch.setattr(lifecycle, "detect_state", lambda: logic.AppState.UPGRADE)
@@ -244,6 +255,8 @@ def _installer_surfaces(monkeypatch: pytest.MonkeyPatch) -> list[QWidget]:
         LicenceDialog("short", "Licence", window),
         AppRunningDialog("upgrade", window),
         UninstallDialog(window),
+        LegacyCleanupDialog(plan(removes=True), window),
+        LegacyCleanupDialog(plan(removes=False), window),
     ]
 
 

@@ -10,6 +10,7 @@ from __future__ import annotations
 from pathlib import Path
 
 import installer_bundle as bundle
+import installer_legacy as legacy
 import installer_logic as logic
 import installer_ops as ops
 import installer_payload as payload
@@ -91,3 +92,40 @@ def uninstall() -> None:
 
     ops.remove_tree_except(target, logic.UNINSTALLER_SUBDIR)
     ops.schedule_self_delete(target)
+
+
+def find_legacy() -> legacy.LegacyPlan | None:
+    """Read the install left under the old name; None when there is none."""
+
+    version, location = ops.read_installed(legacy.LEGACY_UNINSTALL_KEY)
+    if location is None:
+        location = ops.install_target(legacy.LEGACY_APP_NAME)
+    links = (
+        ops.desktop_link(legacy.LEGACY_APP_NAME),
+        ops.start_menu_link(legacy.LEGACY_APP_NAME),
+    )
+    reading = legacy.LegacyReading(
+        registered=ops.registration_exists(legacy.LEGACY_UNINSTALL_KEY),
+        version=version,
+        location=location,
+        exists=location.is_dir(),
+        holds_exe=(location / legacy.LEGACY_EXE_NAME).is_file(),
+        shortcuts=tuple(
+            legacy.LegacyShortcut(link, ops.shortcut_target(link))
+            for link in links
+            if link is not None and link.is_file()
+        ),
+    )
+    return legacy.plan_cleanup(reading)
+
+
+def remove_legacy(plan: legacy.LegacyPlan) -> None:
+    """Carry out a plan. The folder goes first: should it fail, the Apps entry
+    is still there for the user to remove it from."""
+
+    if plan.folder is not None:
+        ops.remove_tree(plan.folder)
+    for link in plan.shortcuts:
+        ops.remove_shortcut(link)
+    if plan.registration:
+        ops.delete_uninstall_entry(legacy.LEGACY_UNINSTALL_KEY)

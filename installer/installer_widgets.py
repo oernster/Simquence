@@ -124,8 +124,17 @@ class AppRunningDialog(QDialog):
     retry gets an immediate still-running notice rather than a silent no-op.
     """
 
-    def __init__(self, action: str, parent: QWidget | None = None) -> None:
+    def __init__(
+        self,
+        action: str,
+        parent: QWidget | None = None,
+        *,
+        app_name: str = APP_DISPLAY_NAME,
+        exe_name: str = logic.EXE_NAME,
+    ) -> None:
         super().__init__(parent)
+        self._app_name = app_name
+        self._exe_name = exe_name
         self.setWindowTitle(f"{APP_DISPLAY_NAME} Setup")
         self.setWindowIcon(bundle.app_icon())
         self.setStyleSheet(theme.STYLESHEET)
@@ -140,7 +149,7 @@ class AppRunningDialog(QDialog):
         self._started = False
 
         message = QLabel(
-            f"{APP_DISPLAY_NAME} is currently running. Close it, then choose "
+            f"{app_name} is currently running. Close it, then choose "
             f"Retry to continue with the {action}."
         )
         message.setWordWrap(True)
@@ -164,10 +173,8 @@ class AppRunningDialog(QDialog):
         layout.addLayout(row)
 
     def _on_retry(self) -> None:
-        if ops.is_app_running():
-            self._notice.setText(
-                f"{APP_DISPLAY_NAME} is still running. Close it first."
-            )
+        if ops.is_app_running(self._exe_name):
+            self._notice.setText(f"{self._app_name} is still running. Close it first.")
             return
         self.accept()
 

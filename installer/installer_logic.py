@@ -63,7 +63,16 @@ UNINSTALL_FLAG = "--uninstall"
 NUITKA_ONEFILE_ENV = "NUITKA_ONEFILE_BINARY"
 _EXE_SUFFIX = ".exe"
 
-UNINSTALL_KEY = r"Software\Microsoft\Windows\CurrentVersion\Uninstall\Simquence"
+_UNINSTALL_KEY_ROOT = r"Software\Microsoft\Windows\CurrentVersion\Uninstall"
+
+
+def uninstall_key(app_name: str) -> str:
+    """The HKCU Apps and features key a product registers itself under."""
+
+    return f"{_UNINSTALL_KEY_ROOT}\\{app_name}"
+
+
+UNINSTALL_KEY = uninstall_key(APP_NAME)
 
 # So Windows groups the taskbar button and the shortcut under one identity.
 APP_AUMID = "uk.codecrafter.simquence"
@@ -114,25 +123,29 @@ def _local_appdata(local_appdata: str | None, home: Path) -> Path:
     return home.joinpath(*_LOCAL_APPDATA_SUBPATH)
 
 
-def install_target(local_appdata: str | None, home: Path) -> Path:
+def install_target(
+    local_appdata: str | None, home: Path, app_name: str = APP_NAME
+) -> Path:
     """Return the per-user install directory for the application."""
 
-    return _local_appdata(local_appdata, home) / _PROGRAMS_DIR_NAME / APP_NAME
+    return _local_appdata(local_appdata, home) / _PROGRAMS_DIR_NAME / app_name
 
 
-def start_menu_link(appdata: str | None) -> Path | None:
+def start_menu_link(
+    appdata: str | None, display_name: str = APP_DISPLAY_NAME
+) -> Path | None:
     """Return the per-user Start Menu shortcut path; None when unavailable."""
 
     if not appdata:
         return None
     programs = Path(appdata).joinpath(*_START_MENU_SUBPATH)
-    return programs / f"{APP_DISPLAY_NAME}{_SHORTCUT_EXT}"
+    return programs / f"{display_name}{_SHORTCUT_EXT}"
 
 
-def desktop_link(home: Path) -> Path:
+def desktop_link(home: Path, display_name: str = APP_DISPLAY_NAME) -> Path:
     """Return the per-user Desktop shortcut path."""
 
-    return home / _DESKTOP_DIR_NAME / f"{APP_DISPLAY_NAME}{_SHORTCUT_EXT}"
+    return home / _DESKTOP_DIR_NAME / f"{display_name}{_SHORTCUT_EXT}"
 
 
 def uninstaller_path(install_dir: Path) -> Path:

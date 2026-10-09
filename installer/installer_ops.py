@@ -19,7 +19,7 @@ import installer_logic as logic
 #
 # These two are mutually exclusive: Windows documents CREATE_NO_WINDOW as
 # ignored when it is combined with DETACHED_PROCESS. Combining them therefore
-# does not hide anything, it hands the child no console at all, and a console
+# does not hide anything, it hands the child no console at all; a console
 # program given no console allocates a fresh visible one. Never pass both.
 _CREATE_NO_WINDOW = 0x08000000
 _DETACHED_PROCESS = 0x00000008
@@ -55,16 +55,18 @@ def _reg_type(kind: str):
 # --------------------------------------------------------------- environment
 
 
-def install_target() -> Path:
-    return logic.install_target(os.environ.get(logic.ENV_LOCALAPPDATA), Path.home())
+def install_target(app_name: str = logic.APP_NAME) -> Path:
+    return logic.install_target(
+        os.environ.get(logic.ENV_LOCALAPPDATA), Path.home(), app_name
+    )
 
 
-def desktop_link() -> Path:
-    return logic.desktop_link(Path.home())
+def desktop_link(display_name: str = logic.APP_DISPLAY_NAME) -> Path:
+    return logic.desktop_link(Path.home(), display_name)
 
 
-def start_menu_link() -> Path | None:
-    return logic.start_menu_link(os.environ.get(logic.ENV_APPDATA))
+def start_menu_link(display_name: str = logic.APP_DISPLAY_NAME) -> Path | None:
+    return logic.start_menu_link(os.environ.get(logic.ENV_APPDATA), display_name)
 
 
 def running_installer_exe() -> Path:
@@ -113,19 +115,32 @@ def set_app_user_model_id() -> None:
 # -------------------------------------------------------------------- registry
 
 
-def read_installed() -> tuple[str | None, Path | None]:
+def read_installed(
+    key_path: str = logic.UNINSTALL_KEY,
+) -> tuple[str | None, Path | None]:
     """Return the registered version and install location, if any."""
 
     winreg = _winreg()
     try:
         with winreg.OpenKey(
-            winreg.HKEY_CURRENT_USER, logic.UNINSTALL_KEY, 0, winreg.KEY_READ
+            winreg.HKEY_CURRENT_USER, key_path, 0, winreg.KEY_READ
         ) as key:
             version, _ = winreg.QueryValueEx(key, "DisplayVersion")
             location, _ = winreg.QueryValueEx(key, "InstallLocation")
     except (FileNotFoundError, OSError):
         return None, None
     return str(version), logic.absolute_location(str(location))
+
+
+def registration_exists(key_path: str) -> bool:
+    """Whether an uninstall key is present, whatever values it holds."""
+
+    winreg = _winreg()
+    try:
+        with winreg.OpenKey(winreg.HKEY_CURRENT_USER, key_path, 0, winreg.KEY_READ):
+            return True
+    except (FileNotFoundError, OSError):
+        return False
 
 
 def write_uninstall_entry(values: tuple[logic.RegistryValue, ...]) -> None:
@@ -137,10 +152,10 @@ def write_uninstall_entry(values: tuple[logic.RegistryValue, ...]) -> None:
             winreg.SetValueEx(key, value.name, 0, _reg_type(value.kind), value.value)
 
 
-def delete_uninstall_entry() -> None:
+def delete_uninstall_entry(key_path: str = logic.UNINSTALL_KEY) -> None:
     winreg = _winreg()
     try:
-        winreg.DeleteKey(winreg.HKEY_CURRENT_USER, logic.UNINSTALL_KEY)
+        winreg.DeleteKey(winreg.HKEY_CURRENT_USER, key_path)
     except (FileNotFoundError, OSError):
         # Already gone. An uninstall that runs twice is not a failure.
         pass
@@ -149,8 +164,8 @@ def delete_uninstall_entry() -> None:
 # ------------------------------------------------------------------- processes
 
 
-def is_app_running() -> bool:
-    """Whether the application is running, via tasklist.
+def is_app_running(exe_name: str = logic.EXE_NAME) -> bool:
+    """Whether the named program is running, via tasklist.
 
     Replacing a running executable is how an install ends up half applied, so
     every action is gated on this.
@@ -158,7 +173,7 @@ def is_app_running() -> bool:
 
     try:
         result = subprocess.run(
-            ["tasklist", "/FI", f"IMAGENAME eq {logic.EXE_NAME}", "/NH"],
+            ["tasklist", "/FI", f"IMAGENAME eq {exe_name}", "/NH"],
             capture_output=True,
             text=True,
             creationflags=_CREATE_NO_WINDOW,
@@ -166,7 +181,7 @@ def is_app_running() -> bool:
         )
     except OSError:  # pragma: no cover - tasklist is always present on Windows
         return False
-    return logic.EXE_NAME.lower() in result.stdout.lower()
+    return exe_name.lower() in result.stdout.lower()
 
 
 def launch(exe_path: Path):
@@ -233,23 +248,19 @@ $link.Description = '{description}'
 $link.Save()
 """
 
+_SHORTCUT_TARGET_SCRIPT = (
+    "(New-Object -ComObject WScript.Shell).CreateShortcut('{link}').TargetPath"
+)
 
-def create_shortcut(link: Path, target: Path, icon: Path | None) -> None:
-    """Write a real .lnk through the Windows scripting host.
 
-    There is no dependency-free Python API for this. A batch file is not a
-    shortcut: it has no icon and it flashes a console.
-    """
+def _ps_literal(value: object) -> str:
+    """Escape for a single-quoted PowerShell string, where '' is one quote."""
 
-    link.parent.mkdir(parents=True, exist_ok=True)
-    script = _SHORTCUT_SCRIPT.format(
-        link=link,
-        target=target,
-        working_dir=target.parent,
-        description=logic.APP_DISPLAY_NAME,
-        icon_line=f"$link.IconLocation = '{icon}'" if icon else "",
-    )
-    subprocess.run(
+    return str(value).replace("'", "''")
+
+
+def _powershell(script: str) -> subprocess.CompletedProcess:
+    return subprocess.run(
         [
             "powershell",
             "-NoProfile",
@@ -259,9 +270,44 @@ def create_shortcut(link: Path, target: Path, icon: Path | None) -> None:
             "-Command",
             script,
         ],
+        capture_output=True,
+        text=True,
         check=False,
         creationflags=_CREATE_NO_WINDOW,
     )
+
+
+def create_shortcut(link: Path, target: Path, icon: Path | None) -> None:
+    """Write a real .lnk through the Windows scripting host.
+
+    There is no dependency-free Python API for this. A batch file is not a
+    shortcut: it has no icon and it flashes a console.
+    """
+
+    link.parent.mkdir(parents=True, exist_ok=True)
+    icon_line = f"$link.IconLocation = '{_ps_literal(icon)}'" if icon else ""
+    _powershell(
+        _SHORTCUT_SCRIPT.format(
+            link=_ps_literal(link),
+            target=_ps_literal(target),
+            working_dir=_ps_literal(target.parent),
+            description=_ps_literal(logic.APP_DISPLAY_NAME),
+            icon_line=icon_line,
+        )
+    )
+
+
+def shortcut_target(link: Path) -> Path | None:
+    """The path a .lnk points at; None when it cannot be read."""
+
+    try:
+        result = _powershell(_SHORTCUT_TARGET_SCRIPT.format(link=_ps_literal(link)))
+    except OSError:  # pragma: no cover - PowerShell is always present on Windows
+        return None
+    target = result.stdout.strip()
+    if result.returncode != 0 or not target:
+        return None
+    return logic.absolute_location(target)
 
 
 def remove_shortcut(link: Path | None) -> None:
@@ -293,6 +339,19 @@ def remove_tree_except(target: Path, keep: str) -> None:
                 entry.unlink()
         except OSError:
             continue
+
+
+def remove_tree(target: Path) -> None:
+    """Delete a whole folder, raising when any of it cannot be removed.
+
+    Unlike the uninstaller's own removal this is not run from inside the
+    folder, so it can finish the job here and report honestly if it cannot.
+    """
+
+    import shutil
+
+    if target.exists():
+        shutil.rmtree(target)
 
 
 def schedule_self_delete(target: Path) -> None:
