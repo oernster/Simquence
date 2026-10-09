@@ -18,7 +18,8 @@ from PySide6.QtWidgets import QDialogButtonBox, QTextBrowser, QVBoxLayout, QWidg
 
 from simquence_ui.auto_scroller import attach
 from simquence_ui.first_stop_dialog import FirstStopDialog
-from simquence_ui.guide_text import GUIDE_HTML, GUIDE_TITLE
+from simquence_ui.guide_text import GUIDE_TITLE, guide_html
+from simquence_ui.guide_toolbar import toolbar_html
 from simquence_ui.pane_focus import follow_overflow
 
 # Wider than How to Read, because this one carries numbered steps and bold run
@@ -51,7 +52,7 @@ class GuideDialog(FirstStopDialog):
         # A QTextBrowser scrolls in PIXELS, which is what the reading cycle
         # needs; the plain-text widget scrolls in lines and the same gentle
         # drift becomes a whole line jumping at a time.
-        text.setHtml(GUIDE_HTML)
+        text.setHtml(guide_html(toolbar_html()))
         root.addWidget(text, 1)
         attach(text)
         follow_overflow(text)

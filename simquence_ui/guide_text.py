@@ -169,12 +169,24 @@ model is right. It is a way of making an argument checkable, not a way of
 avoiding having one.</p>
 """
 
-GUIDE_HTML = (
-    _INTRO
-    + _FIRST_RUN
+
+def guide_html(toolbar: str = "") -> str:
+    """The Guide, with the toolbar section after the lead-in.
+
+    The section is passed in rather than built here because its pictures are
+    files resolved when the Guide opens; this module stays words alone.
+    """
+
+    return _INTRO + toolbar + _BODY
+
+
+_BODY = (
+    _FIRST_RUN
     + _WHAT_YOU_SEE
     + _CHANGE_SOMETHING
     + _COMPOSING
     + _WHY_SETTINGS
     + _HONESTY
 )
+
+GUIDE_HTML = guide_html()

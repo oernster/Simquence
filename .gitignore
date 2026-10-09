@@ -238,3 +238,6 @@ packaging/
 1
 # The macOS disk image builddmg.py writes to the repository root.
 /simquence.dmg
+
+# Oxygen resume snapshot (local session state, never committed)
+.claude/resume.md
