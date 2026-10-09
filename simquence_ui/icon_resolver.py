@@ -61,8 +61,10 @@ DONATE_PNG_NAME = "donate.png"
 # The top bar's artwork, one picture per action. Supplied finished rather than
 # generated, so they are read as they are.
 SAVE_EXPORT_ART = "simquence_save_export.png"
-GUIDE_ART = "simquence_guide.png"
-OUTPUT_INFO_ART = "simquence_output_information.png"
+# Named for what they show, not for their file names, which point the other way:
+# the "i" in a circle is the Guide's picture and the open book is How to Read's.
+INFO_ART = "simquence_output_information.png"
+BOOK_ART = "simquence_guide.png"
 COMPOSE_ART = "simquence_compose_model.png"
 OPEN_EDIT_ART = "simquence_open_edit.png"
 DISTRIBUTIONS_ART = "simquence_distributions.png"

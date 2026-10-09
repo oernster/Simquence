@@ -268,8 +268,7 @@ class InstallerWindow(QWidget):
         process = ops.launch(exe_path)
         if process is None:
             self._status.setText(
-                f"Installed; {APP_DISPLAY_NAME} could not be started from "
-                f"{exe_path}."
+                f"Done; {APP_DISPLAY_NAME} could not be started from {exe_path}."
             )
             return
         self._status.setText(f"Launching {APP_DISPLAY_NAME}...")
@@ -287,7 +286,7 @@ class InstallerWindow(QWidget):
         if time.monotonic() > self._front_deadline:
             self._front_timer.stop()
             self._status.setText(
-                f"Installed. {APP_DISPLAY_NAME} was started but showed no window "
+                f"Done. {APP_DISPLAY_NAME} was started but showed no window "
                 f"within {int(ops.FOREGROUND_WAIT_S)} seconds."
             )
 
@@ -299,12 +298,16 @@ class InstallerWindow(QWidget):
         _, location = ops.read_installed()
         self._set_busy("Repairing...")
         try:
-            lifecycle.repair(location or ops.install_target())
+            exe_path = lifecycle.repair(location or ops.install_target())
         except Exception as error:  # noqa: BLE001 - surfaced as a status message
             self._finish_error(f"Repair failed: {error}")
             return
-        self._status.setText("Repair complete.")
+        # Refreshed before launching, for the same reason as an install: the
+        # window must read as repaired whatever the launch then does.
         self._refresh_after_change()
+        self._status.setText("Repair complete.")
+        if self._launch_on_finish.isChecked():
+            self._launch_and_front(exe_path)
 
     def _on_uninstall(self) -> None:
         """Confirm, then remove the application, shortcuts and registration."""

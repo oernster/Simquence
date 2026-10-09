@@ -33,8 +33,8 @@ EDGE_SLACK_PX = 1
 
 ARTWORK = (
     icon_resolver.SAVE_EXPORT_ART,
-    icon_resolver.GUIDE_ART,
-    icon_resolver.OUTPUT_INFO_ART,
+    icon_resolver.INFO_ART,
+    icon_resolver.BOOK_ART,
     icon_resolver.COMPOSE_ART,
     icon_resolver.OPEN_EDIT_ART,
     icon_resolver.DISTRIBUTIONS_ART,
@@ -103,6 +103,25 @@ def test_every_action_wears_a_picture_and_no_words(bar: TopBar) -> None:
         assert button.iconSize() == QSize(ARTWORK_PX, ARTWORK_PX)
 
 
+@pytest.mark.parametrize(
+    ("button", "art"),
+    (
+        ("guide_btn", icon_resolver.INFO_ART),
+        ("how_to_read_btn", icon_resolver.BOOK_ART),
+    ),
+)
+def test_each_help_button_wears_its_own_picture(
+    bar: TopBar, button: str, art: str
+) -> None:
+    """The Guide is the "i"; How to Read is the book. The file names point
+    the other way, which is how the two were once swapped."""
+
+    size = QSize(PROBE_PX, PROBE_PX)
+    worn = getattr(bar, button).icon().pixmap(size).toImage()
+    expected = artwork_icon(icon_resolver.get_asset_path(art)).pixmap(size).toImage()
+    assert worn == expected
+
+
 def test_a_disabled_picture_keeps_none_of_its_colour(bar: TopBar) -> None:
     size = QSize(PROBE_PX, PROBE_PX)
     for button in _actions(bar):
@@ -137,7 +156,7 @@ def test_a_missing_picture_leaves_words_rather_than_a_blank(
     monkeypatch.setattr(icon_resolver, "find_assets_dir", lambda: tmp_path)
 
     button = artwork_button(
-        icon_resolver.GUIDE_ART, fallback="Guide", tooltip="Guide", on_clicked=_noop
+        icon_resolver.INFO_ART, fallback="Guide", tooltip="Guide", on_clicked=_noop
     )
 
     assert button.text() == "Guide"

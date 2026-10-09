@@ -15,10 +15,10 @@ from simquence_ui import main_window_actions as actions
 from simquence_ui.donate_button import build_donate_button
 from simquence_ui.guide_text import GUIDE_TITLE
 from simquence_ui.icon_resolver import (
+    BOOK_ART,
     COMPOSE_ART,
-    GUIDE_ART,
+    INFO_ART,
     OPEN_EDIT_ART,
-    OUTPUT_INFO_ART,
     SAVE_EXPORT_ART,
 )
 from simquence_ui.theme import Theme
@@ -160,7 +160,7 @@ def build_top_bar(
     layout.addWidget(save_log_btn, 0, Qt.AlignmentFlag.AlignTop)
 
     how_to_read_btn = artwork_button(
-        OUTPUT_INFO_ART,
+        BOOK_ART,
         fallback="How to Read",
         tooltip="How to Read Simquence Output",
         on_clicked=on_show_how_to_read_clicked,
@@ -202,7 +202,7 @@ def build_top_bar(
     # At the far right, after the theme toggle: help sits at the edge of the
     # bar, apart from the controls that act on a model.
     guide_btn = artwork_button(
-        GUIDE_ART,
+        INFO_ART,
         fallback="Guide",
         tooltip=GUIDE_TITLE,
         on_clicked=on_show_guide_clicked,
