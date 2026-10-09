@@ -30,7 +30,7 @@ APP_URL = "https://ernster.dev/Simquence/"
 # Where the donate button sends a browser. The only payment address the
 # application knows; it is handed to the desktop rather than fetched, so
 # nothing here ever opens a connection of its own.
-DONATE_URL = "https://www.paypal.com/ncp/payment/Y275VZ7R2NUNW"
+DONATE_URL = "https://www.paypal.com/ncp/payment/XH6GACTK2PZU6"
 
 LICENCE_SUMMARY = (
     "Distributed under the GNU General Public License version 3 (the model and "
