@@ -12,7 +12,7 @@ python -m black --check .
 python -m flake8 .
 ```
 
-`pytest` alone is the gated run: `pyproject.toml` adds the coverage measurement and the floor, so the suite cannot run without the gate. A full run takes under half a minute (666 tests in about 17 seconds on Windows).
+`pytest` alone is the gated run: `pyproject.toml` adds the coverage measurement and the floor, so the suite cannot run without the gate. A full run takes under half a minute (714 tests in about 18 seconds on Windows).
 
 **black and flake8 are not part of the suite** and there is no CI, so a lint regression passes `pytest` untouched. Run all three and read each exit code. A default-rules `ruff check` reports a backlog; ruff has not been adopted, so its findings are a reading rather than a regression ([TECH_DEBT.md](TECH_DEBT.md) says why).
 
@@ -29,7 +29,7 @@ The floor is 100% LINE coverage (`--cov-fail-under=100`); `.coveragerc` does not
 | `installer/*` | the setup program, for the same reason: it acts on a real filesystem and registry |
 | `generate_scripts.py` | a gitignored local helper, not part of the product |
 
-Lines marked `# pragma: no cover` are also excluded: 49 outside `tests/`, most in the interface (16 in `simquence_ui/focus_cycle.py`), 8 in the installer's operations and 3 in the legacy engine. Read 100% as "100% of the lines measured".
+Lines marked `# pragma: no cover` are also excluded: 48 outside `tests/`, most in the interface (16 in `simquence_ui/focus_cycle.py`), 8 in the installer's operations and 3 in the legacy engine. Read 100% as "100% of the lines measured".
 
 ## Running it by hand
 
@@ -40,13 +40,13 @@ Lines marked `# pragma: no cover` are also excluded: 49 outside `tests/`, most i
 
 ## Where the tests live
 
-All 88 files sit flat in `tests/` (86 test modules plus `conftest.py` and `scroller_harness.py`):
+All 94 files sit flat in `tests/` (92 test modules plus `conftest.py` and `scroller_harness.py`):
 
 | Kind | What it tests | Against |
 |---|---|---|
 | the core | the simulator, the model schema, distributions, the legacy engine and its golden snapshot | models built in the test, the shipped examples |
 | the interface (`test_ui_*`) | windows, panes, the toolbar, the focus cycle, the update check, single instance | a real `QApplication` and real widgets, offscreen |
-| the setup program (`test_installer_*`) | payload reading, licence lookup, version comparison and the rules for removing an install left under the LatencyLab name | real files in a temporary folder, readings built in the test |
+| the setup program (`test_installer_*`) | payload reading, licence lookup, version comparison, Repair, its dialogs' keyboard and the rules for removing an install left under the LatencyLab name | real files in a temporary folder, readings built in the test |
 
 ## Writing a test
 

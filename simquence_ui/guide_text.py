@@ -94,7 +94,8 @@ nothing about which one did it.</p>
 
 _COMPOSING = """
 <h3>4. Writing a model from nothing</h3>
-<p>Press <b>Compose</b>. The composer lists the four parts of a model down the
+<p>Press <b>Compose</b>. It opens a new model (or the one you left unfinished)
+and its title says so. The composer lists the four parts of a model down the
 left; work down them in order, because each one uses the one before it.</p>
 <p><b>System</b> names the model and sets the <b>entry event</b>, which is the
 thing that starts a run. Everything that happens is downstream of it.</p>

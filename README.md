@@ -78,11 +78,11 @@ The core is a CLI that reads a JSON model and writes `summary.json` (aggregate l
 The PySide6 desktop application adds inspection rather than capability; every number it shows comes from the same engine:
 
 - **Examples menu.** Every shipped model, so a fresh install has something to run. Start with **Checkout**, where a 150 ms debounce added for politeness turns out to own the median.
-- **Model Composer.** A two-pane dialog: the four parts of a model on the left, the editor for the selected one on the right. Edit opens the loaded model in the same dialog.
+- **Model Composer.** A two-pane dialog: the four parts of a model on the left, the editor for the selected one on the right. Compose opens a new model and Edit the loaded one; the title says which.
 - **Guide and How to Read.** Six numbered steps to a first run, then a companion on reading the output. Both read themselves at a pace you can follow and hand control back the moment you touch them.
 - **Distributions.** A makespan histogram binned by the Freedman-Diaconis rule (capped at 200 bins) plus a critical-path frequency chart. No resimulation, smoothing or inference. The chart button in the middle of the toolbar opens it.
 - **Cancel that cancels.** Stopping takes effect between one run and the next and reports how many completed; a partial set is never aggregated.
-- **Full keyboard navigation.** One focus ring: Tab and Right forward, Shift+Tab and Left back, wrapping at both ends. A disabled control is skipped and wears a red ring.
+- **Full keyboard navigation.** One focus ring in every window and dialog: Tab and Right forward, Shift+Tab and Left back, wrapping at both ends. A disabled control is skipped and wears a red ring.
 - **Light and dark themes** from one token set.
 - **Update check.** Shortly after launch, then daily, the app asks GitHub anonymously whether a newer published release exists (also Help > Check for Updates). You choose Download, Skip This Version or Later. A failed check stays silent.
 - **No other connections.** Models and results never leave your machine. Open and Export start in your Downloads folder.

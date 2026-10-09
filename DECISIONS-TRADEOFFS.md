@@ -264,17 +264,20 @@ nested event loop.
 - **Costs:** only one part of the model is on screen at a time; the main
   window is out of reach while the composer is open.
 
-### Composing and editing are one surface
+### One composer, two modes
 
-Edit opens the loaded model in the same dialog that composes a new one. An open
-editor follows the next model opened, unless it holds work typed from scratch.
+Compose and Edit open the same dialog. Compose opens a new model (resuming
+one the user left unfinished); Edit opens the loaded model and asks before it
+replaces unfinished work. The title and its picture say which mode is open. An
+open editor follows the next model opened, unless it holds work typed from
+scratch.
 
-- **Rather than:** an editor that could only build and export; a second dialog
-  for changing an existing model.
-- **Gains:** a model that has just been opened can be changed; typed work is
-  never replaced by a refresh.
+- **Rather than:** a second dialog for changing an existing model; one dialog
+  that reopens whatever it last held, whichever button opened it.
+- **Gains:** one way to author a model; Compose never shows somebody else's
+  file and typed work is never replaced without asking.
 - **Costs:** reading a model back in has to accept every spelling the file
-  format allows.
+  format allows; only one model can be open in the composer at a time.
 
 ### Scrolling past a control never changes it
 
@@ -290,15 +293,19 @@ application.
 
 ### One explicit keyboard ring
 
-Tab and Right step forward, Shift+Tab and Left step back; the ring wraps at
-both ends and skips anything disabled. The main window starts with nothing
-focused; a dialog opens on its first usable control.
+Tab and Right step forward, Shift+Tab and Left step back, in the main window,
+every dialog and the setup program; the ring wraps at both ends and skips
+anything disabled. A window starts with nothing focused; a dialog opens on its
+first usable control. A menu title the ring reaches opens its menu with the
+first item offered.
 
-- **Rather than:** the toolkit's natural tab order.
-- **Gains:** the whole application works from the keyboard in one predictable
-  order, including the centred chart button on the toolbar.
-- **Costs:** Left and Right are taken by the ring. That is why Examples is a
-  menu of its own rather than a submenu of File.
+- **Rather than:** the toolkit's natural tab order; arrows that mean something
+  different in each dialog.
+- **Gains:** everything works from the keyboard in one predictable order,
+  including the centred chart button on the toolbar.
+- **Costs:** Left and Right are taken by the ring, which is why Examples is a
+  menu of its own rather than a submenu of File. Reaching a menu title opens
+  its menu rather than only highlighting it.
 
 ### Examples come from the folder
 
