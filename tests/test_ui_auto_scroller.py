@@ -6,6 +6,8 @@ the two later corrections in `test_ui_auto_scroller_corrections.py`.
 
 from __future__ import annotations
 
+import pytest
+
 from PySide6.QtCore import QEvent
 from PySide6.QtWidgets import (
     QPlainTextEdit,
@@ -59,6 +61,7 @@ def test_every_reading_surface_scrolls_in_pixels(qt_app) -> None:
     a tick. That is how three of these dialogs once shipped, reported as jerky.
     """
     from simquence_ui.about_dialog import AboutDialog, AboutDialogContent
+    from simquence_ui.guide_dialog import GuideDialog
     from simquence_ui.how_to_read_dialog import HowToReadDialog
     from simquence_ui.licence_dialog import LicenceDialog
     from simquence_ui.main_licence_dialog import MainLicenceDialog
@@ -69,6 +72,7 @@ def test_every_reading_surface_scrolls_in_pixels(qt_app) -> None:
     qt_app.processEvents()
     content = AboutDialogContent(title="Simquence", body="<p>x</p>")
     dialogs = [
+        GuideDialog(host),
         HowToReadDialog(host),
         LicenceDialog(host),
         MainLicenceDialog(host),
@@ -79,9 +83,19 @@ def test_every_reading_surface_scrolls_in_pixels(qt_app) -> None:
         assert panes, f"{type(dialog).__name__} has no pixel-scrolling pane"
         for found in panes:
             assert not isinstance(found, QPlainTextEdit)
+        # Reading through is what these dialogs are for, so each one reads itself.
+        readers = [p for p in panes if p.findChildren(app_scroller.AutoScroller)]
+        assert readers, f"{type(dialog).__name__} has no self-reading pane"
         dialog.close()
     host.close()
     qt_app.processEvents()
+
+
+def test_a_line_scrolling_surface_is_refused(scroller_module, qt_app) -> None:
+    lines = QPlainTextEdit()
+    with pytest.raises(TypeError):
+        scroller_module.AutoScroller(lines)
+    assert not lines.findChildren(scroller_module.AutoScroller)
 
 
 def test_a_pixel_surface_travels_far_further_than_a_line_surface(qt_app) -> None:

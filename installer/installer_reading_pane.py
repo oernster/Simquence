@@ -17,7 +17,12 @@ from __future__ import annotations
 from enum import Enum, auto
 
 from PySide6.QtCore import QEvent, QObject, Qt, QTimer
-from PySide6.QtWidgets import QAbstractScrollArea, QApplication, QWidget
+from PySide6.QtWidgets import (
+    QAbstractScrollArea,
+    QApplication,
+    QPlainTextEdit,
+    QWidget,
+)
 
 TICK_MS = 40
 START_HOLD_MS = 5000
@@ -27,6 +32,15 @@ BOTTOM_HOLD_MS = 5000
 REWIND_PX = 15
 TOP_HOLD_MS = 2000
 MANUAL_RESUME_MS = 2500
+
+
+def refuse_line_scrolling(area: QAbstractScrollArea) -> None:
+    """Refuse a QPlainTextEdit outright: its scrollbar counts lines, not pixels."""
+
+    if isinstance(area, QPlainTextEdit):
+        raise TypeError(
+            "a QPlainTextEdit scrolls in lines; give the text a QTextBrowser"
+        )
 
 
 class Phase(Enum):
@@ -48,6 +62,7 @@ class AutoScroller(QObject):
     """
 
     def __init__(self, area: QAbstractScrollArea) -> None:
+        refuse_line_scrolling(area)
         super().__init__(area)
         self._area = area
         self._phase = Phase.PAUSE_TOP

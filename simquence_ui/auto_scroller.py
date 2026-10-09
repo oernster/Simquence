@@ -33,7 +33,12 @@ Two later corrections, Stellody's, ported through postal-gambit:
 from enum import Enum, auto
 
 from PySide6.QtCore import QObject, QTimer
-from PySide6.QtWidgets import QAbstractScrollArea, QApplication, QWidget
+from PySide6.QtWidgets import (
+    QAbstractScrollArea,
+    QApplication,
+    QPlainTextEdit,
+    QWidget,
+)
 
 TICK_MS = 40
 
@@ -58,6 +63,19 @@ TOP_HOLD_MS = 2000
 MANUAL_RESUME_MS = 2500
 
 
+def refuse_line_scrolling(area: QAbstractScrollArea) -> None:
+    """Refuse a QPlainTextEdit outright, so the racing pace cannot ship again.
+
+    Its scrollbar counts lines, which turns every pixel constant above into a
+    line; a docstring warning did not stop three dialogs shipping that way.
+    """
+
+    if isinstance(area, QPlainTextEdit):
+        raise TypeError(
+            "a QPlainTextEdit scrolls in lines; give the text a QTextBrowser"
+        )
+
+
 class Phase(Enum):
     DOWN = auto()
     PAUSE_BOTTOM = auto()
@@ -70,6 +88,7 @@ class AutoScroller(QObject):
     """Drives one scrollable surface through the reading cycle."""
 
     def __init__(self, area: QAbstractScrollArea) -> None:
+        refuse_line_scrolling(area)
         super().__init__(area)
         self._area = area
         # Seeded as a top hold carrying the start hold, which is what makes a
