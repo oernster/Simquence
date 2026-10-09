@@ -3,31 +3,37 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>The Simquence application: explicit models, seeded runs and literal output</title>
-<meta name="description" content="The Simquence desktop application and CLI: explicit models of tasks, events, queues and contention, many seeded runs, critical paths and percentiles, with screenshots and the plain files the CLI writes.">
+<title>Simquence App: Seeded Latency Simulation, Critical Paths</title>
+<meta name="description" content="The Simquence desktop app and CLI: explicit models, seeded runs, latency percentiles, critical-path frequency and a model composer, with screenshots.">
 <meta name="author" content="Oliver Ernster">
 <meta name="robots" content="index, follow">
 <meta name="theme-color" content="#181818">
 <link rel="canonical" href="https://simquence.com/app.html">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Simquence">
-<meta property="og:title" content="The Simquence application">
+<meta property="og:title" content="Simquence App: Seeded Latency Simulation, Critical Paths">
 <meta property="og:description" content="Explicit models, many seeded runs, critical paths and percentiles. The UI shows what the model produced and nothing it did not.">
 <meta property="og:url" content="https://simquence.com/app.html">
 <meta property="og:image" content="https://simquence.com/assets/simquence-ui.png">
 <meta property="og:image:alt" content="The Simquence UI showing a makespan distribution, critical-path frequencies and percentiles">
+<meta property="og:image:width" content="1392">
+<meta property="og:image:height" content="743">
+<meta property="og:image:type" content="image/png">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="The Simquence application">
+<meta name="twitter:title" content="Simquence App: Seeded Latency Simulation, Critical Paths">
 <meta name="twitter:description" content="Explicit models, many seeded runs, critical paths and percentiles.">
 <meta name="twitter:image" content="https://simquence.com/assets/simquence-ui.png">
+<meta name="twitter:image:alt" content="The Simquence UI showing a makespan distribution, critical-path frequencies and percentiles">
 <link rel="icon" type="image/png" href="assets/simquence.png">
+<link rel="apple-touch-icon" href="assets/simquence.png">
 <link rel="stylesheet" href="styles.css?v=5b699966d8">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://simquence.com/"}, {"@type": "ListItem", "position": 2, "name": "Features", "item": "https://simquence.com/features.html"}, {"@type": "ListItem", "position": 3, "name": "Simquence App", "item": "https://simquence.com/app.html"}]}</script>
 </head>
 <body>
 <header class="nav">
   <div class="container nav-inner">
     <a class="brand" href="./">
-      <img src="assets/simquence.png" alt="Simquence icon">Simquence</a>
+      <img src="assets/simquence.png" width="256" height="256" alt="Simquence icon">Simquence</a>
     <nav class="nav-links">
       <a href="features.html">Features</a>
       <a href="why.html">Why</a>
@@ -41,7 +47,7 @@
   <section id="what">
     <div class="container">
       <div class="eyebrow">The idea</div>
-      <h2 class="section-title">Find the latency problem before it is politically expensive</h2>
+      <h1 class="section-title">Find the latency problem before it is politically expensive</h1>
       <p class="section-sub">Profilers explain what happened in a running system.
         They rarely explain why the user waited.</p>
       <div class="features">
@@ -62,7 +68,7 @@
       <div class="shots">
         <figure class="shot">
           <div class="frame">
-            <img loading="lazy" src="assets/simquence-ui.png" alt="The Simquence UI showing a makespan distribution, critical-path frequencies, percentiles and the dominant critical path">
+            <img loading="lazy" src="assets/simquence-ui.png" width="1392" height="743" alt="The Simquence UI showing a makespan distribution, critical-path frequencies, percentiles and the dominant critical path">
           </div>
           <figcaption><b>A real model, run 200 times.</b> The shipped checkout
             example: three back ends asked at once, two queued behind a
@@ -73,7 +79,7 @@
         </figure>
         <figure class="shot narrow">
           <div class="frame">
-            <img loading="lazy" src="assets/simquence-compose.png" alt="The Model Composer titled new model, showing the System pane with the default model name, schema version and entry event, with the validate and export controls below">
+            <img loading="lazy" src="assets/simquence-compose.png" width="895" height="621" alt="The Model Composer titled new model, showing the System pane with the default model name, schema version and entry event, with the validate and export controls below">
           </div>
           <figcaption><b>Writing a model from nothing.</b> Compose opens a new
             model and says so in its title. The composer lists the four parts
@@ -82,7 +88,7 @@
         </figure>
         <figure class="shot narrow">
           <div class="frame">
-            <img loading="lazy" src="assets/simquence-edit.png" alt="The Model Composer titled editing checkout, showing the checkout model's System pane with its entry event; its ten tasks are listed in the tree on the left">
+            <img loading="lazy" src="assets/simquence-edit.png" width="896" height="621" alt="The Model Composer titled editing checkout, showing the checkout model's System pane with its entry event; its ten tasks are listed in the tree on the left">
           </div>
           <figcaption><b>Changing one thing, to see what it was worth.</b> Edit
             opens the loaded model in the composer, named in its title, with

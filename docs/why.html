@@ -3,31 +3,37 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Why Simquence exists: latency answered before the code is written</title>
-<meta name="description" content="Why Simquence was built: latency arguments run on intuition and confidence until it is too late to change the architecture. Simquence makes delay and coordination visible at design time, deterministically.">
+<title>Why Simquence: Design-Time Latency Before Code Exists</title>
+<meta name="description" content="Latency arguments run on intuition until the architecture is too costly to change. Simquence makes queueing and delay visible at design time.">
 <meta name="author" content="Oliver Ernster">
 <meta name="robots" content="index, follow">
 <meta name="theme-color" content="#181818">
 <link rel="canonical" href="https://simquence.com/why.html">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Simquence">
-<meta property="og:title" content="Why Simquence exists: latency answered before the code is written">
+<meta property="og:title" content="Why Simquence: Design-Time Latency Before Code Exists">
 <meta property="og:description" content="Latency arguments run on intuition and confidence until it is too late to change the architecture. Simquence makes delay and coordination visible at design time.">
 <meta property="og:url" content="https://simquence.com/why.html">
 <meta property="og:image" content="https://simquence.com/assets/simquence-ui.png">
 <meta property="og:image:alt" content="The Simquence UI showing a makespan distribution, critical-path frequencies and percentiles">
+<meta property="og:image:width" content="1392">
+<meta property="og:image:height" content="743">
+<meta property="og:image:type" content="image/png">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Why Simquence exists">
+<meta name="twitter:title" content="Why Simquence: Design-Time Latency Before Code Exists">
 <meta name="twitter:description" content="Latency arguments run on intuition and confidence until it is too late to change the architecture. Simquence makes delay and coordination visible at design time.">
 <meta name="twitter:image" content="https://simquence.com/assets/simquence-ui.png">
+<meta name="twitter:image:alt" content="The Simquence UI showing a makespan distribution, critical-path frequencies and percentiles">
 <link rel="icon" type="image/png" href="assets/simquence.png">
+<link rel="apple-touch-icon" href="assets/simquence.png">
 <link rel="stylesheet" href="styles.css?v=5b699966d8">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://simquence.com/"}, {"@type": "ListItem", "position": 2, "name": "Why Simquence", "item": "https://simquence.com/why.html"}]}</script>
 </head>
 <body>
 <header class="nav">
   <div class="container nav-inner">
     <a class="brand" href="./">
-      <img src="assets/simquence.png" alt="Simquence icon">Simquence</a>
+      <img src="assets/simquence.png" width="256" height="256" alt="Simquence icon">Simquence</a>
     <nav class="nav-links">
       <a href="features.html">Features</a>
       <a href="why.html">Why</a>
@@ -39,7 +45,7 @@
   <section id="exists">
     <div class="container prose">
       <div class="eyebrow">The reasoning</div>
-      <h2 class="section-title">Why this exists</h2>
+      <h1 class="section-title">Why this exists</h1>
       <p>Latency discussions are dominated by intuition, confidence and post hoc profiling. By the
         time a real system can be measured, the decisions about concurrency, sequencing and delay
         have hardened and are expensive to undo. Profilers explain where the time went; they rarely

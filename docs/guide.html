@@ -3,31 +3,38 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Using Simquence: first run, composing a model and choosing the settings</title>
-<meta name="description" content="How to use Simquence: run the shipped example in six steps, read the three panels, change one thing and run it again, write a model from nothing, then choose runs, seed, concurrency and distributions.">
+<title>How to Use Simquence: Model, Run and Compare Latency</title>
+<meta name="description" content="Run the shipped checkout model in six steps, change one thing, rerun on the same seed and compare; then choose runs, seed, concurrency and distributions.">
 <meta name="author" content="Oliver Ernster">
 <meta name="robots" content="index, follow">
 <meta name="theme-color" content="#181818">
 <link rel="canonical" href="https://simquence.com/guide.html">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Simquence">
-<meta property="og:title" content="Using Simquence">
+<meta property="og:title" content="How to Use Simquence: Model, Run and Compare Latency">
 <meta property="og:description" content="Run the shipped example in six steps, then change one thing and run it again. The same guide the application ships in its Guide dialog, shortened.">
 <meta property="og:url" content="https://simquence.com/guide.html">
 <meta property="og:image" content="https://simquence.com/assets/simquence-ui.png">
 <meta property="og:image:alt" content="The Simquence UI showing a makespan distribution, critical-path frequencies and percentiles">
+<meta property="og:image:width" content="1392">
+<meta property="og:image:height" content="743">
+<meta property="og:image:type" content="image/png">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Using Simquence">
+<meta name="twitter:title" content="How to Use Simquence: Model, Run and Compare Latency">
 <meta name="twitter:description" content="Run the shipped example in six steps, then change one thing and run it again.">
 <meta name="twitter:image" content="https://simquence.com/assets/simquence-ui.png">
+<meta name="twitter:image:alt" content="The Simquence UI showing a makespan distribution, critical-path frequencies and percentiles">
 <link rel="icon" type="image/png" href="assets/simquence.png">
+<link rel="apple-touch-icon" href="assets/simquence.png">
 <link rel="stylesheet" href="styles.css?v=5b699966d8">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://simquence.com/"}, {"@type": "ListItem", "position": 2, "name": "Features", "item": "https://simquence.com/features.html"}, {"@type": "ListItem", "position": 3, "name": "How to Use Simquence", "item": "https://simquence.com/guide.html"}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "HowTo", "name": "Your first latency simulation in Simquence, in six steps", "tool": [{"@type": "HowToTool", "name": "Simquence"}], "step": [{"@type": "HowToStep", "position": 1, "text": "Examples menu, then Checkout. Run flashes twice to say it is ready."}, {"@type": "HowToStep", "position": 2, "text": "Leave Runs at 200 and Seed at 1."}, {"@type": "HowToStep", "position": 3, "text": "Press Run."}, {"@type": "HowToStep", "position": 4, "text": "Read Summary: the percentiles of the makespan, which is how long the whole piece of work took."}, {"@type": "HowToStep", "position": 5, "text": "Read Critical path: the chain of work that actually held the run up."}, {"@type": "HowToStep", "position": 6, "text": "Press the chart button in the middle of the toolbar for Distributions, then look at the shape rather than any one number."}]}</script>
 </head>
 <body>
 <header class="nav">
   <div class="container nav-inner">
     <a class="brand" href="./">
-      <img src="assets/simquence.png" alt="Simquence icon">Simquence</a>
+      <img src="assets/simquence.png" width="256" height="256" alt="Simquence icon">Simquence</a>
     <nav class="nav-links">
       <a href="features.html">Features</a>
       <a href="why.html">Why</a>
@@ -41,7 +48,7 @@
   <section id="using">
     <div class="container prose">
       <div class="eyebrow">Using it</div>
-      <h2 class="section-title">Using Simquence</h2>
+      <h1 class="section-title">Using Simquence</h1>
 
       <p class="section-sub">The app's own Guide, shortened. The full version
         ships in the app, under the <b>i</b> button at the right of the toolbar.</p>
