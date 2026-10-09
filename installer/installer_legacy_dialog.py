@@ -9,7 +9,6 @@ reports, with a single button.
 from __future__ import annotations
 
 from PySide6.QtWidgets import (
-    QDialog,
     QHBoxLayout,
     QLabel,
     QPushButton,
@@ -20,10 +19,10 @@ from PySide6.QtWidgets import (
 import installer_bundle as bundle
 import installer_legacy as legacy
 import installer_theme as theme
-from installer_widgets import NeutralStart
+from installer_keys import FirstStopDialog
 
 
-class LegacyCleanupDialog(QDialog):
+class LegacyCleanupDialog(FirstStopDialog):
     """Ask whether to remove the old install; Accepted means remove it."""
 
     def __init__(self, plan: legacy.LegacyPlan, parent: QWidget | None = None) -> None:
@@ -36,10 +35,6 @@ class LegacyCleanupDialog(QDialog):
         margin = theme.DIALOG_MARGIN
         layout.setContentsMargins(margin, margin, margin, margin)
         layout.setSpacing(theme.BUTTON_GAP)
-
-        self._start = NeutralStart(self)
-        layout.addWidget(self._start)
-        self._started = False
 
         message = QLabel(legacy.describe(plan))
         message.setWordWrap(True)
@@ -62,9 +57,3 @@ class LegacyCleanupDialog(QDialog):
             close.clicked.connect(self.reject)
             row.addWidget(close)
         layout.addLayout(row)
-
-    def showEvent(self, event) -> None:
-        super().showEvent(event)
-        if not self._started:
-            self._started = True
-            self._start.setFocus()

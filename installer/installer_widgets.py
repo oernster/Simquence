@@ -9,7 +9,6 @@ from __future__ import annotations
 
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import (
-    QDialog,
     QHBoxLayout,
     QLabel,
     QPushButton,
@@ -22,6 +21,7 @@ import installer_bundle as bundle
 import installer_logic as logic
 import installer_ops as ops
 import installer_theme as theme
+from installer_keys import FirstStopDialog
 from installer_reading_pane import reading_pane
 
 APP_DISPLAY_NAME = logic.APP_DISPLAY_NAME
@@ -61,7 +61,7 @@ class NeutralStart(QWidget):
         self.setFocusPolicy(Qt.FocusPolicy.NoFocus)
 
 
-class LicenceDialog(QDialog):
+class LicenceDialog(FirstStopDialog):
     """A themed, scrollable view of a licence text, sized to its content."""
 
     def __init__(
@@ -80,8 +80,6 @@ class LicenceDialog(QDialog):
         layout.setContentsMargins(margin, margin, margin, margin)
         layout.setSpacing(theme.BUTTON_GAP)
 
-        self._started = False
-
         view = QTextEdit()
         view.setObjectName("LicenceView")
         view.setReadOnly(True)
@@ -97,27 +95,13 @@ class LicenceDialog(QDialog):
         close = QPushButton("Close")
         close.setObjectName("SecondaryAction")
         close.clicked.connect(self.accept)
-        self._close = close
         row = QHBoxLayout()
         row.addStretch()
         row.addWidget(close)
         layout.addLayout(row)
 
-    def showEvent(self, event) -> None:
-        """Open on Close, never on the text.
 
-        A dialog opened to read a licence has one thing to act on, so it opens
-        there, as the application's dialogs do. The text is a reading pane: a
-        stop only by Tab and only while it overflows, never focused on open.
-        """
-
-        super().showEvent(event)
-        if not self._started:
-            self._started = True
-            self._close.setFocus(Qt.FocusReason.TabFocusReason)
-
-
-class AppRunningDialog(QDialog):
+class AppRunningDialog(FirstStopDialog):
     """A themed ask to close the running app before setup continues.
 
     Retry re-checks the task list and accepts once the app is gone. A premature
@@ -143,10 +127,6 @@ class AppRunningDialog(QDialog):
         margin = theme.DIALOG_MARGIN
         layout.setContentsMargins(margin, margin, margin, margin)
         layout.setSpacing(theme.BUTTON_GAP)
-
-        self._start = NeutralStart(self)
-        layout.addWidget(self._start)
-        self._started = False
 
         message = QLabel(
             f"{app_name} is currently running. Close it, then choose "
@@ -178,14 +158,8 @@ class AppRunningDialog(QDialog):
             return
         self.accept()
 
-    def showEvent(self, event) -> None:
-        super().showEvent(event)
-        if not self._started:
-            self._started = True
-            self._start.setFocus()
 
-
-class UninstallDialog(QDialog):
+class UninstallDialog(FirstStopDialog):
     """A small themed uninstall confirmation naming what will be removed."""
 
     def __init__(self, parent: QWidget | None = None) -> None:
@@ -198,10 +172,6 @@ class UninstallDialog(QDialog):
         margin = theme.DIALOG_MARGIN
         layout.setContentsMargins(margin, margin, margin, margin)
         layout.setSpacing(theme.BUTTON_GAP)
-
-        self._start = NeutralStart(self)
-        layout.addWidget(self._start)
-        self._started = False
 
         message = QLabel(
             f"Remove {APP_DISPLAY_NAME} and its shortcuts from this PC? Any "
@@ -221,9 +191,3 @@ class UninstallDialog(QDialog):
         row.addWidget(cancel)
         row.addWidget(confirm)
         layout.addLayout(row)
-
-    def showEvent(self, event) -> None:
-        super().showEvent(event)
-        if not self._started:
-            self._started = True
-            self._start.setFocus()

@@ -6,6 +6,7 @@ from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import QApplication
 
 from simquence.version import __version__
+from simquence_ui.dialog_ring import install_dialog_arrow_ring
 from simquence_ui.icon_resolver import get_app_icon_path
 from simquence_ui.main_window import MainWindow
 from simquence_ui.run_controller import RunController
@@ -37,7 +38,7 @@ def run_app(argv: list[str] | None = None) -> int:
     app.setOrganizationName("Simquence")
 
     # Asked after QApplication exists, because the answer travels over Qt's own
-    # socket, and before any window is built, because the whole point is not to
+    # socket; before any window is built, because the whole point is not to
     # build a second one.
     if another_instance_is_running():
         return ALREADY_RUNNING_EXIT_CODE
@@ -49,9 +50,11 @@ def run_app(argv: list[str] | None = None) -> int:
 
     apply_theme(app, Theme.DARK)
 
-    # Application-wide, and held on the app, because the composer creates and
+    # Application-wide (held on the app) because the composer creates and
     # destroys controls as the model is edited.
     app._wheel_guard = install_wheel_guard(app)
+    # Application-wide for the same reason: every dialog, whoever opens it.
+    app._dialog_ring = install_dialog_arrow_ring(app)
 
     controller = RunController()
     # Ensure we don't tear down while a simulation worker thread is still running.
@@ -68,7 +71,7 @@ def run_app(argv: list[str] | None = None) -> int:
     window.resize(1400, 720)
     window.show()
 
-    # Held on the window so its lifetime is the window's, and started only once
+    # Held on the window so its lifetime is the window's; it is started only once
     # there is a window worth raising.
     window._instance_server = InstanceServer(lambda: raise_window(window))
 

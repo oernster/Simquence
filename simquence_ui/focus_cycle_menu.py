@@ -2,7 +2,7 @@ from __future__ import annotations
 
 """Menu-bar behaviour the toolkit does not provide.
 
-Qt's menus answer Enter but not Space, and they answer the horizontal arrows by
+Qt's menus answer Enter but not Space; they also answer the horizontal arrows by
 walking between menu titles, which is the same thing the focus ring wants those
 keys for. Every rule here is about resolving one of those two clashes, so they
 are kept together and out of the traversal controller.
@@ -46,6 +46,24 @@ def trigger_highlighted_item(popup: QMenu) -> bool:
     return True
 
 
+def highlight_first_item(menu: QMenu | None) -> None:
+    """Offer the first usable item of a menu the ring has just dropped.
+
+    Qt drops a title's menu the moment the ring highlights it, on Windows and
+    offscreen alike (measured); it opens with nothing active, so the user
+    who arrived there had to press Down before anything was offered. Down from
+    the title already highlights the first item; this makes the ring agree.
+    A menu already showing a highlight is left as it is.
+    """
+
+    if menu is None or not menu.isVisible() or menu.activeAction() is not None:
+        return
+    for action in menu.actions():
+        if action.isEnabled() and action.isVisible() and not action.isSeparator():
+            menu.setActiveAction(action)
+            return
+
+
 def active_popup_menu() -> QMenu | None:
     """The open menu, if the active popup is one."""
 
@@ -56,7 +74,7 @@ def active_popup_menu() -> QMenu | None:
 def should_yield_horizontal(popup: QMenu, *, forward: bool) -> bool:
     """Whether an open menu owns this horizontal arrow rather than the ring.
 
-    Two cases, and only two. Right on an item that HAS a submenu opens it, and
+    Two cases (only two). Right on an item that HAS a submenu opens it;
     Left inside a submenu closes back to its parent item. Everywhere else the
     horizontal arrows keep their ring meaning and step between menu titles, so
     the ring is never trapped inside the menu bar.

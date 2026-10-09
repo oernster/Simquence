@@ -43,6 +43,7 @@ import installer_lifecycle as lifecycle
 import installer_logic as logic
 import installer_ops as ops
 import installer_theme as theme
+from installer_keys import install_arrow_ring
 from installer_widgets import AppRunningDialog, UninstallDialog
 from installer_window import InstallerWindow
 
@@ -58,6 +59,8 @@ def _new_application(name: str) -> QApplication:
     app.setStyle("fusion")
     app.setApplicationName(name)
     app.setWindowIcon(bundle.app_icon())
+    # Right and Left step every window's ring, as Tab and Shift+Tab do.
+    app._arrow_ring = install_arrow_ring(app)
     return app
 
 

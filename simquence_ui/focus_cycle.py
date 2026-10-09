@@ -13,6 +13,7 @@ from simquence_ui.focus_cycle_keys import (
     is_menu_hover,
     suppress_menu_hover,
 )
+from simquence_ui.focus_cycle_menu import highlight_first_item
 from simquence_ui.focus_cycle_widgets import (
     collect_interactive_widgets_in_layout_order,
     maybe_add_interactive_widget,
@@ -32,11 +33,11 @@ class FocusCycleController(QObject):
       at EVERY stop, including the neutral start, so the ring can never be
       trapped in the menu bar or in a pane.
     - Wrap in both directions; skip disabled, hidden and non-actionable stops.
-    - A read-only output pane joins the ring only while it OVERFLOWS, and only
-      to be scrolled: focus that lets the user do nothing is not a stop.
+    - A read-only output pane joins the ring only while it OVERFLOWS (and only
+      to be scrolled): focus that lets the user do nothing is not a stop.
 
     The keys that mean something other than "step the ring" are decided in
-    focus_cycle_keys, and the menu bar's own clashes in focus_cycle_menu, so
+    focus_cycle_keys; the menu bar's own clashes in focus_cycle_menu, so
     this module holds one idea: the order things are visited in.
     """
 
@@ -333,6 +334,10 @@ class FocusCycleController(QObject):
             return self._last_index  # pragma: no cover
         return None
 
+    def _offer_first_item(self, action: QAction) -> None:
+        if self._pending_stop is action:
+            highlight_first_item(action.menu())
+
     def _apply(self, item: tuple[str, QAction | QWidget]) -> None:
         kind, obj = item
         # Whatever the ring last aimed at. A settle callback queued for an
@@ -344,6 +349,8 @@ class FocusCycleController(QObject):
         if kind == "menu":
             self._window.menuBar().setActiveAction(obj)
             self._window.setFocus(Qt.FocusReason.OtherFocusReason)
+            # Once the popup has shown, offer its first item (see menus).
+            QTimer.singleShot(0, lambda: self._offer_first_item(obj))
             return
 
         # Leaving the menu bar is a bit fiddly across platforms/styles.
