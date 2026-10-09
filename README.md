@@ -106,14 +106,14 @@ On Windows, setup installs per user with no administrator rights. If it finds an
 ## Install and run
 
 ```bash
-python -m pip install -e .[dev]
+python -m pip install -e '.[dev]'
 python -m pip install -r requirements.txt
 python -m simquence_ui
 ```
 
 `requirements.txt` brings in PySide6, which only the desktop UI needs; the simulation core has no runtime dependency. `python runner.py` is the same launch through the shim the frozen build starts at. The UI is deliberately not part of the published wheel, so run it from a clone or install a desktop build.
 
-Models at `schema_version: 1` run on a frozen NumPy engine, installed with `python -m pip install -e .[legacy]` (the `dev` extra already includes it). Without it a v1 model fails with a message naming the extra; `schema_version: 2` never needs it.
+Models at `schema_version: 1` run on a frozen NumPy engine, installed with `python -m pip install -e '.[legacy]'` (the `dev` extra already includes it). Without it a v1 model fails with a message naming the extra; `schema_version: 2` never needs it.
 
 ## Tests
 
@@ -133,7 +133,7 @@ python -m build
 The wheel contains the headless core `simquence/` and nothing else. The desktop builds need the `build` extra, kept out of `dev` so running the suite does not install a compiler:
 
 ```bash
-python -m pip install -e .[build]
+python -m pip install -e '.[build]'
 python generate_icons.py
 python buildexe.py
 python buildinstaller.py

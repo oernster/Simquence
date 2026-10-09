@@ -19,7 +19,7 @@ How to run Simquence from source, build it and cut a release. What it is is in [
 ```powershell
 python -m venv venv
 venv\Scripts\Activate.ps1
-python -m pip install -e .[dev]
+python -m pip install -e '.[dev]'
 python -m pip install -r requirements.txt
 python -m simquence_ui
 ```
@@ -37,7 +37,7 @@ python -m build
 
 ## Desktop builds
 
-Install the toolchain first with `python -m pip install -e .[build]`.
+Install the toolchain first with `python -m pip install -e '.[build]'`.
 
 ### Windows
 

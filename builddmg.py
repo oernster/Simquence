@@ -2,7 +2,7 @@
 
 Run on macOS from the repository root with the virtual environment active:
 
-    pip install -e .[build]
+    pip install -e '.[build]'
     python builddmg.py   ->   simquence.dmg
 
 PyInstaller comes from that build extra and is checked for before anything is
@@ -180,7 +180,7 @@ def require_pyinstaller() -> None:
         return
     raise SystemExit(
         f"PyInstaller is not installed in {sys.executable}. "
-        "Install the build extra with `pip install -e .[build]`."
+        "Install the build extra with `pip install -e '.[build]'`."
     )
 
 
@@ -429,7 +429,7 @@ def check_runtime_dependencies() -> None:
             + "".join(f"  {name}\n" for name in missing)
             + "PyInstaller would omit them and the app would crash at launch with\n"
             "ModuleNotFoundError. Install them first:\n"
-            "  pip install -e .[build]"
+            "  pip install -e '.[build]'"
         )
     print(f"All {checked} requirements present")
 

@@ -194,7 +194,7 @@ def require_nuitka() -> None:
     )
     raise SystemExit(
         f"{found}; this build needs {wanted} or later:\n"
-        "    python -m pip install -e .[build]"
+        "    python -m pip install -e '.[build]'"
     )
 
 
