@@ -311,17 +311,16 @@ file name. The test that validates the examples walks the same folder.
 - **Costs:** labels are derived from file names rather than written as
   captions.
 
-### The mark is the distributions switch
+### The distributions switch sits centre
 
-The application mark in the middle of the toolbar is the control that opens and
-closes the distributions panel. Its checked state follows the panel itself, not
-the click.
+The chart button in the middle of the toolbar opens and closes the
+distributions panel. Its checked state follows the panel itself, not the click.
 
-- **Rather than:** a decorative mark and a separate small button.
+- **Rather than:** one more small button in the left-hand group.
 - **Gains:** the most prominent control is the one that matters after a run; it
   tells the truth when the panel is closed some other way.
-- **Costs:** the mark needs a second rendering to stay visible on the checked
-  fill.
+- **Costs:** the chart's yellow bar is partly lost on the yellow checked fill;
+  its outline keeps the picture readable.
 
 ### Point once at what to do next
 

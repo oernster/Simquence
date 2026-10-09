@@ -78,8 +78,8 @@ def test_main_window_core_paths(monkeypatch, tmp_path: Path) -> None:
     w.show()
     app.processEvents()
 
-    # The centre mark is the generated application mark, never a font glyph,
-    # and it is the distributions toggle rather than decoration.
+    # The centre control is the distributions toggle, wearing its picture
+    # rather than a font glyph.
     from PySide6.QtWidgets import QPushButton as _QPushButton
 
     mark = w.findChild(_QPushButton, "distributions_btn")
@@ -97,7 +97,8 @@ def test_main_window_core_paths(monkeypatch, tmp_path: Path) -> None:
 
     info_btn = w.findChild(QPushButton, "how_to_read_btn")
     assert info_btn is not None
-    assert "ℹ️" in info_btn.text()
+    assert info_btn.text() == ""
+    assert info_btn.icon().isNull() is False
     assert info_btn.isEnabled() is True
 
     # Theme toggle route (ensure handler is callable).

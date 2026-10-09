@@ -53,7 +53,7 @@ flashes twice to say it is ready.</li>
 how long the whole piece of work took.</li>
 <li>Read <b>Critical path</b> beside it: the chain of work that actually held
 the run up.</li>
-<li>Press the <b>application mark</b> in the middle of the toolbar to open
+<li>Press the <b>chart button</b> in the middle of the toolbar to open
 <b>Distributions</b>, then look at the shape rather than at any one number.</li>
 </ol>
 <p>That is the whole loop. Everything else is variations on it.</p>

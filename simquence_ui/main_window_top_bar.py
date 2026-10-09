@@ -8,21 +8,22 @@ from PySide6.QtWidgets import (
     QGridLayout,
     QHBoxLayout,
     QPushButton,
-    QSizePolicy,
     QWidget,
 )
 
 from simquence_ui import main_window_actions as actions
 from simquence_ui.donate_button import build_donate_button
-from simquence_ui.glyphs import compose_body, edit_body, guide_body
 from simquence_ui.guide_text import GUIDE_TITLE
+from simquence_ui.icon_resolver import (
+    COMPOSE_ART,
+    GUIDE_ART,
+    OPEN_EDIT_ART,
+    OUTPUT_INFO_ART,
+    SAVE_EXPORT_ART,
+)
 from simquence_ui.theme import Theme
 from simquence_ui.theme_toggle import ThemeToggle
-from simquence_ui.top_bar_buttons import (
-    build_centre_mark,
-    drawn_icon_button,
-    icon_button,
-)
+from simquence_ui.top_bar_buttons import artwork_button, build_centre_mark
 
 # The tray is a band of its own rather than controls floating on the window.
 # The stylesheet gives it a surface and a bottom edge; it needs a name to be
@@ -88,7 +89,8 @@ def build_top_bar(
     on_edit_model_clicked: Callable[[], None],
     on_theme_changed: Callable[[Theme], None],
 ) -> TopBar:
-    """Build the top bar: actions at the edges, the app mark dead centre.
+    """Build the top bar: actions at the edges, the distributions toggle dead
+    centre (called the mark below).
 
     The mark is centred on the BAR, which a row of stretches cannot do. Three
     stretches centre it in the space LEFT OVER between the flanking groups;
@@ -112,49 +114,54 @@ def build_top_bar(
     layout.setSpacing(BUTTON_SPACING)
     layout.setAlignment(Qt.AlignmentFlag.AlignTop)
 
-    save_log_btn = icon_button(
-        "💾", tooltip="Export runs as zip…", on_clicked=on_save_log_clicked
+    save_log_btn = artwork_button(
+        SAVE_EXPORT_ART,
+        fallback="Export",
+        tooltip="Export runs as zip…",
+        on_clicked=on_save_log_clicked,
     )
+    save_log_btn.setObjectName("save_log_btn")
     layout.addWidget(save_log_btn, 0, Qt.AlignmentFlag.AlignTop)
 
     # Immediately left of the info button, because the pair is one idea in two
     # halves: this one says which button to press, that one says what the
     # output means.
-    guide_btn = drawn_icon_button(
-        guide_body, tooltip=GUIDE_TITLE, on_clicked=on_show_guide_clicked
+    guide_btn = artwork_button(
+        GUIDE_ART,
+        fallback="Guide",
+        tooltip=GUIDE_TITLE,
+        on_clicked=on_show_guide_clicked,
     )
     guide_btn.setObjectName("guide_btn")
-    guide_btn.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
     layout.addWidget(guide_btn, 0, Qt.AlignmentFlag.AlignTop)
 
-    how_to_read_btn = icon_button(
-        "ℹ️",
+    how_to_read_btn = artwork_button(
+        OUTPUT_INFO_ART,
+        fallback="How to Read",
         tooltip="How to Read Simquence Output",
         on_clicked=on_show_how_to_read_clicked,
     )
     how_to_read_btn.setObjectName("how_to_read_btn")
     layout.addWidget(how_to_read_btn, 0, Qt.AlignmentFlag.AlignTop)
 
-    compose_btn = drawn_icon_button(
-        compose_body,
+    # Not checkable. The composer is a modal dialog: while it is open it IS the
+    # window; a button reporting that from underneath it says nothing.
+    compose_btn = artwork_button(
+        COMPOSE_ART,
+        fallback="Compose",
         tooltip=actions.COMPOSE_READY,
         on_clicked=on_toggle_model_composer_clicked,
     )
     compose_btn.setObjectName("compose_model_btn")
-    # Not checkable. It was, back when it toggled a dock that shared the window
-    # with the results, so the button was the only thing saying which of the two
-    # was up. The composer is a modal dialog now: while it is open it IS the
-    # window; a button reporting that from underneath it says nothing.
-    compose_btn.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
     layout.addWidget(compose_btn, 0, Qt.AlignmentFlag.AlignTop)
 
-    edit_btn = drawn_icon_button(
-        edit_body,
+    edit_btn = artwork_button(
+        OPEN_EDIT_ART,
+        fallback="Edit",
         tooltip=actions.EDIT_NEEDS_MODEL,
         on_clicked=on_edit_model_clicked,
     )
     edit_btn.setObjectName("edit_model_btn")
-    edit_btn.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
     layout.addWidget(edit_btn, 0, Qt.AlignmentFlag.AlignTop)
 
     layout.addStretch(1)

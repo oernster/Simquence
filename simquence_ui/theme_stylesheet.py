@@ -110,33 +110,6 @@ QPushButton[role="theme-toggle"] {{
   padding: 2px 8px;
 }}
 
-/* Compose keeps the icon buttons' height; its CHECKED state is the visible
-   answer to "is the composer open". Object-name specificity means these ring
-   rules have to be repeated here or the button shows none. */
-QPushButton#compose_model_btn {{
-  min-height: 34px;
-  max-height: 34px;
-  padding: 2px 10px;
-}}
-
-/* Switched ON. The ink goes dark here and only here, because the accent is far
-   too light to carry the near-white every other filled button uses. */
-QPushButton#compose_model_btn:checked {{
-  background-color: {accent};
-  color: {accent_text};
-}}
-
-QPushButton#compose_model_btn:enabled:hover,
-QPushButton#compose_model_btn:enabled:focus {{
-  border-color: {ring};
-}}
-
-QPushButton#compose_model_btn:disabled {{
-  background-color: {panel};
-  color: {muted_text};
-  border: 2px solid {danger};
-}}
-
 /* The distributions toggle answers the same question from the other side: the
    two docks share the right-hand area, so at most one of this pair is checked.
    It carries the application's own mark rather than a drawn glyph; a

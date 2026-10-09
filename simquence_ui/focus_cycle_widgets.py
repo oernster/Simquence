@@ -146,7 +146,7 @@ def declared_ring_stops(w: QWidget) -> tuple[QWidget, ...] | None:
     Layout order is the right default and is what the eye follows almost
     everywhere. It is wrong the moment a container OVERLAYS one child on
     another, because an overlay has no position in the row it covers: the top
-    bar centres the application mark on the whole bar by putting it in the same
+    bar centres the distributions toggle on the whole bar by putting it in the same
     grid cell as the row of buttons, so the layout reaches it last however far
     left it is drawn. Such a container says what its order is; everything else
     is walked exactly as before.

@@ -102,47 +102,6 @@ def test_the_rendered_menu_paints_the_elevated_surface(
     window.deleteLater()
 
 
-def test_a_checked_button_repaints_its_glyph_in_the_accent_ink(
-    app: QApplication,
-) -> None:
-    """A stylesheet cannot reach inside an icon.
-
-    The checked fill is the light accent and the checked TEXT is dark, but a
-    glyph is a baked pixmap: without a second rendering it stays near-white and
-    disappears at the moment the button is saying something.
-    """
-
-    from PySide6.QtGui import QIcon
-
-    from simquence_ui.glyphs import compose_body, two_tone_icon
-
-    tokens = tokens_for(Theme.DARK)
-    icon = two_tone_icon(
-        compose_body,
-        ink=tokens.primary_text,
-        accent=tokens.accent,
-        disabled=tokens.muted_text,
-        checked_ink=tokens.accent_text,
-        size=20,
-    )
-
-    off = icon.pixmap(20, QIcon.Mode.Normal, QIcon.State.Off).toImage()
-    on = icon.pixmap(20, QIcon.Mode.Normal, QIcon.State.On).toImage()
-
-    assert off != on
-
-    def _has(image, colour: str) -> bool:
-        wanted = QColor(colour).rgb()
-        return any(
-            image.pixel(x, y) == wanted
-            for y in range(image.height())
-            for x in range(image.width())
-        )
-
-    assert _has(off, tokens.primary_text)
-    assert _has(on, tokens.accent_text)
-
-
 @pytest.mark.parametrize("theme", THEMES)
 def test_a_combo_popup_floats_on_the_same_surface_as_a_menu(
     app: QApplication, theme: Theme

@@ -3,60 +3,125 @@
 `main_window_top_bar` decides what sits where and in what order the ring reads
 them; this module decides what one button looks like. Kept apart so the bar
 stays a layout and each kind of button has one place that says how it is made.
+
+Every action wears a supplied picture from `assets/` rather than an emoji or a
+drawn glyph: an emoji is whatever font happens to be installed, so the same bar
+looked different on every machine.
 """
 
 from __future__ import annotations
 
 from collections.abc import Callable
+from pathlib import Path
 
 from PySide6.QtCore import QSize, Qt
-from PySide6.QtGui import QColor, QIcon, QPainter, QPixmap
+from PySide6.QtGui import QIcon, QImage, QPainter, QPixmap, QRegion
 from PySide6.QtWidgets import QPushButton, QSizePolicy, QWidget
 
-from simquence_ui.glyphs import two_tone_icon
-from simquence_ui.icon_resolver import get_app_icon_png_path
-from simquence_ui.theme import Theme, tokens_for
+from simquence_ui.icon_resolver import DISTRIBUTIONS_ART, get_asset_path
 
 TOOLBAR_BUTTON_PX = 34
 
-# The glyph inside a toolbar button, leaving room for the 2px ring and the
-# button's own padding without crowding either.
+# The donate mark's height inside a toolbar button, leaving room for the 2px
+# ring and the button's own padding without crowding either.
 GLYPH_PX = 20
+
+# The pictures on the action buttons. Larger than the donate mark because they
+# carry detail rather than a wordmark; still clear of the ring and padding
+# inside the 34px button.
+ARTWORK_PX = 24
+
+# How much of the supplied picture is kept before Qt scales it to the button:
+# four times the drawn size, so it stays sharp under display scaling without
+# holding a full-size picture for every state.
+_ARTWORK_WORK_PX = ARTWORK_PX * 4
+
+# A disabled picture is grey and faint. Keeping any of its colour would read as
+# half-available, which is not a state this application has.
+DISABLED_OPACITY = 0.45
 
 # Named so the stylesheet can say what CHECKED looks like on it. The name is
 # shared with the sheet rather than written out twice.
 DISTRIBUTIONS_BUTTON_NAME = "distributions_btn"
 
-# The application mark, in the middle of the bar. Painted from the generated
-# icon set rather than an emoji glyph, so the mark in the bar, the mark in the
-# taskbar, the mark on the shortcut and the mark in About are all one file.
+# The distributions toggle sits dead centre. A minimum width holds the centre
+# steady if its picture is ever missing, since a control that collapses would
+# move the thing it is supposed to centre.
 TOP_BADGE_PX = 36
 
-# The mark is the centrepiece, so it is drawn a little larger than the glyphs
-# flanking it, while still fitting inside a button of the tray's own height.
-CENTRE_MARK_PX = 24
 
-# Ask for a larger source and scale it down: downscaling a slightly-too-big icon
-# looks better than upscaling a slightly-too-small one.
-_MARK_SOURCE_PX = 64
+def _trimmed(source: QPixmap) -> QPixmap:
+    """The picture without its transparent margin, so every action fills the
+    same box whatever margin its artwork was drawn with."""
+
+    bounds = QRegion(source.mask()).boundingRect()
+    return source.copy(bounds) if not bounds.isEmpty() else source
+
+
+def _greyed(source: QPixmap) -> QPixmap:
+    """The picture in grey alone, faded, keeping its outline."""
+
+    grey = QPixmap.fromImage(
+        source.toImage()
+        .convertToFormat(QImage.Format.Format_ARGB32)
+        .convertToFormat(QImage.Format.Format_Grayscale8)
+    )
+    masked = QPixmap(source.size())
+    masked.fill(Qt.GlobalColor.transparent)
+    painter = QPainter(masked)
+    painter.drawPixmap(0, 0, grey)
+    painter.setCompositionMode(QPainter.CompositionMode.CompositionMode_DestinationIn)
+    painter.drawPixmap(0, 0, source)
+    painter.end()
+
+    out = QPixmap(source.size())
+    out.fill(Qt.GlobalColor.transparent)
+    painter = QPainter(out)
+    painter.setOpacity(DISABLED_OPACITY)
+    painter.drawPixmap(0, 0, masked)
+    painter.end()
+    return out
+
+
+def artwork_icon(path: Path | None) -> QIcon:
+    """A toolbar icon from a supplied picture; empty when there is none.
+
+    A checked button keeps the picture as drawn and says "on" with its fill.
+    Flattening the picture to one ink for that state was measured: the
+    distributions chart became a dark mound that no longer read as a chart,
+    while in full colour its outline keeps it legible on the yellow fill.
+    """
+
+    if path is None:
+        return QIcon()
+    source = QPixmap(str(path))
+    if source.isNull():
+        return QIcon()
+    art = _trimmed(source).scaled(
+        _ARTWORK_WORK_PX,
+        _ARTWORK_WORK_PX,
+        Qt.AspectRatioMode.KeepAspectRatio,
+        Qt.TransformationMode.SmoothTransformation,
+    )
+    disabled = _greyed(art)
+    icon = QIcon()
+    icon.addPixmap(art, QIcon.Mode.Normal, QIcon.State.Off)
+    icon.addPixmap(disabled, QIcon.Mode.Disabled, QIcon.State.Off)
+    return icon
 
 
 def build_centre_mark(
     parent: QWidget, *, tooltip: str, on_clicked: Callable[[], None]
 ) -> QPushButton:
-    """The application mark, dead centre, doubling as the distributions toggle.
+    """The distributions toggle, dead centre.
 
-    It was decoration and is now the control, which is the same widget doing a
-    job instead of sitting there: the mark is the most prominent thing on the
-    bar and the panel it opens is the point of running anything, so the two
-    belong together rather than competing for attention from opposite ends.
+    The panel it opens is the point of running anything, so it takes the most
+    prominent place on the bar rather than competing from one end.
 
     The height is fixed and the WIDTH is left natural. Fixing both to a size
     smaller than the frame the stylesheet computes makes Qt lay the frame out at
     its natural size and clip it at the widget edge, which slices the bottom
-    border off and leaves a ring that stops short. A minimum width holds the
-    centre steady if the icon set is ever missing, since a mark that collapses
-    would move the thing it is supposed to centre.
+    border off and leaves a ring that stops short.
     """
 
     mark = QPushButton(parent)
@@ -68,67 +133,20 @@ def build_centre_mark(
     mark.setCheckable(True)
     mark.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
     mark.clicked.connect(on_clicked)
-
-    mark_path = get_app_icon_png_path(_MARK_SOURCE_PX)
-    if mark_path is not None:
-        mark.setIcon(_mark_icon(QPixmap(str(mark_path))))
-        mark.setIconSize(QSize(CENTRE_MARK_PX, CENTRE_MARK_PX))
+    _wear(
+        mark, artwork_icon(get_asset_path(DISTRIBUTIONS_ART)), fallback="Distributions"
+    )
     return mark
 
 
-def _mark_icon(source: QPixmap) -> QIcon:
-    """The mark, plus a second rendering of it for the checked state.
+def _wear(button: QPushButton, icon: QIcon, *, fallback: str) -> None:
+    """Put the picture on; a missing picture leaves words rather than a blank."""
 
-    The mark's hands and hub are banana and the checked fill is banana, so on
-    its own the mark loses them at exactly the moment the button is saying
-    something. Measured at the 24px the bar draws, the same 74% of the mark
-    clears both fills by luminance; it is not the same 74%: on the blue fill the
-    quarter that does not clear is the case, which is warm against a cool fill
-    and so is separated by hue instead, while on the banana fill it is the
-    hands, which are that same yellow and therefore genuinely gone. A
-    stylesheet cannot reach inside an icon, so the second rendering is the same
-    answer the drawn glyphs already use, in the same ink.
-    """
-
-    icon = QIcon()
-    icon.addPixmap(source, QIcon.Mode.Normal, QIcon.State.Off)
-    icon.addPixmap(
-        _inked(source, tokens_for(Theme.DARK).accent_text),
-        QIcon.Mode.Normal,
-        QIcon.State.On,
-    )
-    return icon
-
-
-def _inked(source: QPixmap, colour: str) -> QPixmap:
-    """The same shape in one flat colour, keeping its alpha.
-
-    The mark is strokes rather than a solid body, so flattening it reads as the
-    same stopwatch drawn in a different ink rather than as a blob of its
-    outline.
-    """
-
-    out = QPixmap(source.size())
-    out.fill(Qt.GlobalColor.transparent)
-    painter = QPainter(out)
-    painter.drawPixmap(0, 0, source)
-    painter.setCompositionMode(QPainter.CompositionMode.CompositionMode_SourceIn)
-    painter.fillRect(out.rect(), QColor(colour))
-    painter.end()
-    return out
-
-
-def icon_button(
-    glyph: str, *, tooltip: str, on_clicked: Callable[[], None]
-) -> QPushButton:
-    """A toolbar button captioned with an emoji glyph."""
-
-    button = QPushButton(glyph)
-    button.setToolTip(tooltip)
-    button.setProperty("role", "icon-action")
-    button.setFixedHeight(TOOLBAR_BUTTON_PX)
-    button.clicked.connect(on_clicked)
-    return button
+    if icon.isNull():
+        button.setText(fallback)
+        return
+    button.setIcon(icon)
+    button.setIconSize(QSize(ARTWORK_PX, ARTWORK_PX))
 
 
 def glyph_button(
@@ -150,33 +168,20 @@ def glyph_button(
     return button
 
 
-def drawn_icon_button(
-    body_of: Callable[..., str],
+def artwork_button(
+    art_name: str,
     *,
+    fallback: str,
     tooltip: str,
     on_clicked: Callable[[], None],
-    checkable: bool = False,
 ) -> QPushButton:
-    """A toolbar button carrying a drawn two-tone glyph rather than an emoji.
+    """A toolbar button wearing one of the supplied pictures from `assets/`."""
 
-    The colours come from the dark theme's tokens because the button fill is
-    the same blue in both themes, so one rendering serves both and the glyph
-    never has to be redrawn on a theme switch.
-    """
-
-    tokens = tokens_for(Theme.DARK)
-    return glyph_button(
-        two_tone_icon(
-            body_of,
-            ink=tokens.primary_text,
-            accent=tokens.accent,
-            disabled=tokens.muted_text,
-            # A checked button's fill is the light accent, so its glyph takes
-            # the accent's dark ink. Without it the icon stays near-white and
-            # vanishes at the moment the button is saying something.
-            checked_ink=tokens.accent_text if checkable else None,
-            size=GLYPH_PX,
-        ),
-        tooltip=tooltip,
-        on_clicked=on_clicked,
-    )
+    button = QPushButton()
+    button.setToolTip(tooltip)
+    button.setProperty("role", "icon-action")
+    button.setFixedHeight(TOOLBAR_BUTTON_PX)
+    button.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
+    button.clicked.connect(on_clicked)
+    _wear(button, artwork_icon(get_asset_path(art_name)), fallback=fallback)
+    return button

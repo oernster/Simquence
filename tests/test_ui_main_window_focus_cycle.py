@@ -74,7 +74,7 @@ def test_focus_cycle_tab_order_and_arrow_keys(monkeypatch) -> None:
     def _focused_widget_text() -> str:
         fw = QApplication.focusWidget()
         if isinstance(fw, QPushButton):
-            # Compose and Edit carry a drawn glyph and no caption, so they are
+            # The tray buttons carry a picture and no caption, so they are
             # identified by object name; everything else still reads better as
             # the text the user can see.
             return fw.text() or fw.objectName()
@@ -152,7 +152,7 @@ def test_focus_cycle_tab_order_and_arrow_keys(monkeypatch) -> None:
     # How to Read sits immediately right of it: the pair is one idea in two
     # halves, which button to press and then what the output means.
     _send(Qt.Key_Tab)
-    _wait_for_focus_text("ℹ️")
+    _wait_for_focus_text("how_to_read_btn")
 
     # Distributions button exists but is disabled until a successful run
     # completes, so it is intentionally skipped by the focus-cycle.
@@ -211,7 +211,7 @@ def test_focus_cycle_tab_order_and_arrow_keys(monkeypatch) -> None:
     assert _focused_widget_text() == "guide_btn"
 
     _send(Qt.Key_Tab)
-    assert _focused_widget_text() == "ℹ️"
+    assert _focused_widget_text() == "how_to_read_btn"
 
     _send(Qt.Key_Tab)
     assert _focused_widget_text() == "compose_model_btn"

@@ -421,7 +421,7 @@ Full keyboard reachability is built as one explicit focus ring rather than left 
 - `Tab` and `Right` step forward, `Shift+Tab` and `Left` step back; the ring wraps at both ends. The horizontal arrows are tested first, so they step the ring everywhere rather than being swallowed by the menu bar or a list.
 - Ring order is the menu titles, then the body widget stops, then the docks. Docks are siblings of `centralWidget()`, so they are collected explicitly by [`simquence_ui.focus_cycle_widgets.collect_interactive_widgets_in_layout_order()`](simquence_ui/focus_cycle_widgets.py:1). The Model Composer used to depend on that and no longer does: it is a dialog, which is a window of its own and owns its focus, so it is reached the way every other dialog is rather than by the main ring being taught to walk into it.
 - A disabled or hidden control is skipped by the ring and shows no ring colour, because every hover and focus rule is gated on `:enabled`.
-- **Layout order is reading order everywhere except under an overlay; a container that overlays says so itself.** The top bar centres the application mark on the WHOLE bar, which cannot be done in a row of stretches, so the mark shares one grid cell with the row of buttons and is added second (it has to be; otherwise the row takes the click where they meet). Layout order therefore reaches every button first and the mark last, so the ring crossed the bar to the theme toggle at the far right before coming back to the mark in the middle: the one control on the bar impossible to miss with the eye was the last one the keyboard offered, which a user cannot tell apart from its having been skipped. [`main_window_top_bar.NavBand`](simquence_ui/main_window_top_bar.py:1) states the bar's left-to-right order through a `ring_stops()` method that [`focus_cycle_widgets.declared_ring_stops()`](simquence_ui/focus_cycle_widgets.py:1) prefers over the layout walk. Only a container whose layout is deliberately not in reading order needs this; everything else is walked exactly as before. The order is asserted against where the controls are actually DRAWN rather than against the declared list, at a realistic window width, because a bar narrow enough for the left-hand group to run past its own centre would otherwise pin the wrong answer; a second test fails if a control on the band is missing from the declaration, so adding a button and forgetting the order cannot drop it off the ring.
+- **Layout order is reading order everywhere except under an overlay; a container that overlays says so itself.** The top bar centres the distributions toggle (the mark) on the WHOLE bar, which cannot be done in a row of stretches, so the mark shares one grid cell with the row of buttons and is added second (it has to be; otherwise the row takes the click where they meet). Layout order therefore reaches every button first and the mark last, so the ring crossed the bar to the theme toggle at the far right before coming back to the mark in the middle: the one control on the bar impossible to miss with the eye was the last one the keyboard offered, which a user cannot tell apart from its having been skipped. [`main_window_top_bar.NavBand`](simquence_ui/main_window_top_bar.py:1) states the bar's left-to-right order through a `ring_stops()` method that [`focus_cycle_widgets.declared_ring_stops()`](simquence_ui/focus_cycle_widgets.py:1) prefers over the layout walk. Only a container whose layout is deliberately not in reading order needs this; everything else is walked exactly as before. The order is asserted against where the controls are actually DRAWN rather than against the declared list, at a realistic window width, because a bar narrow enough for the left-hand group to run past its own centre would otherwise pin the wrong answer; a second test fails if a control on the band is missing from the declaration, so adding a button and forgetting the order cannot drop it off the ring.
 - The main window starts neutral: nothing is focused and no menu is open until the first `Tab` or `Right`. Dialogs do the opposite and open already focused on their first usable control ([`simquence_ui.first_stop_dialog`](simquence_ui/first_stop_dialog.py:1)), because a dialog was opened on purpose. A reading pane is not a control, so About, the Guide, How to Read and both licences open on OK rather than on their text; list, table and tree views are kept, so the Model Composer still opens on its section tree.
 - **A pane is never a stop; a reading pane is one only while it overflows.** The run output, the critical-path frequency list and every dialog's text use [`simquence_ui.pane_focus.follow_overflow()`](simquence_ui/pane_focus.py:1): `TabFocus` while there is somewhere to scroll, `NoFocus` when the text fits, re-decided whenever a scrollbar's range changes or the pane is resized. Never `StrongFocus`, because a click would then focus the whole page. The Model Composer's scrolling pages hold controls of their own, so they are `NoFocus` outright (`as_pane()`); Tab into a control on a page scrolls it into view.
 - **Examples is a top-level menu rather than a submenu of File; the ring is the reason.** The ring claims Left and Right to step between stops, which is the same pair Qt uses to open and close a submenu, so a submenu would be the one part of the menu bar the keyboard could not reach the usual way. A title of its own costs nothing and is walked like any other.
@@ -435,13 +435,10 @@ The accent is banana yellow and is one value across both themes, like `primary`,
 because a filled block does not need the per-theme adjustment a line drawn on a
 surface does. Anything painted ON it takes `accent_text`, a near-black: the
 accent is far too light to carry the near-white every other filled control uses.
-That applies to drawn icons as well as to text; a stylesheet cannot reach
-inside an icon, so a checkable button whose checked fill is the accent supplies
-a second rendering of its glyph in the accent's ink. Without it the glyph stays
-near-white and disappears at exactly the moment the button means something. A
-button carrying the application's MARK rather than a drawn glyph is the
-exception: a picture cannot be recoloured that way, so its checked state is said
-by the fill and the ink alone.
+A picture on a checked button is the exception: it keeps its own colours and
+the fill alone says "on". Flattening the distributions chart to that ink was
+measured and rejected; it read as a dark mound, while in full colour its
+outline keeps it a chart on the yellow fill.
 
 **One place decides how tall an input stands.** A Qt type selector matches a
 class and its subclasses; `QDoubleSpinBox` is a SIBLING of `QSpinBox` rather
@@ -608,22 +605,17 @@ asked at different moments and the Guide's own text is ordered on that basis:
 six numbered steps with no explanation attached, then every reason afterwards,
 once there is something for the reason to attach to. Its button sits
 immediately left of the info button so the pair reads as one idea in two
-halves and its glyph is an open book precisely because it must share no shape
-with an "i" in a circle.
+halves and its picture is an open book, sharing no shape with the "i" in a
+circle beside it.
 
-Every drawn glyph in the tray is TWO colours; they all split the same way
-([`two_tone_icon()`](simquence_ui/glyphs.py:1)): the part that merely sits
-there takes the button's own ink and the part that says what the button DOES
-takes the accent. The book's covers against its ruled lines and page edge, the
-event graph's edges against its nodes and its plus, the document against its
-pencil. A single-tone glyph on a filled button reads as a watermark; the book's
-single-tone version was two blank curves, which said "a document" rather than
-"a manual with something in it". The book carries two ruled lines per page rather than three because three
-were measured at the 20px the tray actually draws and blurred into each other,
-so the sense of several pages comes from the page edge instead, which has room
-to be seen. Disabled mutes BOTH tones: a glyph that kept its accent while the
-rest of it greyed out would read as half-available, which is not a state this
-application has.
+Every action in the tray wears a supplied picture from `assets/` (named in
+[`icon_resolver`](simquence_ui/icon_resolver.py:1)) rather than an emoji, which
+is whatever font happens to be installed.
+[`artwork_icon()`](simquence_ui/top_bar_buttons.py:1) trims each picture's
+transparent margin so every action fills the same box, then derives its states:
+disabled is grey and faded, because a picture that kept its colour while
+disabled would read as half-available, which is not a state this application
+has. A missing picture leaves the button's name as words rather than a blank.
 
 The text lives in [`guide_text`](simquence_ui/guide_text.py:1) rather than in
 the dialog, for the same reason `about_text` does: the words change far more
@@ -634,12 +626,9 @@ also what
 moves in PIXELS; a `QPlainTextEdit` scrolls in LINES, where the same gentle
 drift becomes a whole line jumping at a time.
 
-**The application mark is the distributions toggle.** It sat dead centre on the
-tray as decoration, transparent to the mouse and off the keyboard ring, while
-the control that opens the distributions panel was one more small glyph in the
-left-hand group. The mark is the most prominent thing on the bar and the panel
-is the point of having run anything, so they are now one widget instead of
-competing for attention from opposite ends of the bar.
+**The distributions toggle sits dead centre** (the mark, below). The panel is
+the point of having run anything, so its control takes the most prominent place
+on the bar rather than being one more small button in the left-hand group.
 
 Centring it is an overlay rather than a row of stretches: three stretches centre
 a widget in the space LEFT OVER between the flanking groups; those groups
@@ -655,15 +644,8 @@ size and clip it at the widget edge, slicing the bottom border off a ring that
 then stops short. A minimum width holds the centre steady if the icon set is
 ever missing, because a mark that collapses moves the thing it is centring.
 
-The mark's hands and hub are banana, as is the checked fill, so the mark on
-its own loses them at exactly the moment the button is saying something. A
-stylesheet cannot reach inside an icon, so
-[`_mark_icon()`](simquence_ui/top_bar_buttons.py:79) supplies a second
-rendering for `QIcon.State.On`, flattened to `accent_text`: the same answer the
-drawn glyphs already use, in the same ink. It is a flat re-ink rather than a
-silhouette because the mark is strokes rather than a solid body, so flattening
-it reads as the same stopwatch in a different ink instead of a blob of its
-outline.
+Checked, it keeps its picture in full colour on the accent fill; see the
+accent note above for why it is not flattened to one ink.
 
 **A panel button says whether the panel is up.** Distributions is a toggle
 ([`toggle_distributions()`](simquence_ui/main_window_dock_switching.py:44)), not
@@ -789,7 +771,6 @@ Three delivery findings are load-bearing and are recorded here so they are not r
 - **The donate button takes a seat in the existing top bar.** The window has a tray of icon buttons already, so a band of chrome carrying one control would cost more than it buys. The button sits immediately left of the theme toggle, in the row and in the declared ring alike, because those two are the only controls about the application rather than the model. As a member of the tray it is drawn at the tray's own glyph height, keeping the mark's aspect. Its one address is `DONATE_URL` beside the rest of the identity in [`about_text`](simquence_ui/about_text.py:1), handed to the desktop through the [`links`](simquence_ui/links.py:1) seam: the application never fetches the page. The picture says nothing about leaving the application, so the tooltip does. The window has no status bar, so a desktop that refuses says so in an information box naming the address. Conformance: [`tests/test_ui_donate_button.py`](tests/test_ui_donate_button.py:1).
 - **The macOS assets are opaque; every other platform's are transparent.** The master has a transparent canvas and a transparent dial face, which is correct for the Windows taskbar, the Flatpak hicolor set and the in-application badge, all of which sit on a surface the mark is not supposed to occlude. macOS is the exception: the Dock, Finder and the mounted disk image composite the icon straight onto the desktop, so the transparent version reads as a red ring and a yellow hand floating on the pale grey of the default light appearance, with no icon visible at all. `generate_icons.py` therefore draws the macOS outputs on an opaque black tile (`MAC_BACKGROUND_RGBA`) and writes them under a separate `simquence_icon_mac` stem, leaving the shared set untouched: the `.icns` the bundle and PyInstaller consume, `simquence_icon_mac_1024.png` as the source `builddmg.py` hands to `dmg_icon.png_to_icns` for the volume and file icons, then `simquence_icon_mac.png` as the Dock icon at runtime. `icon_resolver.app_icon_names` is what makes the last one macOS-only; the in-application badge goes on resolving through `get_app_icon_png_path` and stays transparent, because it is drawn on the application's own background.
 - **The macOS tile follows Apple's icon grid, not the full canvas.** A full-bleed square renders visibly larger than every system application beside it in the Dock, with hard corners where everything around it is rounded. `mac_icon` in `generate_icons.py` therefore insets the black tile to 824 of the 1024 point canvas (`MAC_TILE_FRACTION`) with a 185.4 point corner radius (`MAC_TILE_RADIUS_FRACTION`), leaving the canvas around it transparent, then sizes the mark to `MAC_MARK_FRACTION` of the tile so it keeps the interior margin system icons keep. The corner mask is drawn at `MAC_MASK_SUPERSAMPLE` times the target size and scaled back down, because Pillow's `rounded_rectangle` does not antialias and an aliased corner is obvious against the desktop. This shaping is macOS-only: Windows and Flatpak apply their own framing and want the square master.
-- The glyph is balanced in its tile, 7 units clear at the top and at the base on the SVG's 64-unit grid. The case must not approach y=60 or lower, where the tile's own 14-unit corner radius is already curving inward and the circle reads as clipped.
 
 ## Quality gates (enforced by tests)
 

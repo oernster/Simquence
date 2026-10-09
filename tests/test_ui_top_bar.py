@@ -17,9 +17,6 @@ WINDOW_WIDTHS = (900, 1400, 1920)
 # blended edges an icon this size is mostly made of.
 ICON_PROBE_PX = 64
 
-# Rasterising blends the ink against transparency at every edge, so an exact
-# match would only ever hold in the middle of a stroke.
-INK_TOLERANCE = 60
 WINDOW_HEIGHT = 720
 
 # A badge one pixel off centre is not a defect; a badge 134 pixels off centre
@@ -81,21 +78,23 @@ def test_the_mark_is_centred_on_the_bar_not_on_the_leftover_space(
     assert abs(mark_centre - bar.width() / 2) <= CENTRING_TOLERANCE_PX
 
 
-def test_the_mark_is_the_generated_icon_and_not_a_font_glyph(
+def test_the_mark_is_its_picture_and_not_a_font_glyph(
     window: MainWindow,
 ) -> None:
-    """A glyph is whatever font happens to be installed; a file is the mark."""
+    """A glyph is whatever font happens to be installed; a file is the same
+    everywhere."""
 
     mark = window._distributions_btn
     assert mark.text() == ""
     assert mark.icon().isNull() is False
 
 
-def test_the_mark_is_re_inked_for_the_checked_state(window: MainWindow) -> None:
-    """The mark's hands and hub are banana and the checked fill is banana, so
-    on its own the mark loses them at exactly the moment the button is saying
-    something. A stylesheet cannot reach inside an icon, so the checked state
-    gets a second rendering, the same answer the drawn glyphs already use."""
+def test_the_checked_mark_keeps_its_picture(window: MainWindow) -> None:
+    """Checked says "on" with its fill, never by flattening the picture.
+
+    Flattened to one dark ink the chart was measured reading as a mound; in
+    full colour its outline keeps it a chart on the yellow fill.
+    """
 
     icon = window._distributions_btn.icon()
     size = QSize(ICON_PROBE_PX, ICON_PROBE_PX)
@@ -103,27 +102,7 @@ def test_the_mark_is_re_inked_for_the_checked_state(window: MainWindow) -> None:
     unchecked = icon.pixmap(size, QIcon.Mode.Normal, QIcon.State.Off).toImage()
     checked = icon.pixmap(size, QIcon.Mode.Normal, QIcon.State.On).toImage()
 
-    assert unchecked != checked
-
-    ink = QColor(tokens_for(Theme.DARK).accent_text)
-    opaque = 0
-    inked = 0
-    for y in range(checked.height()):
-        for x in range(checked.width()):
-            pixel = QColor(checked.pixel(x, y))
-            if checked.pixelColor(x, y).alpha() == 0:
-                continue
-            opaque += 1
-            if (
-                abs(pixel.red() - ink.red()) <= INK_TOLERANCE
-                and abs(pixel.green() - ink.green()) <= INK_TOLERANCE
-                and abs(pixel.blue() - ink.blue()) <= INK_TOLERANCE
-            ):
-                inked += 1
-
-    assert opaque > 0
-    # Every visible part of it, not most of it: the whole mark is re-inked.
-    assert inked == opaque
+    assert checked == unchecked
 
 
 def test_the_centre_mark_is_the_distributions_toggle(window: MainWindow) -> None:
@@ -254,67 +233,6 @@ def test_the_declared_order_holds_every_control_on_the_bar(
         if is_interactive_widget(window, child) and id(child) not in declared
     ]
     assert not missing, missing
-
-
-def _accent_pixels(widget, accent: QColor) -> int:
-    """How much of a rendered button is drawn in the accent."""
-
-    image = widget.grab().toImage()
-    return sum(
-        1
-        for y in range(image.height())
-        for x in range(image.width())
-        if _near(QColor(image.pixel(x, y)), accent)
-    )
-
-
-def _near(pixel: QColor, want: QColor) -> bool:
-    return (
-        abs(pixel.red() - want.red()) <= INK_TOLERANCE
-        and abs(pixel.green() - want.green()) <= INK_TOLERANCE
-        and abs(pixel.blue() - want.blue()) <= INK_TOLERANCE
-    )
-
-
-@pytest.mark.parametrize("name", ("_compose_btn", "_edit_btn"))
-def test_the_drawn_glyphs_are_two_tone(
-    app: QApplication, window: MainWindow, name: str
-) -> None:
-    """A single-tone glyph on a filled button reads as a watermark.
-
-    Compose and Edit both split the same way the Guide's book does: the part
-    that merely sits there takes the button's ink; the part that says what
-    the button DOES takes the accent.
-    """
-
-    apply_theme(app, Theme.DARK)
-    app.processEvents()
-
-    button = getattr(window, name)
-    button.setEnabled(True)
-    app.processEvents()
-
-    assert _accent_pixels(button, QColor(tokens_for(Theme.DARK).accent)) > 0
-
-
-@pytest.mark.parametrize("name", ("_compose_btn", "_edit_btn"))
-def test_a_disabled_drawn_glyph_mutes_both_of_its_tones(
-    app: QApplication, window: MainWindow, name: str
-) -> None:
-    """A glyph that keeps its accent while the rest of it greys out reads as
-    half-available, which is not a state this application has."""
-
-    apply_theme(app, Theme.DARK)
-    accent = QColor(tokens_for(Theme.DARK).accent)
-
-    button = getattr(window, name)
-    button.setEnabled(False)
-    app.processEvents()
-
-    assert _accent_pixels(button, accent) == 0
-
-    button.setEnabled(True)
-    app.processEvents()
 
 
 @pytest.mark.parametrize("theme", (Theme.DARK, Theme.LIGHT))

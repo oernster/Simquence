@@ -58,6 +58,15 @@ BADGE_PNG_SIZE = 256
 # the repository root, so a build ships the small render and never the master.
 DONATE_PNG_NAME = "donate.png"
 
+# The top bar's artwork, one picture per action. Supplied finished rather than
+# generated, so they are read as they are.
+SAVE_EXPORT_ART = "simquence_save_export.png"
+GUIDE_ART = "simquence_guide.png"
+OUTPUT_INFO_ART = "simquence_output_information.png"
+COMPOSE_ART = "simquence_compose_model.png"
+OPEN_EDIT_ART = "simquence_open_edit.png"
+DISTRIBUTIONS_ART = "simquence_distributions.png"
+
 
 def candidate_asset_dirs(
     *,
@@ -154,13 +163,19 @@ def get_app_icon_png_path(
     return candidate if candidate.is_file() else None
 
 
-def get_donate_png_path(assets_dir: Path | None = None) -> Path | None:
-    """The artwork for the donate button; None when it was never generated."""
+def get_asset_path(file_name: str, assets_dir: Path | None = None) -> Path | None:
+    """A named file in the assets directory; None when it is not there."""
 
     if assets_dir is None:
         assets_dir = find_assets_dir()
     if assets_dir is None:
         return None
 
-    candidate = assets_dir / DONATE_PNG_NAME
+    candidate = assets_dir / file_name
     return candidate if candidate.is_file() else None
+
+
+def get_donate_png_path(assets_dir: Path | None = None) -> Path | None:
+    """The artwork for the donate button; None when it was never generated."""
+
+    return get_asset_path(DONATE_PNG_NAME, assets_dir)

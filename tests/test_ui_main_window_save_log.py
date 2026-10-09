@@ -50,11 +50,11 @@ def test_save_log_button_dumps_right_panel(monkeypatch, tmp_path: Path) -> None:
 
     # Find the save button in the top bar (just below the menu).
     matches = w.findChildren(QPushButton)
-    btns = [b for b in matches if "💾" in b.text()]
+    btns = [b for b in matches if b.objectName() == "save_log_btn"]
     assert btns
     btn = btns[0]
 
-    assert "💾" in btn.text()
+    assert btn.icon().isNull() is False
 
     # Requirement: export disabled until first successful run.
     assert btn.isEnabled() is False
