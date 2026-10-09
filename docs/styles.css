@@ -69,6 +69,13 @@ header.nav {
   padding: 104px 0 80px;
   overflow: hidden;
 }
+/* The home page's hero carries the app screenshot, so the first screen shows
+   the product rather than only words about it. */
+.hero.hero-shot { padding: 48px 0 64px; }
+.hero.hero-shot .logo { width: 72px; height: 72px; margin-bottom: 12px; }
+.hero.hero-shot .lede { margin-top: 18px; }
+.hero.hero-shot .cta { margin-top: 24px; }
+.hero.hero-shot .shot { margin-top: 36px; text-align: left; }
 .hero::before {
   content: "";
   position: absolute;

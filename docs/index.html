@@ -26,7 +26,7 @@
 <meta name="twitter:image:alt" content="The Simquence UI showing a makespan distribution, critical-path frequencies and percentiles">
 <link rel="icon" type="image/png" href="assets/simquence.png">
 <link rel="apple-touch-icon" href="assets/simquence.png">
-<link rel="stylesheet" href="styles.css?v=5b699966d8">
+<link rel="stylesheet" href="styles.css?v=fc1439b215">
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "SoftwareApplication", "name": "Simquence", "alternateName": "LatencyLab", "applicationCategory": "DeveloperApplication", "applicationSubCategory": "Latency simulation", "operatingSystem": "Windows, macOS, Linux", "description": "Simquence simulates explicit models of your software architecture (tasks, events, queues, contention) thousands of times, to show where users would wait and why, before the code exists.", "url": "https://simquence.com/", "downloadUrl": "https://simquence.com/download.html", "installUrl": "https://simquence.com/download.html", "image": "https://simquence.com/assets/simquence-ui.png", "screenshot": ["https://simquence.com/assets/simquence-ui.png", "https://simquence.com/assets/simquence-compose.png", "https://simquence.com/assets/simquence-edit.png"], "featureList": ["Seeded, reproducible Monte Carlo latency simulation", "Makespan percentiles from p50 to p99", "Critical-path frequency across runs", "Queueing and contention through context concurrency", "Debounces, backoffs and poll intervals as delays on wiring", "Model Composer for writing models without hand-written JSON", "Command-line interface writing JSON and CSV results"], "isAccessibleForFree": true, "offers": {"@type": "Offer", "price": "0", "priceCurrency": "GBP"}, "author": {"@type": "Person", "name": "Oliver Ernster", "url": "https://ernster.dev/"}, "sameAs": ["https://github.com/oernster/Simquence"], "audience": {"@type": "Audience", "audienceType": "Senior engineers, software architects, CTOs and technical leaders"}, "keywords": "latency simulator, architecture simulation, design-time latency, p99 latency, critical path analysis, queueing simulation, event-driven systems, Monte Carlo simulation, performance modelling", "license": "https://www.gnu.org/licenses/gpl-3.0.html"}</script>
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebSite", "name": "Simquence", "url": "https://simquence.com/", "inLanguage": "en"}</script>
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "What is a design-time latency simulator?", "acceptedAnswer": {"@type": "Answer", "text": "A tool that predicts how long a flow takes from a model of its design rather than from running code. Simquence runs a model of tasks, events and shared resources thousands of times and reports latency percentiles from p50 to p99 with the critical path of each run."}}, {"@type": "Question", "name": "How is it different from a profiler or APM tool?", "acceptedAnswer": {"@type": "Answer", "text": "A profiler or APM tool measures a system that already runs. Simquence works on the design before the code exists, so a structural decision can be tested while it is still cheap to change."}}, {"@type": "Question", "name": "What can it model?", "acceptedAnswer": {"@type": "Answer", "text": "Any event-driven software: a web checkout, a desktop UI thread, a microservice fan-out, a mobile flow or an embedded pipeline. Queueing comes from each context's concurrency; debounces, backoffs and poll intervals are delays on the wiring."}}, {"@type": "Question", "name": "Are the results reproducible?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Every run is seeded, so the same model and seed give the same answer every time. Rerun a changed model on the same seed and any difference is the design change rather than luck."}}, {"@type": "Question", "name": "Is it free? Does it send my models anywhere?", "acceptedAnswer": {"@type": "Answer", "text": "It is free under GPL-3.0, with an LGPL-3.0 desktop interface. Models and results stay on your machine; the only outbound call is an anonymous daily check of GitHub for a newer release."}}]}</script>
@@ -37,102 +37,73 @@
     <a class="brand" href="#top">
       <img src="assets/simquence.png" width="256" height="256" alt="Simquence icon">Simquence</a>
     <nav class="nav-links">
-      <a href="features.html">Features</a>
       <a href="why.html">Why</a>
       <a href="download.html">Download</a>
+      <a href="https://github.com/oernster/Simquence">GitHub</a>
     </nav>
   </div>
 </header>
 <main id="top">
-  <section class="hero">
+  <section class="hero hero-shot">
     <div class="container">
       <img class="logo" src="assets/simquence.png" width="256" height="256" alt="Simquence icon">
       <h1>Simquence</h1>
       <div class="tagline">Design-Time Latency Exploration</div>
-      <p class="lede">Simulate your architecture's latency before you build it.
-        Describe the design as a small explicit model, run it thousands of times
-        and see which chain of work users would actually wait on. Not a
-        profiler: it works on the design rather than the code.</p>
+      <p class="lede">Simulate your architecture's latency before you build it: model the
+        work, the events and the queues, run it thousands of times and see which chain
+        of work users would actually wait on.</p>
       <div class="cta">
         <a class="btn btn-primary" href="download.html">Download</a>
-        <a class="btn btn-ghost" href="guide.html">How to use it</a>
+        <a class="btn btn-ghost" href="https://github.com/oernster/Simquence">Source on GitHub</a>
       </div>
-      <p class="release-note">Windows, macOS and Linux.</p>
-      <div class="badges">
-        <span>Local-first</span>·<span>No cloud, no account</span>
-        ·<span>Deterministic, seeded runs</span>·<span>GPL-3.0 + LGPL-3.0</span>
-      </div>
+      <p class="release-note">Windows, macOS and Linux · free · local-first, no account</p>
+        <figure class="shot" id="ui">
+          <div class="frame">
+            <img src="assets/simquence-ui.png" width="1392" height="743" alt="The Simquence UI showing a makespan distribution, critical-path frequencies, percentiles and the dominant critical path">
+          </div>
+          <figcaption><b>The shipped checkout example, run 200 times.</b> Most people
+            expect the slowest back end to dominate. In most runs a 150&nbsp;ms debounce
+            holds the user up instead.</figcaption>
+        </figure>
     </div>
   </section>
 
-  <section id="onepass">
+  <section id="loop">
     <div class="container">
-      <div class="eyebrow">What it is, in one pass</div>
-      <h2 class="section-title">A design-time latency simulator</h2>
-      <p class="section-sub">The whole workflow is a loop:</p>
+      <h2 class="section-title">The whole workflow</h2>
       <div class="features">
-        <div class="feature"><div class="fnum">01</div><h3>Model</h3><p>Tasks, the events that trigger them and the resources they queue behind. Plain JSON or the composer; 10 to 20 tasks is often enough.</p></div>
-        <div class="feature"><div class="fnum">02</div><h3>Run</h3><p>Queues form where concurrency runs out; durations are drawn from your distributions. Thousands of times, every run seeded.</p></div>
-        <div class="feature"><div class="fnum">03</div><h3>Read</h3><p>Each run records the makespan (how long the user waited) and the critical path (the chain that set the finish time). The spread is the finding.</p></div>
-        <div class="feature"><div class="fnum">04</div><h3>Change one thing</h3><p>Raise a concurrency, remove a debounce, split a queue. Two changes at once tell you nothing about which one did it.</p></div>
-        <div class="feature"><div class="fnum">05</div><h3>Compare</h3><p>Run again on the same seed. The randomness is identical, so any shift is the design change rather than luck.</p></div>
-      </div>
-      <div class="split">
-        <div class="panel">
-          <h3>What a model is</h3>
-          <ul>
-            <li><b>System:</b> a name and the entry event that starts a run, such as "user clicks Pay".</li>
-            <li><b>Contexts:</b> what work runs on (a thread pool, a database connection, a UI thread), each with a <b>concurrency</b>. Concurrency 1 means everything waits in line; that is where most surprising latency comes from.</li>
-            <li><b>Tasks:</b> units of work, each with a context, a duration distribution and the event it emits.</li>
-            <li><b>Wiring:</b> which events trigger which tasks, optionally after a delay. The wiring is the architecture.</li>
-          </ul>
-        </div>
-        <div class="panel">
-          <h3>Any event-driven software</h3>
-          <ul>
-            <li>It simulates the <b>design rather than the code</b>, so the domain does not matter.</li>
-            <li>A <b>web checkout</b>, a <b>desktop UI thread</b>, a <b>microservice fan-out</b>, a <b>mobile flow</b> or an <b>embedded pipeline</b>.</li>
-            <li>If it is <b>work triggered by events, competing for shared resources</b>, it can be modelled.</li>
-          </ul>
-        </div>
+        <div class="feature"><div class="fnum">01</div><h3>Model</h3><p>Tasks, the events that trigger them and the resources they queue behind.</p></div>
+        <div class="feature"><div class="fnum">02</div><h3>Run</h3><p>Thousands of seeded runs; queues form where concurrency runs out.</p></div>
+        <div class="feature"><div class="fnum">03</div><h3>Read</h3><p>Percentiles of how long users waited and the chain that held them up.</p></div>
+        <div class="feature"><div class="fnum">04</div><h3>Change one thing</h3><p>Raise a concurrency, remove a debounce, split a queue.</p></div>
+        <div class="feature"><div class="fnum">05</div><h3>Compare</h3><p>Same seed, same randomness: any shift is the design change.</p></div>
       </div>
     </div>
   </section>
 
-  <section id="explore" class="alt">
+  <section id="composer" class="alt">
     <div class="container">
-      <div class="eyebrow">The rest of the site</div>
-      <h2 class="section-title">One page per question</h2>
-      <div class="split">
-        <div class="panel is-for">
-          <h3>Who it's for</h3>
-          <p>The roles that make <b>structural decisions</b> which are expensive to undo; and who it is not for.</p>
-          <p><a class="btn btn-panel" href="who.html">Who it's for &rarr;</a></p>
-        </div>
-        <div class="panel not-for">
-          <h3>Features</h3>
-          <p>The application, <b>your first run in six steps</b> and how to read the output.</p>
-          <p><a class="btn btn-panel" href="features.html">Features &rarr;</a></p>
-        </div>
-      </div>
-      <div class="split">
-        <div class="panel is-for">
-          <h3>Why</h3>
-          <p>Latency answered at design time, while the architecture is still cheap to change.</p>
-          <p><a class="btn btn-panel" href="why.html">Why it exists &rarr;</a></p>
-        </div>
-        <div class="panel not-for">
-          <h3>Download</h3>
-          <p><b>One installer per platform</b>; free, local-first, no account.</p>
-          <p><a class="btn btn-panel" href="download.html">Download &rarr;</a></p>
-        </div>
+      <h2 class="section-title">Models without hand-written JSON</h2>
+      <div class="shots">
+        <figure class="shot narrow">
+          <div class="frame">
+            <img loading="lazy" src="assets/simquence-compose.png" width="895" height="621" alt="The Model Composer titled new model, showing the System pane with the default model name, schema version and entry event">
+          </div>
+          <figcaption><b>Compose</b> writes a new model, part by part.</figcaption>
+        </figure>
+        <figure class="shot narrow">
+          <div class="frame">
+            <img loading="lazy" src="assets/simquence-edit.png" width="896" height="621" alt="The Model Composer titled editing checkout, showing the checkout model's System pane; its ten tasks are listed in the tree on the left">
+          </div>
+          <figcaption><b>Edit</b> changes the loaded one; export and run again on the same seed.</figcaption>
+        </figure>
       </div>
     </div>
   </section>
+
   <section id="faq">
     <div class="container prose">
-      <div class="eyebrow">Questions</div>
-      <h2 class="section-title">Latency simulation, briefly</h2>
+      <h2 class="section-title">Questions</h2>
       <h3>What is a design-time latency simulator?</h3>
       <p>A tool that predicts how long a flow takes from a model of its design rather than from running code. Simquence runs a model of tasks, events and shared resources thousands of times and reports latency percentiles from p50 to p99 with the critical path of each run.</p>
       <h3>How is it different from a profiler or APM tool?</h3>
@@ -143,15 +114,15 @@
       <p>Yes. Every run is seeded, so the same model and seed give the same answer every time. Rerun a changed model on the same seed and any difference is the design change rather than luck.</p>
       <h3>Is it free? Does it send my models anywhere?</h3>
       <p>It is free under GPL-3.0, with an LGPL-3.0 desktop interface. Models and results stay on your machine; the only outbound call is an anonymous daily check of GitHub for a newer release.</p>
+      <p>The full guide and how to read the output ship inside the app. <a href="why.html">Why it exists and who it is for</a>.</p>
     </div>
   </section>
-  <section id="support">
+
+  <section id="support" class="alt">
     <div class="container">
-      <div class="eyebrow">Support</div>
       <h2 class="section-title">Supporting Simquence</h2>
-      <p class="section-sub">Simquence is free with no paid tier and nothing held back. If it
-        has saved you time, a contribution supports its maintenance. The same link sits in the
-        app's top bar.</p>
+      <p class="section-sub">Free, with no paid tier and nothing held back. If it has saved you
+        time, a contribution supports its maintenance.</p>
       <div class="cta">
         <a class="btn btn-ghost btn-donate" href="https://www.paypal.com/ncp/payment/XH6GACTK2PZU6"><img src="donate.png" width="133" height="116" alt="Donate">Donate</a>
       </div>
@@ -163,11 +134,10 @@
     <div>
       <strong>Simquence</strong>: design-time latency exploration for event-driven systems<br>
       (c) Oliver Ernster · Local-first · GPL-3.0 + LGPL-3.0 · v<!--VERSION-->4.0.0<!--/VERSION--><br>
-      A commercial licence for my own code is also available, separately from the open-source licences: see <a href="https://ernster.dev/commercial-licensing.html">commercial licensing</a>.
+      A commercial licence for my own code is also available: see <a href="https://ernster.dev/commercial-licensing.html">commercial licensing</a>.
     </div>
     <div class="footer-links">
       <a href="./">Home</a>
-      <a href="features.html">Features</a>
       <a href="why.html">Why</a>
       <a href="download.html">Download</a>
       <a href="https://github.com/oernster/Simquence/releases">Releases</a>

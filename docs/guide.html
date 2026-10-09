@@ -1,133 +1,14 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>How to Use Simquence: Model, Run and Compare Latency</title>
-<meta name="description" content="Run the shipped checkout model in six steps, change one thing, rerun on the same seed and compare; then choose runs, seed, concurrency and distributions.">
-<meta name="author" content="Oliver Ernster">
-<meta name="robots" content="index, follow">
-<meta name="theme-color" content="#181818">
-<link rel="canonical" href="https://simquence.com/guide.html">
-<meta property="og:type" content="website">
-<meta property="og:site_name" content="Simquence">
-<meta property="og:title" content="How to Use Simquence: Model, Run and Compare Latency">
-<meta property="og:description" content="Run the shipped example in six steps, then change one thing and run it again. The same guide the application ships in its Guide dialog, shortened.">
-<meta property="og:url" content="https://simquence.com/guide.html">
-<meta property="og:image" content="https://simquence.com/assets/simquence-ui.png">
-<meta property="og:image:alt" content="The Simquence UI showing a makespan distribution, critical-path frequencies and percentiles">
-<meta property="og:image:width" content="1392">
-<meta property="og:image:height" content="743">
-<meta property="og:image:type" content="image/png">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="How to Use Simquence: Model, Run and Compare Latency">
-<meta name="twitter:description" content="Run the shipped example in six steps, then change one thing and run it again.">
-<meta name="twitter:image" content="https://simquence.com/assets/simquence-ui.png">
-<meta name="twitter:image:alt" content="The Simquence UI showing a makespan distribution, critical-path frequencies and percentiles">
-<link rel="icon" type="image/png" href="assets/simquence.png">
-<link rel="apple-touch-icon" href="assets/simquence.png">
-<link rel="stylesheet" href="styles.css?v=5b699966d8">
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://simquence.com/"}, {"@type": "ListItem", "position": 2, "name": "Features", "item": "https://simquence.com/features.html"}, {"@type": "ListItem", "position": 3, "name": "How to Use Simquence", "item": "https://simquence.com/guide.html"}]}</script>
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "HowTo", "name": "Your first latency simulation in Simquence, in six steps", "tool": [{"@type": "HowToTool", "name": "Simquence"}], "step": [{"@type": "HowToStep", "position": 1, "text": "Examples menu, then Checkout. Run flashes twice to say it is ready."}, {"@type": "HowToStep", "position": 2, "text": "Leave Runs at 200 and Seed at 1."}, {"@type": "HowToStep", "position": 3, "text": "Press Run."}, {"@type": "HowToStep", "position": 4, "text": "Read Summary: the percentiles of the makespan, which is how long the whole piece of work took."}, {"@type": "HowToStep", "position": 5, "text": "Read Critical path: the chain of work that actually held the run up."}, {"@type": "HowToStep", "position": 6, "text": "Press the chart button in the middle of the toolbar for Distributions, then look at the shape rather than any one number."}]}</script>
+<title>Simquence</title>
+<meta name="robots" content="noindex">
+<link rel="canonical" href="https://simquence.com/">
+<meta http-equiv="refresh" content="0; url=https://simquence.com/">
+<script>location.replace("https://simquence.com/");</script>
 </head>
 <body>
-<header class="nav">
-  <div class="container nav-inner">
-    <a class="brand" href="./">
-      <img src="assets/simquence.png" width="256" height="256" alt="Simquence icon">Simquence</a>
-    <nav class="nav-links">
-      <a href="features.html">Features</a>
-      <a href="why.html">Why</a>
-      <a href="download.html">Download</a>
-    </nav>
-  </div>
-</header>
-<main>
-  <div class="crumb container"><a href="features.html">Features</a> <span aria-hidden="true">/</span> Using it</div>
-
-  <section id="using">
-    <div class="container prose">
-      <div class="eyebrow">Using it</div>
-      <h1 class="section-title">Using Simquence</h1>
-
-      <p class="section-sub">The app's own Guide, shortened. The full version
-        ships in the app, under the <b>i</b> button at the right of the toolbar.</p>
-
-      <h3>Your first run, in six steps</h3>
-      <ol>
-        <li><b>Examples</b> menu, then <b>Checkout</b>. Run flashes twice to say it is ready.</li>
-        <li>Leave <b>Runs</b> at 200 and <b>Seed</b> at 1.</li>
-        <li>Press <b>Run</b>.</li>
-        <li>Read <b>Summary</b>: the percentiles of the makespan, which is how long the whole piece of work took.</li>
-        <li>Read <b>Critical path</b>: the chain of work that actually held the run up.</li>
-        <li>Press the <b>chart button</b> in the middle of the toolbar for <b>Distributions</b>, then look at the shape rather than any one number.</li>
-      </ol>
-      <p>That is the whole loop. Everything else is a variation on it.</p>
-
-      <p>What each panel means is on <a href="reading.html">Reading the output</a>.</p>
-
-      <h3>Change one thing, run it again</h3>
-      <ol>
-        <li>Press <b>Edit</b>. The composer opens with the loaded model already in it.</li>
-        <li>Change one thing. Raising a context's <b>concurrency</b> from 1 to 2 is the clearest first experiment.</li>
-        <li><b>Export + Load Into Main UI</b>, then <b>Run</b> again with the <b>same seed</b>.</li>
-        <li>Compare the percentiles and the dominant path against what you had.</li>
-      </ol>
-      <p>One change at a time. Two changes and a different answer tells you nothing about which one did it.</p>
-
-      <h3>Writing a model from nothing</h3>
-      <p>Press <b>Compose</b> for a new model and work down <b>System</b>, <b>Contexts</b>, <b>Tasks</b> and
-        <b>Wiring</b> in order, because each uses the one before it. Then <b>Validate</b> and
-        <b>Export</b>.</p>
-
-      <h3>Choosing the settings</h3>
-      <ul>
-        <li><b>Runs.</b> 200 is enough to see the shape and compare two structures. To say anything about p99, think in thousands.</li>
-        <li><b>Seed.</b> Same model and seed, same answer, every time. Hold it steady to compare structures, then change it to check the difference was not one lucky draw.</li>
-        <li><b>Concurrency.</b> How many things genuinely happen at once. 1 serialises everything, which is what a single database connection or UI thread is.</li>
-        <li><b>Distribution.</b> <b>Fixed</b> only when the duration truly does not vary; <b>Normal</b> for symmetric variation; <b>Lognormal</b> for IO, network or contention, where normal comes out far too optimistic at p99.</li>
-        <li><b>Delays on wiring.</b> Debounces, backoffs, poll intervals. They frequently own the median while everyone is looking at the database.</li>
-        <li><b>Stress multiplier.</b> Every duration multiplied: what happens when everything is twice as slow?</li>
-      </ul>
-      <p>Simquence tells you what a model does, not whether the model is right. It makes an
-        argument checkable; it does not spare you having one.</p>
-
-      <div class="cta" style="justify-content:flex-start;margin-top:30px;">
-        <a class="btn btn-primary" href="reading.html">Reading the output</a>
-        <a class="btn btn-ghost" href="./">Back to overview</a>
-      </div>
-    </div>
-  </section>
-
-  <section id="explore" class="alt">
-    <div class="container">
-      <div class="eyebrow">The rest of the site</div>
-      <h2 class="section-title">Where to next</h2>
-      <p class="section-sub">Every page answers one question.</p>
-      <div class="pillnav">
-        <a class="btn btn-panel" href="features.html">All features</a>
-        <a class="btn btn-panel" href="app.html">The application</a>
-        <a class="btn btn-panel" href="reading.html">Reading the output</a>
-      </div>
-    </div>
-  </section>
-</main>
-<footer>
-  <div class="container footer-inner">
-    <div>
-      <strong>Simquence</strong>: design-time latency exploration for event-driven systems<br>
-      (c) Oliver Ernster · Local-first · GPL-3.0 + LGPL-3.0 · v<!--VERSION-->4.0.0<!--/VERSION-->
-    </div>
-    <div class="footer-links">
-      <a href="./">Home</a>
-      <a href="features.html">Features</a>
-      <a href="why.html">Why</a>
-      <a href="download.html">Download</a>
-      <a href="https://github.com/oernster/Simquence/releases">Releases</a>
-      <a href="https://github.com/oernster/Simquence">GitHub</a>
-      <a href="https://ernster.dev/">More of my work</a>
-    </div>
-  </div>
-</footer>
+<p>This page has moved to <a href="https://simquence.com/">https://simquence.com/</a>.</p>
 </body>
 </html>

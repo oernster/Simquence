@@ -1,11 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>https://simquence.com/</loc></url>
-  <url><loc>https://simquence.com/app.html</loc></url>
-  <url><loc>https://simquence.com/download.html</loc></url>
-  <url><loc>https://simquence.com/features.html</loc></url>
-  <url><loc>https://simquence.com/guide.html</loc></url>
-  <url><loc>https://simquence.com/reading.html</loc></url>
-  <url><loc>https://simquence.com/who.html</loc></url>
   <url><loc>https://simquence.com/why.html</loc></url>
+  <url><loc>https://simquence.com/download.html</loc></url>
 </urlset>

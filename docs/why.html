@@ -3,15 +3,15 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Why Simquence: Design-Time Latency Before Code Exists</title>
-<meta name="description" content="Latency arguments run on intuition until the architecture is too costly to change. Simquence makes queueing and delay visible at design time.">
+<title>Why Simquence Exists and Who It Is For</title>
+<meta name="description" content="Why Simquence exists and who it is for: senior engineers, architects and CTOs deciding structure before it hardens. Not for tuning existing code.">
 <meta name="author" content="Oliver Ernster">
 <meta name="robots" content="index, follow">
 <meta name="theme-color" content="#181818">
 <link rel="canonical" href="https://simquence.com/why.html">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Simquence">
-<meta property="og:title" content="Why Simquence: Design-Time Latency Before Code Exists">
+<meta property="og:title" content="Why Simquence Exists and Who It Is For">
 <meta property="og:description" content="Latency arguments run on intuition and confidence until it is too late to change the architecture. Simquence makes delay and coordination visible at design time.">
 <meta property="og:url" content="https://simquence.com/why.html">
 <meta property="og:image" content="https://simquence.com/assets/simquence-ui.png">
@@ -20,14 +20,14 @@
 <meta property="og:image:height" content="743">
 <meta property="og:image:type" content="image/png">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Why Simquence: Design-Time Latency Before Code Exists">
+<meta name="twitter:title" content="Why Simquence Exists and Who It Is For">
 <meta name="twitter:description" content="Latency arguments run on intuition and confidence until it is too late to change the architecture. Simquence makes delay and coordination visible at design time.">
 <meta name="twitter:image" content="https://simquence.com/assets/simquence-ui.png">
 <meta name="twitter:image:alt" content="The Simquence UI showing a makespan distribution, critical-path frequencies and percentiles">
 <link rel="icon" type="image/png" href="assets/simquence.png">
 <link rel="apple-touch-icon" href="assets/simquence.png">
-<link rel="stylesheet" href="styles.css?v=5b699966d8">
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://simquence.com/"}, {"@type": "ListItem", "position": 2, "name": "Why Simquence", "item": "https://simquence.com/why.html"}]}</script>
+<link rel="stylesheet" href="styles.css?v=fc1439b215">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://simquence.com/"}, {"@type": "ListItem", "position": 2, "name": "Why Simquence Exists and Who It Is For", "item": "https://simquence.com/why.html"}]}</script>
 </head>
 <body>
 <header class="nav">
@@ -35,52 +35,52 @@
     <a class="brand" href="./">
       <img src="assets/simquence.png" width="256" height="256" alt="Simquence icon">Simquence</a>
     <nav class="nav-links">
-      <a href="features.html">Features</a>
       <a href="why.html">Why</a>
       <a href="download.html">Download</a>
+      <a href="https://github.com/oernster/Simquence">GitHub</a>
     </nav>
   </div>
 </header>
 <main>
   <section id="exists">
     <div class="container prose">
-      <div class="eyebrow">The reasoning</div>
-      <h1 class="section-title">Why this exists</h1>
-      <p>Latency discussions are dominated by intuition, confidence and post hoc profiling. By the
-        time a real system can be measured, the decisions about concurrency, sequencing and delay
-        have hardened and are expensive to undo. Profilers explain where the time went; they rarely
-        explain why the user waited.</p>
-      <p>Simquence moves the question to design time. Everything is named in the model and nothing
-        is inferred; scheduling is deterministic and randomness is seeded. When the numbers change,
-        it is because the model changed, never because the measurement drifted.</p>
-      <p>The results routinely betray intuition. In the shipped checkout model most people predict
-        the slowest back end dominates; instead a short debounce, added so the interface would feel
-        calm, is the critical path in most runs. The same engine produced the hierarchy-depth and
-        authority-placement numbers in
-        <a href="https://www.crankthecode.com/books">Relativistic Decision Architecture</a>
-        from published models and seeds, so every quantitative claim there can be rerun.</p>
-      <p>It is a local Python CLI with a desktop UI over the same headless core: keyboard navigable,
-        100% coverage gated, no account and no server. Your models never leave your machine; the
-        only outbound call is an anonymous daily check of GitHub for a newer release. It exists so
-        the latency problem is found before it is politically expensive.</p>
-      <div class="cta" style="justify-content:flex-start;margin-top:30px;">
-        <a class="btn btn-primary" href="https://github.com/oernster/Simquence">View on GitHub</a>
-        <a class="btn btn-ghost" href="./">Back to overview</a>
-      </div>
+      <h1 class="section-title">Why Simquence exists</h1>
+      <p>By the time a system can be profiled, its decisions about concurrency, sequencing
+        and delay have hardened and are expensive to undo. Profilers explain where the time
+        went; they rarely explain why the user waited. Simquence answers that at design time,
+        from a model where everything is named and every run is seeded.</p>
+      <p>The answers routinely betray intuition: in the shipped checkout model a debounce
+        added so the interface would feel calm, not the slowest back end, holds up most runs.
+        The same engine produced the quantitative claims in
+        <a href="https://www.crankthecode.com/books">Relativistic Decision Architecture</a>,
+        so each can be rerun.</p>
     </div>
   </section>
 
-  <section id="explore" class="alt">
+  <section id="who" class="alt">
     <div class="container">
-      <div class="eyebrow">The rest of the site</div>
-      <h2 class="section-title">Where to next</h2>
-      <p class="section-sub">Every page answers one question.</p>
-      <div class="pillnav">
-        <a class="btn btn-panel" href="./">Overview</a>
-        <a class="btn btn-panel" href="who.html">Who it's for</a>
-        <a class="btn btn-panel" href="features.html">Features</a>
-        <a class="btn btn-panel" href="download.html">Download</a>
-        <a class="btn btn-panel" href="https://github.com/oernster/Simquence">GitHub</a>
+      <h2 class="section-title">Who it is for</h2>
+      <div class="split">
+        <div class="panel is-for">
+          <h3>For you if</h3>
+          <ul>
+            <li>You are a <b>senior engineer, architect or CTO</b> deciding structure before it hardens.</li>
+            <li>You want to know <b>which chain of work dominates</b> latency, not guess.</li>
+            <li>You want to test <b>which change helps</b> before any code is written.</li>
+          </ul>
+        </div>
+        <div class="panel not-for">
+          <h3>Not for you if</h3>
+          <ul>
+            <li>You are <b>tuning code that already exists</b>. Use a profiler.</li>
+            <li>You want a <b>reassuring dashboard</b> or <b>generated recommendations</b>.</li>
+            <li>You will not <b>write the structure down</b>; the model has to exist first.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="cta" style="justify-content:flex-start;margin-top:34px;">
+        <a class="btn btn-primary" href="download.html">Download</a>
+        <a class="btn btn-ghost" href="./">Back to overview</a>
       </div>
     </div>
   </section>
@@ -93,7 +93,6 @@
     </div>
     <div class="footer-links">
       <a href="./">Home</a>
-      <a href="features.html">Features</a>
       <a href="why.html">Why</a>
       <a href="download.html">Download</a>
       <a href="https://github.com/oernster/Simquence/releases">Releases</a>
