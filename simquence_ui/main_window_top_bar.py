@@ -3,7 +3,7 @@ from __future__ import annotations
 from collections.abc import Callable
 from dataclasses import dataclass
 
-from PySide6.QtCore import Qt
+from PySide6.QtCore import QSize, Qt
 from PySide6.QtWidgets import (
     QGridLayout,
     QHBoxLayout,
@@ -53,14 +53,50 @@ class NavBand(QWidget):
     def __init__(self, parent: QWidget) -> None:
         super().__init__(parent)
         self._ring_stops: tuple[QWidget, ...] = ()
+        self._centre: QWidget | None = None
 
-    def set_ring_stops(self, stops: tuple[QWidget, ...]) -> None:
+    def set_ring_stops(
+        self, stops: tuple[QWidget, ...], *, centre: QWidget | None = None
+    ) -> None:
         self._ring_stops = stops
+        self._centre = centre
 
     def ring_stops(self) -> tuple[QWidget, ...]:
         """Left to right as drawn, which is not the order the layout holds."""
 
         return self._ring_stops
+
+    def minimumSizeHint(self) -> QSize:
+        """Never so narrow that the centred control lands on a side group.
+
+        The overlay centres the mark on the bar whatever the groups beside it
+        measure, so a window narrower than twice the wider group drew the mark
+        on top of the Edit button. The minimum is read from the controls' own
+        sizes, so it follows them rather than a guessed width.
+        """
+
+        base = super().minimumSizeHint()
+        if self._centre not in self._ring_stops:
+            return base
+        split = self._ring_stops.index(self._centre)
+        left = self._ring_stops[:split]
+        right = self._ring_stops[split + 1 :]
+        side = max(_extent(left), _extent(right)) + BUTTON_SPACING
+        margins = self.layout().contentsMargins()
+        width = (
+            2 * side
+            + self._centre.sizeHint().width()
+            + margins.left()
+            + margins.right()
+        )
+        return QSize(max(base.width(), width), base.height())
+
+
+def _extent(widgets: tuple[QWidget, ...]) -> int:
+    """How wide a group of controls laid out in a row stands."""
+
+    widths = sum(widget.sizeHint().width() for widget in widgets)
+    return widths + BUTTON_SPACING * max(len(widgets) - 1, 0)
 
 
 @dataclass(frozen=True, slots=True)
@@ -205,7 +241,8 @@ def build_top_bar(
             distributions_btn,
             donate_btn,
             theme_toggle,
-        )
+        ),
+        centre=distributions_btn,
     )
 
     return TopBar(

@@ -27,6 +27,7 @@ rules. Leaving them out is how a button ends up with no ring at all.
 """
 
 from simquence_ui.theme_tokens import DARK_TOKENS, LIGHT_TOKENS, ThemeTokens
+from simquence_ui.toolbar_metrics import EMOJI_PX, TOOLBAR_BUTTON_PX
 
 _TEMPLATE = """
 /* `outline: none` removes Qt's own dotted focus rectangle around a control's
@@ -91,9 +92,9 @@ QPushButton[flash="true"] {{
 }}
 
 QPushButton[role="icon-action"] {{
-  font-size: 18px;
-  min-width: 34px;
-  min-height: 34px;
+  font-size: {emoji_px}px;
+  min-width: {button_px}px;
+  min-height: {button_px}px;
   padding: 2px 8px;
   border-radius: 10px;
 }}
@@ -104,9 +105,9 @@ QPushButton[role="icon-action"] {{
 QPushButton[role="theme-toggle"] {{
   background-color: {panel};
   color: {text};
-  font-size: 18px;
-  min-width: 34px;
-  min-height: 34px;
+  font-size: {emoji_px}px;
+  min-width: {button_px}px;
+  min-height: {button_px}px;
   padding: 2px 8px;
 }}
 
@@ -280,6 +281,8 @@ def build_stylesheet(tokens: ThemeTokens) -> str:
         danger=tokens.danger,
         accent=tokens.accent,
         accent_text=tokens.accent_text,
+        button_px=TOOLBAR_BUTTON_PX,
+        emoji_px=EMOJI_PX,
     ).strip()
 
 

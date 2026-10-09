@@ -19,7 +19,8 @@ from PySide6.QtWidgets import QMessageBox, QPushButton, QWidget
 from simquence_ui import links
 from simquence_ui.about_text import APP_NAME, DONATE_URL
 from simquence_ui.icon_resolver import get_donate_png_path
-from simquence_ui.top_bar_buttons import GLYPH_PX, glyph_button
+from simquence_ui.toolbar_metrics import GLYPH_PX
+from simquence_ui.top_bar_buttons import glyph_button
 
 DONATE_BUTTON_NAME = "donate_btn"
 

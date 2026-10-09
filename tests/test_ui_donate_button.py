@@ -17,11 +17,11 @@ from simquence_ui import donate_button, icon_resolver, links
 from simquence_ui.about_text import DONATE_URL
 from simquence_ui.icon_resolver import DONATE_PNG_NAME, get_donate_png_path
 from simquence_ui.main_window_top_bar import TopBar, build_top_bar
-from simquence_ui.top_bar_buttons import GLYPH_PX
+from simquence_ui.toolbar_metrics import GLYPH_PX
 
 # Written out in full rather than read back from the constant, so a typo in the
 # payment address fails here instead of sending a supporter to the wrong page.
-SIMQUENCE_DONATE_URL = "https://www.paypal.com/ncp/payment/Y275VZ7R2NUNW"
+SIMQUENCE_DONATE_URL = "https://www.paypal.com/ncp/payment/XH6GACTK2PZU6"
 
 
 def _ignore(*_args: object) -> None:

@@ -30,7 +30,7 @@ from pathlib import Path
 from PIL import Image, ImageDraw
 
 from simquence_ui.icon_resolver import DONATE_PNG_NAME
-from simquence_ui.top_bar_buttons import GLYPH_PX
+from simquence_ui.toolbar_metrics import GLYPH_PX
 
 PROJECT_ROOT = Path(__file__).resolve().parent
 ASSETS_DIR = PROJECT_ROOT / "assets"

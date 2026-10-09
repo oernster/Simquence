@@ -19,6 +19,9 @@ ICON_PROBE_PX = 64
 
 WINDOW_HEIGHT = 720
 
+# Far narrower than the bar can be, so the window's own minimum decides.
+NARROW_WINDOW_WIDTH = 300
+
 # A badge one pixel off centre is not a defect; a badge 134 pixels off centre
 # was the reported one. Half a pixel of rounding is all the slack there is.
 CENTRING_TOLERANCE_PX = 1.0
@@ -76,6 +79,41 @@ def test_the_mark_is_centred_on_the_bar_not_on_the_leftover_space(
     mark_centre = mark.geometry().x() + mark.geometry().width() / 2
 
     assert abs(mark_centre - bar.width() / 2) <= CENTRING_TOLERANCE_PX
+
+
+def test_a_band_with_no_centre_keeps_its_ordinary_minimum(app: QApplication) -> None:
+    """Before the bar is told what it centres there is nothing to make room
+    for, so it asks for no more than any widget would."""
+
+    from simquence_ui.main_window_top_bar import NavBand
+
+    holder = QWidget()
+    band = NavBand(holder)
+    assert band.minimumSizeHint() == QWidget.minimumSizeHint(band)
+    holder.deleteLater()
+
+
+def test_the_centred_mark_never_lands_on_a_side_group(
+    app: QApplication, window: MainWindow
+) -> None:
+    """Centring on the bar ignores the groups beside it, so a narrow window
+    drew the mark over the Edit button. Asked for far less than it needs, the
+    window is held wide enough that nothing overlaps."""
+
+    _enable_every_bar_control(window, app)
+    window.resize(NARROW_WINDOW_WIDTH, WINDOW_HEIGHT)
+    app.processEvents()
+
+    band = window._top_bar
+    mark = window._distributions_btn
+
+    def drawn(widget: QWidget):
+        return widget.rect().translated(widget.mapTo(band, widget.rect().topLeft()))
+
+    others = [w for w in band.ring_stops() if w is not mark]
+    assert others
+    for widget in others:
+        assert not drawn(mark).intersects(drawn(widget)), widget.objectName()
 
 
 def test_the_mark_is_its_picture_and_not_a_font_glyph(

@@ -19,17 +19,7 @@ from PySide6.QtGui import QIcon, QImage, QPainter, QPixmap, QRegion
 from PySide6.QtWidgets import QPushButton, QSizePolicy, QWidget
 
 from simquence_ui.icon_resolver import DISTRIBUTIONS_ART, get_asset_path
-
-TOOLBAR_BUTTON_PX = 34
-
-# The donate mark's height inside a toolbar button, leaving room for the 2px
-# ring and the button's own padding without crowding either.
-GLYPH_PX = 20
-
-# The pictures on the action buttons. Larger than the donate mark because they
-# carry detail rather than a wordmark; still clear of the ring and padding
-# inside the 34px button.
-ARTWORK_PX = 24
+from simquence_ui.toolbar_metrics import ARTWORK_PX, GLYPH_PX, TOOLBAR_BUTTON_PX
 
 # How much of the supplied picture is kept before Qt scales it to the button:
 # four times the drawn size, so it stays sharp under display scaling without
@@ -47,7 +37,7 @@ DISTRIBUTIONS_BUTTON_NAME = "distributions_btn"
 # The distributions toggle sits dead centre. A minimum width holds the centre
 # steady if its picture is ever missing, since a control that collapses would
 # move the thing it is supposed to centre.
-TOP_BADGE_PX = 36
+TOP_BADGE_PX = TOOLBAR_BUTTON_PX
 
 
 def _trimmed(source: QPixmap) -> QPixmap:

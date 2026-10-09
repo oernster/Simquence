@@ -2,6 +2,8 @@
 
 Simulate your architecture's latency before you build it.
 
+**Website:** [ernster.dev/Simquence](https://ernster.dev/Simquence/) · **Download:** [Windows, macOS and Linux](https://ernster.dev/Simquence/download.html)
+
 Simquence is a design-time latency simulator. You describe a software architecture as a small, explicit model: the units of work, the events that trigger them and the shared resources they queue behind. Simquence runs that model thousands of times with realistic timing variation and reports how long the flow takes across percentiles, which chain of work held each run up and how often each chain is the culprit. It works on the design rather than the code, so it applies to any event-driven software.
 
 It is not a profiler, tracer or runtime observer. It exists to prevent confident people from shipping bad architecture.
@@ -151,7 +153,7 @@ python buildinstaller.py
 
 Simquence is free and stays free. There is no paid tier, no licence key and no feature held back behind a donation. If it has saved you time, a donation supports its maintenance and continued development. The same link sits in the app's top bar; pressing it hands the address to your browser and Simquence itself opens no connection.
 
-<a href="https://www.paypal.com/ncp/payment/Y275VZ7R2NUNW"><img src="docs/donate.png" alt="Donate to Simquence" width="120"></a>
+<a href="https://www.paypal.com/ncp/payment/XH6GACTK2PZU6"><img src="docs/donate.png" alt="Donate to Simquence" width="120"></a>
 
 ## Licence
 

@@ -18,7 +18,8 @@ from PySide6.QtWidgets import QApplication, QPushButton, QWidget
 
 from simquence_ui import icon_resolver
 from simquence_ui.main_window_top_bar import TopBar, build_top_bar
-from simquence_ui.top_bar_buttons import ARTWORK_PX, artwork_button, artwork_icon
+from simquence_ui.toolbar_metrics import ARTWORK_PX
+from simquence_ui.top_bar_buttons import artwork_button, artwork_icon
 
 # Grey means the three channels agree. Scaling blends neighbours, so a pixel
 # that came from grey can still drift by a little.
