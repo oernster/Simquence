@@ -6,7 +6,7 @@ import json
 
 import pytest
 
-from latencylab_ui.update_github import (
+from simquence_ui.update_github import (
     _ACCEPT_HEADER,
     _API_URL,
     _TIMEOUT_SECONDS,
@@ -15,11 +15,11 @@ from latencylab_ui.update_github import (
 
 PAYLOAD = {
     "tag_name": "v3.1.0",
-    "html_url": "https://github.com/oernster/latencylab/releases/tag/v3.1.0",
+    "html_url": "https://github.com/oernster/Simquence/releases/tag/v3.1.0",
     "assets": [
         {
-            "name": "LatencyLabSetup.exe",
-            "browser_download_url": "https://example.com/LatencyLabSetup.exe",
+            "name": "SimquenceSetup.exe",
+            "browser_download_url": "https://example.com/SimquenceSetup.exe",
         },
     ],
 }
@@ -63,7 +63,7 @@ def test_happy_path() -> None:
     assert release is not None
     assert release.version == "v3.1.0"
     assert release.page_url == PAYLOAD["html_url"]
-    assert release.assets[0].name == "LatencyLabSetup.exe"
+    assert release.assets[0].name == "SimquenceSetup.exe"
 
 
 def test_request_target_headers_and_timeout() -> None:

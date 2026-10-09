@@ -9,8 +9,8 @@
 set -euo pipefail
 
 # Must match build_flatpak.sh.
-APP_ID="uk.codecrafter.LatencyLab"
-BUNDLE="latencylab.flatpak"
+APP_ID="uk.codecrafter.Simquence"
+BUNDLE="simquence.flatpak"
 
 PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "${PROJECT_ROOT}"

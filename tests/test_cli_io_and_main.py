@@ -32,7 +32,7 @@ def _minimal_v2_model() -> dict:
 
 
 def test_cli_simulate_writes_summary_runs_and_trace(tmp_path: Path) -> None:
-    from latencylab.cli import main
+    from simquence.cli import main
 
     model_path = tmp_path / "m.json"
     _write_json(model_path, _minimal_v2_model())
@@ -67,18 +67,18 @@ def test_cli_simulate_writes_summary_runs_and_trace(tmp_path: Path) -> None:
 def test_cli_unhandled_command_raises_assertion(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    import latencylab.cli
+    import simquence.cli
 
     class _DummyParser:
         def parse_args(self, _argv: list[str] | None) -> object:
             return SimpleNamespace(cmd="nope")
 
-    monkeypatch.setattr(latencylab.cli, "_build_parser", lambda: _DummyParser())
+    monkeypatch.setattr(simquence.cli, "_build_parser", lambda: _DummyParser())
     with pytest.raises(AssertionError, match="Unhandled command"):
-        latencylab.cli.main(["anything"])
+        simquence.cli.main(["anything"])
 
 
-def test_python_m_latencylab_executes_main(tmp_path: Path) -> None:
+def test_python_m_simquence_executes_main(tmp_path: Path) -> None:
     model_path = tmp_path / "m.json"
     _write_json(model_path, _minimal_v2_model())
 
@@ -89,7 +89,7 @@ def test_python_m_latencylab_executes_main(tmp_path: Path) -> None:
         [
             sys.executable,
             "-m",
-            "latencylab",
+            "simquence",
             "simulate",
             "--model",
             str(model_path),
@@ -121,7 +121,7 @@ def test___main___module_runs_inprocess_and_exits_zero(tmp_path: Path) -> None:
     old_argv = sys.argv[:]
     try:
         sys.argv = [
-            "python -m latencylab",
+            "python -m simquence",
             "simulate",
             "--model",
             str(model_path),
@@ -135,7 +135,7 @@ def test___main___module_runs_inprocess_and_exits_zero(tmp_path: Path) -> None:
             str(out_runs),
         ]
         with pytest.raises(SystemExit) as exc:
-            runpy.run_module("latencylab.__main__", run_name="__main__")
+            runpy.run_module("simquence.__main__", run_name="__main__")
         assert exc.value.code == 0
     finally:
         sys.argv = old_argv
@@ -145,8 +145,8 @@ def test___main___module_runs_inprocess_and_exits_zero(tmp_path: Path) -> None:
 
 
 def test_io_writers_roundtrip(tmp_path: Path) -> None:
-    from latencylab.io import write_runs_csv, write_summary_json, write_trace_csv
-    from latencylab.types import RunResult, TaskInstance
+    from simquence.io import write_runs_csv, write_summary_json, write_trace_csv
+    from simquence.types import RunResult, TaskInstance
 
     out_summary = tmp_path / "out" / "summary.json"
     out_runs = tmp_path / "out" / "runs.csv"

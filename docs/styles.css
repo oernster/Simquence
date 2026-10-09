@@ -1,4 +1,4 @@
-/* LatencyLab GitHub Pages site. Dark, royal-blue-accented, matching the app
+/* Simquence GitHub Pages site. Dark, royal-blue-accented, matching the app
    theme: `--accent` is the application's `primary` token, the fill every
    filled control takes. */
 :root {
@@ -10,7 +10,7 @@
   --muted: #9aa0aa;
   --accent: #374fb0;
   --accent-bright: #7fa2f5;
-  /* The application's own accent. Banana yellow, matching latencylab_ui's
+  /* The application's own accent. Banana yellow, matching simquence_ui's
      `accent` token; `--banana-ink` is what goes on top of it, because the
      yellow is far too light to carry white. */
   --banana: #ffe135;

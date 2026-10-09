@@ -1,6 +1,6 @@
 # Testing
 
-How LatencyLab is tested: running the checks, reading what they say, what the
+How Simquence is tested: running the checks, reading what they say, what the
 gate holds and what it leaves out, the rules a run by hand has to follow and
 how a new test or guard is written. The layer rules themselves are in
 [ARCHITECTURE.md](ARCHITECTURE.md); setting up the environment the tests run in
@@ -39,7 +39,7 @@ floor was met; anything else means read the failures above the table.
 The floor is 100% LINE coverage (`--cov-fail-under=100`), not branch:
 `.coveragerc` does not switch branch measurement on. It is measured over the
 whole repository (`--cov=.`) less a named list in `.coveragerc`, so the
-headless core in `latencylab/`, the desktop interface in `latencylab_ui/` and
+headless core in `simquence/`, the desktop interface in `simquence_ui/` and
 the root shims `runner.py` and `stamp_version.py` are all inside it.
 
 Outside the floor:
@@ -47,13 +47,13 @@ Outside the floor:
 | Omitted | Why |
 |---|---|
 | `tests/`, the virtual environments | not product code |
-| `buildexe.py`, `buildinstaller.py`, `builddmg.py`, `build_utils.py`, `dmg_icon.py`, `generate_icons.py`, `render_master_icon.py` | build scripts: linear recipes that only mean anything against a real toolchain, so a build proves them |
+| `buildexe.py`, `buildinstaller.py`, `builddmg.py`, `build_utils.py`, `dmg_icon.py`, `generate_icons.py` | build scripts: linear recipes that only mean anything against a real toolchain, so a build proves them |
 | `installer/*` | the setup program, for the same reason: it acts on a real filesystem and a real registry |
 | `generate_scripts.py` | a local helper, not part of the product |
 
 Then any line marked `# pragma: no cover`. Counted on 2026-10-03: 48 of them
 outside `tests/`,
-most in the interface (16 in `latencylab_ui/focus_cycle.py`), 7 in the
+most in the interface (16 in `simquence_ui/focus_cycle.py`), 7 in the
 installer's operations and 3 in the legacy engine. Read 100% as "100% of the
 lines measured".
 
@@ -64,7 +64,7 @@ lines measured".
   the variable is not already set. A shell that already has it set to
   something else puts every window on screen.
 - **Your settings are never written.** The update check's settings live at
-  `.latencylab\settings.json` in your home directory. The tests that save
+  `.simquence\settings.json` in your home directory. The tests that save
   settings point the store at pytest's `tmp_path`; the update-check tests pass
   a fake store and the entry-point tests replace the update-check wiring
   entirely. Measured on 2026-10-02: after a full run the real file did not

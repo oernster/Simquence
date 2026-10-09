@@ -1,6 +1,6 @@
 # Development
 
-How to run LatencyLab from source, build it and cut a release. What it is and
+How to run Simquence from source, build it and cut a release. What it is and
 who it is for is in [README.md](README.md); how it is put together is in
 [ARCHITECTURE.md](ARCHITECTURE.md); running and writing the tests is in
 [TESTING.md](TESTING.md). Commands run from the repository root.
@@ -29,18 +29,18 @@ python -m pip install -e .[dev]
 python -m pip install -r requirements.txt
 ```
 
-The headless core runs as `latencylab` (the console script) or
-`python -m latencylab`. The desktop interface is not part of the published
+The headless core runs as `simquence` (the console script) or
+`python -m simquence`. The desktop interface is not part of the published
 package, so it runs only from a clone or an installed desktop build:
 
 ```powershell
-python -m latencylab_ui
+python -m simquence_ui
 python runner.py
 ```
 
 `runner.py` is the shim the frozen build starts at too. Running the interface
 from source uses your real settings: the update check keeps the version you
-chose to skip in `.latencylab\settings.json` in your home directory.
+chose to skip in `.simquence\settings.json` in your home directory.
 
 ## The package
 
@@ -75,11 +75,11 @@ python buildinstaller.py
 2. stamps the version into the site under `docs/` (`stamp_version.py`);
 3. clears the previous bundle and Nuitka's scratch;
 4. compiles the application with Nuitka;
-5. stages the bundle as `installer/payload/LatencyLab/LatencyLab.exe`;
+5. stages the bundle as `installer/payload/Simquence/Simquence.exe`;
 6. starts that executable headless for a few seconds and refuses to finish if
    it dies, which is where a packaging fault shows up. No window opens.
 
-Set `LATENCYLAB_BUILD_DEBUG=1` first to keep a console attached for tracebacks.
+Set `SIMQUENCE_BUILD_DEBUG=1` first to keep a console attached for tracebacks.
 
 `buildinstaller.py`:
 
@@ -87,7 +87,7 @@ Set `LATENCYLAB_BUILD_DEBUG=1` first to keep a console attached for tracebacks.
 2. stamps the version again;
 3. zips the staged bundle as the setup program's payload;
 4. compiles the setup program with Nuitka as one executable carrying that zip;
-5. publishes it as `dist-installer/LatencyLabSetup.exe`.
+5. publishes it as `dist-installer/SimquenceSetup.exe`.
 
 The zip is deliberate: a Nuitka onefile build strips loose executables and DLLs
 out of an included directory, so a payload staged as loose files would lose
@@ -102,7 +102,7 @@ python builddmg.py
 Checks for PyInstaller, `create-dmg`, the Xcode signing tools, every runtime
 dependency and the notarization credentials before building anything, then
 stamps, builds the bundle with PyInstaller, signs it, notarizes it and writes
-`latencylab.dmg`. Notarization uses the keychain profile `LatencyLab`, stored
+`simquence.dmg`. Notarization uses the keychain profile `Simquence`, stored
 once with `xcrun notarytool store-credentials`; `APPLE_KEYCHAIN_PROFILE` names a
 different profile. Setting both `APPLE_ID` and `APPLE_APP_PASSWORD` (an
 app-specific password) uses that pair instead, for a machine with no keychain.
@@ -123,16 +123,13 @@ then builds the Flatpak; `clean_flatpak.sh` removes only what it produced.
 ## Generated assets
 
 `generate_icons.py` derives every platform icon from the master
-`latencylab.png`, including the opaque macOS variants the Dock, Finder and the
-disk image need. It also derives the donate button's artwork from its own
-master, `donate.png`, into `assets/`. Every build ships `assets/` whole.
-
-The mark itself starts as the SVG on the site: `render_master_icon.py`
-re-renders `latencylab.png` from it. After changing the mark, run both in
-order:
+`assets/application-icon.png`, including the opaque macOS variants the Dock,
+Finder and the disk image need, plus the site's logo at
+`docs/assets/simquence.png`. It also derives the donate button's artwork from
+its own master, `donate.png`, into `assets/`. Every build ships `assets/`
+whole. After changing either master:
 
 ```powershell
-python render_master_icon.py
 python generate_icons.py
 ```
 
@@ -155,7 +152,7 @@ build. Run `python stamp_version.py` by hand after a bump otherwise.
 
 ## Standing rules
 
-- The core in `latencylab/` imports no Qt and never references the interface.
+- The core in `simquence/` imports no Qt and never references the interface.
 - The pure core modules never touch the filesystem; `io` does the loading.
 - The wheel contains the headless core and nothing else.
 - No module goes over 400 lines, nor sits in the band just below it; build

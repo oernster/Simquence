@@ -14,7 +14,7 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from latencylab_ui.wheel_guard import (
+from simquence_ui.wheel_guard import (
     WHEEL_FOCUS_BIT,
     WheelGuard,
     can_scroll,

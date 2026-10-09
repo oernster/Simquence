@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from latencylab_ui import model_composer_export as export_mod
+from simquence_ui import model_composer_export as export_mod
 
 
 def _ensure_qapp():
@@ -19,10 +19,10 @@ def test_model_composer_remaining_branches(tmp_path: Path, monkeypatch) -> None:
 
     from PySide6.QtWidgets import QFileDialog, QMessageBox, QWidget
 
-    from latencylab.model import Model
-    from latencylab_ui.model_composer_dialog import ModelComposerDialog
+    from simquence.model import Model
+    from simquence_ui.model_composer_dialog import ModelComposerDialog
 
-    import latencylab_ui.model_composer_dialog as _dock_mod
+    import simquence_ui.model_composer_dialog as _dock_mod
 
     # Never allow modal dialogs to hang tests.
     monkeypatch.setattr(QMessageBox, "critical", lambda *_a, **_k: None)

@@ -8,9 +8,9 @@ from PySide6.QtCore import QObject, Signal
 from PySide6.QtGui import QColor
 from PySide6.QtWidgets import QApplication
 
-from latencylab_ui import main_window_actions as actions
-from latencylab_ui.main_window import MainWindow
-from latencylab_ui.theme import Theme, apply_theme, tokens_for
+from simquence_ui import main_window_actions as actions
+from simquence_ui.main_window import MainWindow
+from simquence_ui.theme import Theme, apply_theme, tokens_for
 
 BOOLS = (False, True)
 
@@ -147,7 +147,7 @@ def test_run_wears_the_red_ring_until_a_model_is_loaded(
 
     from pathlib import Path
 
-    from latencylab.model import Model
+    from simquence.model import Model
 
     apply_theme(app, theme)
     app.processEvents()

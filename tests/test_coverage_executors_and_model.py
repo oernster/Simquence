@@ -2,8 +2,8 @@ from __future__ import annotations
 
 import pytest
 
-from latencylab.executors import default_executor_for_model
-from latencylab.model import ContextDef, EventDef, Model
+from simquence.executors import default_executor_for_model
+from simquence.model import ContextDef, EventDef, Model
 
 
 def _minimal_model(*, version: int) -> Model:
@@ -21,7 +21,7 @@ def _minimal_model(*, version: int) -> Model:
 def test_runexecutor_protocol_method_is_not_implemented() -> None:
     with pytest.raises(NotImplementedError):
         # Call the Protocol's placeholder implementation to cover it.
-        from latencylab.executors import RunExecutor
+        from simquence.executors import RunExecutor
 
         RunExecutor.execute(  # type: ignore[misc]
             object(),  # type: ignore[arg-type]

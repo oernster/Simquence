@@ -3,9 +3,9 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from latencylab.model import Model
-from latencylab.sim import simulate_many
-from latencylab.validate import validate_model
+from simquence.model import Model
+from simquence.sim import simulate_many
+from simquence.validate import validate_model
 
 
 def test_simulation_is_deterministic_for_seed(tmp_path: Path) -> None:

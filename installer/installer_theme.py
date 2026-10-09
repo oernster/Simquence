@@ -2,7 +2,7 @@
 
 One stylesheet and one set of geometry tokens, shared by the window and every
 dialog, so the installer looks like the application it installs without
-importing anything from the `latencylab` packages.
+importing anything from the `simquence` packages.
 
 The ring model is the application's own, three-state: no ring at rest, a
 green ring while an enabled control is hovered or focused and a permanent red
@@ -37,7 +37,7 @@ BUTTON_GAP = 10
 # The gap between the product name and the version that trails it.
 HEADER_VERSION_GAP = 8
 
-# --- LatencyLab palette -------------------------------------------------------
+# --- Simquence palette -------------------------------------------------------
 # Every QPushButton carries a transparent 2px border by default, so the green
 # hover ring changes the colour and never the layout; every hover and focus
 # reaction is gated on :enabled so a disabled button stays muted.
@@ -47,7 +47,7 @@ _SURFACE_RAISED = "#222831"
 _BORDER = "#2c333d"
 _TEXT = "#e6e9ee"
 _TEXT_MUTED = "#9aa3af"
-# The application's own accent (latencylab_ui/theme_tokens.py, `accent`).
+# The application's own accent (simquence_ui/theme_tokens.py, `accent`).
 _ACCENT = "#ffe135"
 # Buttons never wear a filled accent: a green ring is hard to read against a
 # light fill, so every button is dark with a light blue caption and only the

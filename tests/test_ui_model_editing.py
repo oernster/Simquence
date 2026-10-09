@@ -8,7 +8,7 @@ import pytest
 from PySide6.QtCore import QObject, Signal
 from PySide6.QtWidgets import QApplication
 
-from latencylab_ui import main_window_actions as actions
+from simquence_ui import main_window_actions as actions
 
 
 @pytest.fixture()
@@ -40,7 +40,7 @@ class _Controller(QObject):
 
 
 def _window(app: QApplication):
-    from latencylab_ui.main_window import MainWindow
+    from simquence_ui.main_window import MainWindow
 
     window = MainWindow(run_controller=_Controller())
     # Shown, because a dock inside a hidden window never reports itself visible
@@ -53,7 +53,7 @@ def _window(app: QApplication):
 def test_editing_a_loaded_model_fills_the_composer_and_opens_it(
     app: QApplication,
 ) -> None:
-    from latencylab_ui.example_models import find_examples_dir
+    from simquence_ui.example_models import find_examples_dir
 
     examples = find_examples_dir()
     assert examples is not None
@@ -107,7 +107,7 @@ def test_edit_is_inert_and_says_why_until_a_model_is_loaded(
 def test_editing_an_already_open_composer_does_not_toggle_it_shut(
     app: QApplication,
 ) -> None:
-    from latencylab_ui.example_models import find_examples_dir
+    from simquence_ui.example_models import find_examples_dir
 
     examples = find_examples_dir()
     assert examples is not None
@@ -130,7 +130,7 @@ def test_editing_an_already_open_composer_does_not_toggle_it_shut(
 def test_opening_another_model_updates_an_open_editor(app: QApplication) -> None:
     """A view of a model that keeps showing the previous one is just wrong."""
 
-    from latencylab_ui.example_models import find_examples_dir
+    from simquence_ui.example_models import find_examples_dir
 
     examples = find_examples_dir()
     assert examples is not None
@@ -161,7 +161,7 @@ def test_a_composer_holding_typed_work_is_not_overwritten_by_a_load(
 ) -> None:
     """Replacing what the user typed would be data loss, not a refresh."""
 
-    from latencylab_ui.example_models import find_examples_dir
+    from simquence_ui.example_models import find_examples_dir
 
     examples = find_examples_dir()
     assert examples is not None
@@ -191,7 +191,7 @@ def test_a_closed_editor_is_not_refreshed_behind_the_users_back(
 ) -> None:
     """Nothing to keep in step, and Edit reloads from disk when next pressed."""
 
-    from latencylab_ui.example_models import find_examples_dir
+    from simquence_ui.example_models import find_examples_dir
 
     examples = find_examples_dir()
     assert examples is not None

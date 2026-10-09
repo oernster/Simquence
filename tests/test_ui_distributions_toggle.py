@@ -5,7 +5,7 @@ import pytest
 from PySide6.QtCore import QObject, Signal
 from PySide6.QtWidgets import QApplication
 
-from latencylab_ui.main_window import MainWindow
+from simquence_ui.main_window import MainWindow
 
 
 @pytest.fixture()

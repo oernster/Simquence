@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""LatencyLab installer: the entry point.
+"""Simquence installer: the entry point.
 
 A self-contained PySide6 installer compiled into a single executable by
 buildinstaller.py. It carries the built application bundle and the licence texts
@@ -14,8 +14,8 @@ the full lifecycle:
 - Optional Desktop and Start Menu shortcuts, plus an optional launch on finish.
 
 It never needs administrator rights: it deploys to
-`%LOCALAPPDATA%\\Programs\\LatencyLab` and registers under HKCU. It is
-deliberately standalone (it imports nothing from the `latencylab` packages) and
+`%LOCALAPPDATA%\\Programs\\Simquence` and registers under HKCU. It is
+deliberately standalone (it imports nothing from the `simquence` packages) and
 dependency-light: process detection uses `tasklist`, version comparison is a
 plain tuple compare and shortcuts are written through the Windows scripting
 host, so the onefile build pulls in nothing beyond PySide6 and the standard

@@ -2,8 +2,8 @@ from __future__ import annotations
 
 import pytest
 
-from latencylab.model import Model
-from latencylab.validate import ModelValidationError, validate_model
+from simquence.model import Model
+from simquence.validate import ModelValidationError, validate_model
 
 
 def test_rejects_unknown_context() -> None:

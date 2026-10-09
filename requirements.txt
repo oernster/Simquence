@@ -1,6 +1,6 @@
 # Runtime dependencies.
 #
-# NOTE: the LatencyLab *core engine* under `latencylab/` is stdlib-only.
+# NOTE: the Simquence *core engine* under `simquence/` is stdlib-only.
 # This file includes the optional UI runtime dependency so `pip install -r
 # requirements.txt` is enough to run the GUI.
 #

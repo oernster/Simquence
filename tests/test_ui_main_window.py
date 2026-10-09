@@ -37,8 +37,8 @@ def test_main_window_core_paths(monkeypatch, tmp_path: Path) -> None:
     from PySide6.QtCore import QObject, Signal
     from PySide6.QtWidgets import QFileDialog, QMessageBox
 
-    from latencylab_ui.main_window import MainWindow
-    from latencylab_ui.run_controller import RunOutputs
+    from simquence_ui.main_window import MainWindow
+    from simquence_ui.run_controller import RunOutputs
 
     class _FakeController(QObject):
         started = Signal(int)
@@ -101,14 +101,14 @@ def test_main_window_core_paths(monkeypatch, tmp_path: Path) -> None:
     assert info_btn.isEnabled() is True
 
     # Theme toggle route (ensure handler is callable).
-    from latencylab_ui.theme import Theme
+    from simquence_ui.theme import Theme
 
     w._on_theme_changed(Theme.LIGHT)
     w._on_theme_changed(Theme.DARK)
 
     # No model: Run is inert and says so, rather than being pressable and then
     # interrupting with a dialog to explain what it should have shown.
-    from latencylab_ui import main_window_actions as actions
+    from simquence_ui import main_window_actions as actions
 
     w._loaded_model = None
     w._refresh_actions()

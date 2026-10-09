@@ -24,7 +24,7 @@ def test_enter_on_a_widget_that_is_not_a_button_is_not_an_activation() -> None:
 
     from PySide6.QtWidgets import QMainWindow, QVBoxLayout, QWidget
 
-    from latencylab_ui.focus_cycle_keys import activate_focused_button
+    from simquence_ui.focus_cycle_keys import activate_focused_button
 
     w = QMainWindow()
     root = QWidget()
@@ -52,7 +52,7 @@ def test_enter_with_no_focus_at_all_is_not_an_activation() -> None:
 
     from PySide6.QtWidgets import QMainWindow
 
-    from latencylab_ui.focus_cycle_keys import activate_focused_button
+    from simquence_ui.focus_cycle_keys import activate_focused_button
 
     w = QMainWindow()
     w.show()
@@ -71,7 +71,7 @@ def test_enter_with_no_focus_at_all_is_not_an_activation() -> None:
 def test_dismissing_a_popup_when_none_is_open_is_a_no_op() -> None:
     _ensure_qapp()
 
-    from latencylab_ui.focus_cycle_keys import dismiss_active_popup
+    from simquence_ui.focus_cycle_keys import dismiss_active_popup
 
     # No dropdown is open, so there is nothing to close and nothing to raise.
     assert dismiss_active_popup() is None

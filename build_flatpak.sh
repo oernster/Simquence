@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Build a LatencyLab Flatpak bundle, then install it.
+# Build a Simquence Flatpak bundle, then install it.
 #
 # The manifest, launcher, desktop entry, metainfo and prune script are generated
 # here rather than committed, so there is one place where the app's identity is
@@ -19,9 +19,9 @@
 
 set -euo pipefail
 
-APP_ID="uk.codecrafter.LatencyLab"
-APP_NAME="LatencyLab"
-APP_COMMAND="latencylab"
+APP_ID="uk.codecrafter.Simquence"
+APP_NAME="Simquence"
+APP_COMMAND="simquence"
 APP_SUMMARY="Design-time latency exploration for event-driven systems"
 
 RUNTIME="org.freedesktop.Platform"
@@ -37,7 +37,7 @@ REPO_DIR="${PROJECT_ROOT}/.flatpak-repo"
 WHEELS_DIR="${PROJECT_ROOT}/.flatpak-wheels"
 PACKAGING_DIR="${PROJECT_ROOT}/packaging"
 MANIFEST="${PROJECT_ROOT}/${APP_ID}.yml"
-BUNDLE="${PROJECT_ROOT}/latencylab.flatpak"
+BUNDLE="${PROJECT_ROOT}/simquence.flatpak"
 PRUNE_SCRIPT="prune_flatpak_tree.py"
 
 # Pinned by hash and fetched by flatpak-builder on the host rather than inside
@@ -124,7 +124,7 @@ if [ "${INSTALL_SCOPE}" = "system" ] && [ "${INSTALL_BUNDLE}" -eq 1 ]; then
 fi
 
 section "Checking the icons"
-if [ ! -f "${PROJECT_ROOT}/assets/latencylab_icon_256.png" ]; then
+if [ ! -f "${PROJECT_ROOT}/assets/simquence_icon_256.png" ]; then
     echo "assets/ is missing its generated icons. Run: python generate_icons.py" >&2
     exit 1
 fi
@@ -144,12 +144,12 @@ mkdir -p "${PACKAGING_DIR}"
 cat > "${PACKAGING_DIR}/${APP_COMMAND}" <<'LAUNCHER'
 #!/bin/sh
 PYTHON_DIR_PLACEHOLDER
-export PYTHONPATH="/app/lib/${PYTHON_DIR}/site-packages:/app/share/latencylab${PYTHONPATH:+:$PYTHONPATH}"
+export PYTHONPATH="/app/lib/${PYTHON_DIR}/site-packages:/app/share/simquence${PYTHONPATH:+:$PYTHONPATH}"
 export QT_PLUGIN_PATH="/app/lib/${PYTHON_DIR}/site-packages/PySide6/Qt/plugins"
 export QT_QPA_PLATFORM_PLUGIN_PATH="/app/lib/${PYTHON_DIR}/site-packages/PySide6/Qt/plugins/platforms"
 export QML2_IMPORT_PATH="/app/lib/${PYTHON_DIR}/site-packages/PySide6/Qt/qml"
-export LATENCYLAB_ASSETS_DIR="/app/assets"
-export LATENCYLAB_EXAMPLES_DIR="/app/examples"
+export SIMQUENCE_ASSETS_DIR="/app/assets"
+export SIMQUENCE_EXAMPLES_DIR="/app/examples"
 
 if [ -n "$WAYLAND_DISPLAY" ] && [ -z "$FORCE_X11" ]; then
     export QT_QPA_PLATFORM=wayland
@@ -157,7 +157,7 @@ else
     export QT_QPA_PLATFORM=xcb
 fi
 
-exec python3 /app/share/latencylab/runner.py "$@"
+exec python3 /app/share/simquence/runner.py "$@"
 LAUNCHER
 
 # The launcher is written literally so $VAR survives; only the runtime's Python
@@ -190,7 +190,7 @@ cat > "${PACKAGING_DIR}/${APP_ID}.metainfo.xml" <<METAINFO
   </developer>
   <description>
     <p>
-      LatencyLab is a deterministic, seeded latency simulator for event-driven
+      Simquence is a deterministic, seeded latency simulator for event-driven
       systems. It models tasks, events, queues, delays and resource contention,
       and prices the cost of a structure before that structure hardens.
     </p>
@@ -205,7 +205,7 @@ cat > "${PACKAGING_DIR}/${PRUNE_SCRIPT}" <<'PRUNE'
 """Delete what /app carries but never runs.
 
 The Qt wheels are built for every Qt user at once, so most of what they install
-is dead weight here: LatencyLab imports QtCore, QtGui, QtWidgets, QtSvg and
+is dead weight here: Simquence imports QtCore, QtGui, QtWidgets, QtSvg and
 QtNetwork and nothing else. What each part of PySide6 belongs to is read from
 the wheels' own install records rather than named here, so a Qt upgrade cannot
 leave this list stale.
@@ -391,7 +391,7 @@ def main(argv: list[str]) -> int:
 
     prefix, python_dir, app_command = Path(argv[1]), argv[2], argv[3]
     site_packages = prefix / "lib" / python_dir / "site-packages"
-    app_tree = prefix / "share" / "latencylab"
+    app_tree = prefix / "share" / "simquence"
 
     freed = prune_addons(site_packages)
     freed += prune_build_only(site_packages)
@@ -477,11 +477,11 @@ modules:
       - type: file
         path: requirements.txt
 
-  - name: latencylab
+  - name: simquence
     buildsystem: simple
     build-commands:
-      - install -d /app/share/latencylab
-      - cp -r latencylab latencylab_ui runner.py VERSION LICENSE /app/share/latencylab/
+      - install -d /app/share/simquence
+      - cp -r simquence simquence_ui runner.py VERSION LICENSE /app/share/simquence/
       # Only the PNGs: the .ico and .icns are for the Windows and macOS builds.
       - install -Dm644 -t /app/assets assets/*.png
       # The shipped models, so a fresh install has something to open.
@@ -492,7 +492,7 @@ modules:
 MANIFEST_HEAD
 
 for size in "${ICON_SIZES[@]}"; do
-    printf '      - install -Dm644 assets/latencylab_icon_%s.png /app/share/icons/hicolor/%sx%s/apps/%s.png\n' \
+    printf '      - install -Dm644 assets/simquence_icon_%s.png /app/share/icons/hicolor/%sx%s/apps/%s.png\n' \
         "${size}" "${size}" "${size}" "${APP_ID}"
 done
 
@@ -506,11 +506,11 @@ printf '      - python3 packaging/%s /app %s %s\n' \
 cat <<'MANIFEST_TAIL'
     sources:
       - type: dir
-        path: latencylab
-        dest: latencylab
+        path: simquence
+        dest: simquence
       - type: dir
-        path: latencylab_ui
-        dest: latencylab_ui
+        path: simquence_ui
+        dest: simquence_ui
       - type: dir
         path: assets
         dest: assets

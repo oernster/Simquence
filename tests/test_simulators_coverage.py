@@ -2,13 +2,13 @@ from __future__ import annotations
 
 import pytest
 
-from latencylab.model import Model
-from latencylab.sim import simulate_many
+from simquence.model import Model
+from simquence.sim import simulate_many
 
 
 def test_v2_delay_parse_errors_and_sampler_unhandled_dist() -> None:
-    from latencylab.sim_v2 import _sample_ms
-    from latencylab.model import DurationDist
+    from simquence.sim_v2 import _sample_ms
+    from simquence.model import DurationDist
     import random
 
     with pytest.raises(AssertionError, match="unhandled dist"):
@@ -78,7 +78,7 @@ def test_v2_failure_when_max_tasks_per_run_exceeded() -> None:
 
 
 def test_v1_legacy_sampler_unhandled_dist_and_failure_when_max_tasks_exceeded() -> None:
-    from latencylab.sim_legacy import _sample_duration_ms, simulate_many
+    from simquence.sim_legacy import _sample_duration_ms, simulate_many
 
     # Cover: if want_trace: all_traces.extend(trace)
     ok_model = Model.from_json(
@@ -192,7 +192,7 @@ def test_v1_capacity_parent_branch_in_critical_path() -> None:
 
 
 def test_legacy_seed_helpers_cover_splitmix_and_seed_for_run() -> None:
-    from latencylab.sim_legacy import _seed_for_run, _splitmix64
+    from simquence.sim_legacy import _seed_for_run, _splitmix64
 
     assert isinstance(_splitmix64(0), int)
     assert _seed_for_run(123, 0) != _seed_for_run(123, 1)

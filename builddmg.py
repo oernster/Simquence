@@ -1,9 +1,9 @@
-"""Build a signed, optionally notarised macOS DMG for LatencyLab.
+"""Build a signed, optionally notarised macOS DMG for Simquence.
 
 Run on macOS from the repository root with the virtual environment active:
 
     pip install -e .[build]
-    python builddmg.py   ->   latencylab.dmg
+    python builddmg.py   ->   simquence.dmg
 
 PyInstaller comes from that build extra and is checked for before anything is
 built, so a missing one costs a second rather than a failed ten-minute run.
@@ -11,7 +11,7 @@ built, so a missing one costs a second rather than a failed ten-minute run.
 Signing uses DEVELOPER_ID_APPLICATION if set. Notarisation is mandatory: a
 Developer ID signature alone is not enough, because since macOS 10.15 Gatekeeper
 rejects signed-but-unnotarised apps with "Apple could not verify ... is free of
-malware". notarytool authenticates with the keychain profile LatencyLab by
+malware". notarytool authenticates with the keychain profile Simquence by
 default (APPLE_KEYCHAIN_PROFILE names a different one). When APPLE_ID and
 APPLE_APP_PASSWORD are both set, that pair is used instead; a password that is
 not app-specific in shape stops the build before anything is built. Set
@@ -48,11 +48,11 @@ from build_utils import (
 )
 from dmg_icon import png_to_icns, set_file_icon
 
-APP_NAME = "LatencyLab"
+APP_NAME = "Simquence"
 APP_AUTHOR = "Oliver Ernster"
 # The same string buildexe.py writes into the Windows resource block.
 COPYRIGHT = f"Copyright {APP_AUTHOR}"
-BUNDLE_ID = "uk.codecrafter.LatencyLab"
+BUNDLE_ID = "uk.codecrafter.Simquence"
 ENTRY_SCRIPT = PROJECT_ROOT / "runner.py"
 
 DIST_DIR = PROJECT_ROOT / "dist"
@@ -62,8 +62,8 @@ APP_BUNDLE = DIST_DIR / f"{APP_NAME}.app"
 # The opaque macOS variant, not the transparent one the other platforms use:
 # the disk image icon is drawn onto the Finder window and the desktop, where a
 # transparent canvas leaves the mark sitting on pale grey. See generate_icons.py.
-ICNS_SOURCE_PNG = PROJECT_ROOT / "assets" / "latencylab_icon_mac_1024.png"
-ICNS_FILE = PROJECT_ROOT / "assets" / "latencylab.icns"
+ICNS_SOURCE_PNG = PROJECT_ROOT / "assets" / "simquence_icon_mac_1024.png"
+ICNS_FILE = PROJECT_ROOT / "assets" / "simquence.icns"
 
 # The DMG lands at the repository root under a fixed name, because that is
 # where the person who ran the build looks for it. dist/ is PyInstaller's
@@ -85,14 +85,14 @@ APPLE_APP_PASSWORD = os.environ.get("APPLE_APP_PASSWORD", "")
 APPLE_TEAM_ID = os.environ.get("APPLE_TEAM_ID", "W7K465GKFJ")
 
 # The notarization credential for this app, created once with
-#   xcrun notarytool store-credentials LatencyLab \
+#   xcrun notarytool store-credentials Simquence \
 #     --apple-id <id> --team-id <team> --password <app-specific>
 # One profile per app means a leaked credential can be revoked for a single
 # app. Stated explicitly rather than derived from a display name: the profile
 # is a fact registered with Apple; deriving it would silently change which
 # credential the build looks for if that name were ever edited.
 # APPLE_KEYCHAIN_PROFILE overrides it.
-NOTARY_PROFILE = os.environ.get("APPLE_KEYCHAIN_PROFILE", "") or "LatencyLab"
+NOTARY_PROFILE = os.environ.get("APPLE_KEYCHAIN_PROFILE", "") or "Simquence"
 
 # The notary service accepts only an app-specific password from appleid.apple.com
 # and rejects the Apple account password with HTTP 401. The shape is distinctive,
@@ -107,7 +107,7 @@ ALLOW_UNNOTARIZED = os.environ.get("ALLOW_UNNOTARIZED", "") == "1"
 # only way to skip it is to ask for that explicitly.
 NOTARISING = not ALLOW_UNNOTARIZED
 
-# LatencyLab is a plain Qt application: no web engine, so no JIT entitlement.
+# Simquence is a plain Qt application: no web engine, so no JIT entitlement.
 # The one entitlement it needs is to load the Qt frameworks we signed ourselves.
 ENTITLEMENTS_XML = """<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
@@ -124,7 +124,7 @@ ENTITLEMENTS_XML = """<?xml version="1.0" encoding="UTF-8"?>
 DATA_FILES: tuple[tuple[Path, str], ...] = (
     (VERSION_FILE, "."),
     (PROJECT_ROOT / "LICENSE", "."),
-    (PROJECT_ROOT / "latencylab_ui" / "LGPL3.txt", "latencylab_ui"),
+    (PROJECT_ROOT / "simquence_ui" / "LGPL3.txt", "simquence_ui"),
 )
 DATA_DIRS: tuple[tuple[Path, str], ...] = (
     (PROJECT_ROOT / "assets", "assets"),
@@ -213,8 +213,8 @@ def build_app(entitlements: Path) -> None:
         f"--osx-bundle-identifier={BUNDLE_ID}",
         f"--codesign-identity={DEVELOPER_ID}",
         f"--osx-entitlements-file={entitlements}",
-        "--collect-submodules=latencylab",
-        "--collect-submodules=latencylab_ui",
+        "--collect-submodules=simquence",
+        "--collect-submodules=simquence_ui",
     ]
     for source, destination in DATA_FILES + DATA_DIRS:
         command.append(f"--add-data={source}{os.pathsep}{destination}")

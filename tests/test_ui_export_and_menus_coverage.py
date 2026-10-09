@@ -7,10 +7,10 @@ from pathlib import Path
 def test_export_runs_appends_zip_suffix_and_writes(monkeypatch, tmp_path: Path) -> None:
     from PySide6.QtWidgets import QApplication, QFileDialog, QMessageBox, QWidget
 
-    from latencylab.model import Model
-    from latencylab.types import RunResult
-    from latencylab_ui.main_window_file_io import export_runs, on_save_log_clicked
-    from latencylab_ui.run_controller import RunOutputs
+    from simquence.model import Model
+    from simquence.types import RunResult
+    from simquence_ui.main_window_file_io import export_runs, on_save_log_clicked
+    from simquence_ui.run_controller import RunOutputs
 
     _ = QApplication.instance() or QApplication([])
 
@@ -86,7 +86,7 @@ def test_export_runs_gate_returns_if_button_disabled(
 ) -> None:
     from PySide6.QtWidgets import QApplication, QFileDialog, QWidget
 
-    from latencylab_ui.main_window_file_io import on_save_log_clicked
+    from simquence_ui.main_window_file_io import on_save_log_clicked
 
     _ = QApplication.instance() or QApplication([])
 
@@ -108,7 +108,7 @@ def test_export_runs_cancel_dialog_returns_without_writing(
 ) -> None:
     from PySide6.QtWidgets import QApplication, QFileDialog, QWidget
 
-    from latencylab_ui.main_window_file_io import on_save_log_clicked
+    from simquence_ui.main_window_file_io import on_save_log_clicked
 
     _ = QApplication.instance() or QApplication([])
 
@@ -126,7 +126,7 @@ def test_export_runs_cancel_dialog_returns_without_writing(
 def test_export_runs_shows_info_if_no_outputs(monkeypatch, tmp_path: Path) -> None:
     from PySide6.QtWidgets import QApplication, QFileDialog, QMessageBox, QWidget
 
-    from latencylab_ui.main_window_file_io import on_save_log_clicked
+    from simquence_ui.main_window_file_io import on_save_log_clicked
 
     _ = QApplication.instance() or QApplication([])
 
@@ -161,7 +161,7 @@ def test_export_runs_shows_info_if_no_outputs(monkeypatch, tmp_path: Path) -> No
 def test_show_license_dialogs_set_parent_refs() -> None:
     from PySide6.QtWidgets import QApplication, QWidget
 
-    import latencylab_ui.main_window_menus as menus
+    import simquence_ui.main_window_menus as menus
 
     _ = QApplication.instance() or QApplication([])
 
@@ -176,7 +176,7 @@ def test_show_license_dialogs_set_parent_refs() -> None:
 def test_show_how_to_read_dialog_sets_parent_ref() -> None:
     from PySide6.QtWidgets import QApplication, QWidget
 
-    import latencylab_ui.main_window_menus as menus
+    import simquence_ui.main_window_menus as menus
 
     _ = QApplication.instance() or QApplication([])
 
@@ -193,7 +193,7 @@ def test_top_bar_how_to_read_button_opens_same_dialog_via_main_window() -> None:
     from PySide6.QtCore import QObject, Signal
     from PySide6.QtWidgets import QApplication
 
-    from latencylab_ui.main_window import MainWindow
+    from simquence_ui.main_window import MainWindow
 
     app = QApplication.instance() or QApplication([])
 

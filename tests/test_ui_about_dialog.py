@@ -2,9 +2,9 @@ from __future__ import annotations
 
 
 def test_about_text_includes_versions_and_credits() -> None:
-    from latencylab.version import __version__
+    from simquence.version import __version__
 
-    from latencylab_ui.main_window_menus import _about_text
+    from simquence_ui.main_window_menus import _about_text
 
     txt = _about_text()
 
@@ -20,7 +20,7 @@ def test_about_text_includes_versions_and_credits() -> None:
     # licences the application is distributed under oblige it to say what it is
     # built on. Pinned against the credit list rather than restated here, so a
     # dependency added without a credit is caught by the test below.
-    from latencylab_ui.about_text import CREDITS
+    from simquence_ui.about_text import CREDITS
 
     for credit in CREDITS:
         assert credit.name in txt
@@ -30,8 +30,8 @@ def test_about_text_includes_versions_and_credits() -> None:
 def test_show_about_dialog_calls_message_box(monkeypatch) -> None:
     from PySide6.QtWidgets import QApplication, QWidget
 
-    from latencylab.version import __version__
-    import latencylab_ui.main_window_menus as menus
+    from simquence.version import __version__
+    import simquence_ui.main_window_menus as menus
 
     # A QApplication must exist before any widget is built; the instance itself
     # is not needed here.
@@ -42,7 +42,7 @@ def test_show_about_dialog_calls_message_box(monkeypatch) -> None:
     class _FakeDialog:
         def __init__(self, parent, *, content):
             assert isinstance(parent, QWidget)
-            assert content.title == "LatencyLab"
+            assert content.title == "Simquence"
             assert __version__ in content.body
             self.open_called = False
 

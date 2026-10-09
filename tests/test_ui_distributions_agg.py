@@ -2,7 +2,7 @@ from __future__ import annotations
 
 
 def test_stable_truncate_edge_cases() -> None:
-    from latencylab_ui.distributions_agg import stable_truncate
+    from simquence_ui.distributions_agg import stable_truncate
 
     assert stable_truncate("abc", max_chars=0) == ""
     assert stable_truncate("abc", max_chars=1) == "…"
@@ -13,7 +13,7 @@ def test_stable_truncate_edge_cases() -> None:
 def test_percentile_sorted_edge_cases() -> None:
     import math
 
-    from latencylab_ui.distributions_agg import _percentile_sorted
+    from simquence_ui.distributions_agg import _percentile_sorted
 
     assert math.isnan(_percentile_sorted([], 50.0))
 
@@ -28,7 +28,7 @@ def test_percentile_sorted_edge_cases() -> None:
 
 
 def test_freedman_diaconis_bins_deterministic_and_counts() -> None:
-    from latencylab_ui.distributions_agg import freedman_diaconis_bins
+    from simquence_ui.distributions_agg import freedman_diaconis_bins
 
     xs = [1.0, 2.0, 2.0, 3.0, 10.0, 10.0]
     bins1 = freedman_diaconis_bins(xs)
@@ -39,7 +39,7 @@ def test_freedman_diaconis_bins_deterministic_and_counts() -> None:
 
 
 def test_freedman_diaconis_bins_degenerate_iqr_single_bin() -> None:
-    from latencylab_ui.distributions_agg import freedman_diaconis_bins
+    from simquence_ui.distributions_agg import freedman_diaconis_bins
 
     # All values equal -> span=0.
     xs = [5.0, 5.0, 5.0]
@@ -49,7 +49,7 @@ def test_freedman_diaconis_bins_degenerate_iqr_single_bin() -> None:
 
 
 def test_freedman_diaconis_bins_len1() -> None:
-    from latencylab_ui.distributions_agg import freedman_diaconis_bins
+    from simquence_ui.distributions_agg import freedman_diaconis_bins
 
     bins = freedman_diaconis_bins([123.0])
     assert len(bins) == 1
@@ -59,7 +59,7 @@ def test_freedman_diaconis_bins_len1() -> None:
 
 
 def test_freedman_diaconis_bins_iqr_zero_but_span_positive() -> None:
-    from latencylab_ui.distributions_agg import freedman_diaconis_bins
+    from simquence_ui.distributions_agg import freedman_diaconis_bins
 
     # When IQR is small but non-zero (depending on interpolation), FD binning may
     # still choose multiple bins. The invariant we require is that the histogram
@@ -70,7 +70,7 @@ def test_freedman_diaconis_bins_iqr_zero_but_span_positive() -> None:
 
 
 def test_freedman_diaconis_bins_iqr_exactly_zero_single_bin() -> None:
-    from latencylab_ui.distributions_agg import freedman_diaconis_bins
+    from simquence_ui.distributions_agg import freedman_diaconis_bins
 
     # For n=5 the 25th and 75th percentiles are exact indices 1 and 3.
     # With four zeros, q1==q3==0 => IQR=0 while span>0.
@@ -81,8 +81,8 @@ def test_freedman_diaconis_bins_iqr_exactly_zero_single_bin() -> None:
 
 
 def test_critical_path_frequency_top10_and_other_sorted_and_full_display() -> None:
-    from latencylab.types import RunResult
-    from latencylab_ui.distributions_agg import critical_path_frequency
+    from simquence.types import RunResult
+    from simquence_ui.distributions_agg import critical_path_frequency
 
     # 12 unique paths, descending frequency, plus a failed run which must be ignored.
     runs: list[RunResult] = []

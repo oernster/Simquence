@@ -22,7 +22,7 @@ import re
 from pathlib import Path
 
 _ROOT = Path(__file__).resolve().parents[1]
-_SOURCES = ("latencylab_ui", "installer")
+_SOURCES = ("simquence_ui", "installer")
 
 CONTAINERS = frozenset(
     {

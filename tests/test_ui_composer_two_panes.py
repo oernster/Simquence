@@ -5,16 +5,16 @@ import pytest
 from PySide6.QtCore import QObject, Signal
 from PySide6.QtWidgets import QApplication, QMainWindow, QPushButton
 
-from latencylab_ui import focus_cycle_widgets as ring
-from latencylab_ui.main_window import MainWindow
-from latencylab_ui.model_composer_dialog import ModelComposerDialog
-from latencylab_ui.model_composer_panes import (
+from simquence_ui import focus_cycle_widgets as ring
+from simquence_ui.main_window import MainWindow
+from simquence_ui.model_composer_dialog import ModelComposerDialog
+from simquence_ui.model_composer_panes import (
     MIN_HEIGHT,
     MIN_WIDTH,
     initial_size,
     page_index,
 )
-from latencylab_ui.model_composer_tree import (
+from simquence_ui.model_composer_tree import (
     CONTEXTS,
     NO_TASK,
     SYSTEM,
@@ -180,7 +180,7 @@ def test_removing_a_task_keeps_the_selection_on_a_real_row(
 
 def _current(tree: ComposerTree) -> tuple[str, int]:
     item = tree.currentItem()
-    from latencylab_ui.model_composer_tree import INDEX_ROLE, SECTION_ROLE
+    from simquence_ui.model_composer_tree import INDEX_ROLE, SECTION_ROLE
 
     return str(item.data(0, SECTION_ROLE)), int(item.data(0, INDEX_ROLE))
 

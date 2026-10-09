@@ -19,8 +19,8 @@ def test_compose_button_exists_and_opens_the_composer() -> None:
     from PySide6.QtCore import QObject, Signal
     from PySide6.QtWidgets import QPushButton
 
-    from latencylab_ui import main_window_actions as actions
-    from latencylab_ui.main_window import MainWindow
+    from simquence_ui import main_window_actions as actions
+    from simquence_ui.main_window import MainWindow
 
     class _Controller(QObject):
         started = Signal(int)
@@ -78,8 +78,8 @@ def test_export_and_export_load_use_deterministic_json(
     from PySide6.QtCore import QObject, Signal
     from PySide6.QtWidgets import QFileDialog
 
-    from latencylab_ui.main_window import MainWindow
-    from latencylab_ui.model_composer_types import (
+    from simquence_ui.main_window import MainWindow
+    from simquence_ui.model_composer_types import (
         build_raw_model_dict,
         dumps_deterministic,
     )

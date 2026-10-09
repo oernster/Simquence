@@ -6,10 +6,10 @@ def test_switch_to_compose_no_prompt_when_no_outputs() -> None:
 
     from PySide6.QtWidgets import QApplication
 
-    from latencylab_ui.main_window_dock_switching import (
+    from simquence_ui.main_window_dock_switching import (
         open_model_composer,
     )
-    from latencylab_ui.main_window import MainWindow
+    from simquence_ui.main_window import MainWindow
 
     app = QApplication.instance() or QApplication([])
     _ = app
@@ -53,8 +53,8 @@ def test_prompt_export_returns_when_no_last_outputs() -> None:
     from PySide6.QtCore import QObject, Signal
     from PySide6.QtWidgets import QApplication
 
-    from latencylab_ui.main_window import MainWindow
-    from latencylab_ui.main_window_dock_switching import _prompt_export_if_needed
+    from simquence_ui.main_window import MainWindow
+    from simquence_ui.main_window_dock_switching import _prompt_export_if_needed
 
     app = QApplication.instance() or QApplication([])
     _ = app
@@ -93,8 +93,8 @@ def test_switch_to_compose_prompt_yes_export_cancel_blocks_switch(monkeypatch) -
     from PySide6.QtCore import QObject, Signal
     from PySide6.QtWidgets import QApplication, QMessageBox
 
-    from latencylab_ui.main_window import MainWindow
-    from latencylab_ui.main_window_dock_switching import (
+    from simquence_ui.main_window import MainWindow
+    from simquence_ui.main_window_dock_switching import (
         open_model_composer,
     )
 
@@ -147,8 +147,8 @@ def test_prompt_export_no_path_does_not_raise(monkeypatch) -> None:
     from PySide6.QtCore import QObject, Signal
     from PySide6.QtWidgets import QApplication, QMessageBox
 
-    from latencylab_ui.main_window import MainWindow
-    from latencylab_ui.main_window_dock_switching import _prompt_export_if_needed
+    from simquence_ui.main_window import MainWindow
+    from simquence_ui.main_window_dock_switching import _prompt_export_if_needed
 
     app = QApplication.instance() or QApplication([])
     _ = app
@@ -191,8 +191,8 @@ def test_switch_to_compose_prompt_cancel_blocks_switch(monkeypatch) -> None:
     from PySide6.QtCore import QObject, Signal
     from PySide6.QtWidgets import QApplication, QMessageBox
 
-    from latencylab_ui.main_window import MainWindow
-    from latencylab_ui.main_window_dock_switching import (
+    from simquence_ui.main_window import MainWindow
+    from simquence_ui.main_window_dock_switching import (
         open_model_composer,
     )
 

@@ -8,9 +8,9 @@ from PySide6.QtCore import QObject, Qt, Signal
 from PySide6.QtTest import QTest
 from PySide6.QtWidgets import QApplication
 
-from latencylab.model import Model
-from latencylab_ui import focus_cycle_widgets as ring
-from latencylab_ui.main_window import MainWindow
+from simquence.model import Model
+from simquence_ui import focus_cycle_widgets as ring
+from simquence_ui.main_window import MainWindow
 
 MODEL_JSON = {
     "schema_version": 1,
@@ -182,7 +182,7 @@ def test_space_drops_a_highlighted_menu_title(
     that activates everything else in the application stopped at the menus.
     """
 
-    from latencylab_ui import focus_cycle_menu as menus
+    from simquence_ui import focus_cycle_menu as menus
 
     bar = window.menuBar()
     title = bar.actions()[0]
@@ -206,7 +206,7 @@ def test_space_drops_a_highlighted_menu_title(
 def test_space_on_a_title_with_no_menu_does_nothing(window: MainWindow) -> None:
     from PySide6.QtGui import QAction
 
-    from latencylab_ui import focus_cycle_menu as menus
+    from simquence_ui import focus_cycle_menu as menus
 
     bar = window.menuBar()
     bare = QAction("Bare", bar)
@@ -220,7 +220,7 @@ def test_space_on_a_title_with_no_menu_does_nothing(window: MainWindow) -> None:
 
 
 def test_nothing_highlighted_means_space_is_not_ours(window: MainWindow) -> None:
-    from latencylab_ui import focus_cycle_menu as menus
+    from simquence_ui import focus_cycle_menu as menus
 
     window.menuBar().setActiveAction(None)
     assert menus.open_menu_under_title(window) is False
@@ -240,7 +240,7 @@ def test_an_open_menu_yields_right_into_a_submenu_and_left_back_out(
 
     from PySide6.QtWidgets import QMenu
 
-    from latencylab_ui import focus_cycle_menu as menus
+    from simquence_ui import focus_cycle_menu as menus
 
     parent = QMenu(window)
     plain = parent.addAction("Plain")
@@ -266,7 +266,7 @@ def test_a_menu_item_that_opens_a_submenu_is_not_triggered_by_space(
 
     from PySide6.QtWidgets import QMenu
 
-    from latencylab_ui import focus_cycle_menu as menus
+    from simquence_ui import focus_cycle_menu as menus
 
     parent = QMenu(window)
     submenu = QMenu("Deeper", parent)
@@ -292,7 +292,7 @@ def test_space_triggers_the_highlighted_item_of_an_open_menu(
 
     from PySide6.QtWidgets import QMenu
 
-    from latencylab_ui.focus_cycle_keys import handle_space
+    from simquence_ui.focus_cycle_keys import handle_space
 
     fired: list[str] = []
     menu = QMenu(window)
@@ -313,7 +313,7 @@ def test_space_triggers_the_highlighted_item_of_an_open_menu(
 def test_the_combo_handler_declines_everything_that_is_not_its_business(
     app: QApplication, window: MainWindow
 ) -> None:
-    from latencylab_ui.focus_cycle_keys import handle_combo_box
+    from simquence_ui.focus_cycle_keys import handle_combo_box
 
     # A text field owns its own vertical arrows.
     window._runs_spin.setFocus()
@@ -362,7 +362,7 @@ def test_focus_is_reasserted_when_something_steals_it(
 def test_space_triggers_a_plain_highlighted_item(window: MainWindow) -> None:
     from PySide6.QtWidgets import QMenu
 
-    from latencylab_ui import focus_cycle_menu as menus
+    from simquence_ui import focus_cycle_menu as menus
 
     fired: list[str] = []
     menu = QMenu(window)

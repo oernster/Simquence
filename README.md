@@ -1,12 +1,12 @@
-# <img width="64" height="64" alt="latencylab" src="https://github.com/user-attachments/assets/cb5045c5-8ba7-4d01-889b-944ccc336001" /> LatencyLab
+# <img width="64" height="64" alt="simquence" src="https://github.com/user-attachments/assets/cb5045c5-8ba7-4d01-889b-944ccc336001" /> Simquence
 
 Simulate your architecture's latency before you build it.
 
-LatencyLab is a design-time latency simulator. You describe a planned (or existing) software architecture as a small, explicit model: the units of work, the events that trigger them and the shared resources they queue behind. LatencyLab executes that model thousands of times with realistic timing variation. Out come the numbers you cannot get from a whiteboard: how long the flow takes across percentiles, which chain of work actually held each run up and how often each chain is the culprit. It works on the design, not the code, so it applies to any event-driven software: web backends, desktop and mobile UIs, microservices and embedded pipelines. Change the model, run again on the same seed and you can see exactly what an architectural decision costs before a line of it is written.
+Simquence is a design-time latency simulator. You describe a planned (or existing) software architecture as a small, explicit model: the units of work, the events that trigger them and the shared resources they queue behind. Simquence executes that model thousands of times with realistic timing variation. Out come the numbers you cannot get from a whiteboard: how long the flow takes across percentiles, which chain of work actually held each run up and how often each chain is the culprit. It works on the design, not the code, so it applies to any event-driven software: web backends, desktop and mobile UIs, microservices and embedded pipelines. Change the model, run again on the same seed and you can see exactly what an architectural decision costs before a line of it is written.
 
 It is not a profiler, tracer or runtime observer. It exists to prevent confident people from shipping bad architecture.
 
-> **Commercial licences available.** LatencyLab is free and open source under GPL-3.0, with its interface layer under LGPL-3.0. If those terms do not suit what you are building, such as a closed-source product, a commercial licence can be bought from me separately. It covers my own code; PySide6 keeps its own LGPL-3.0 licence. See [commercial licensing](https://ernster.dev/commercial-licensing.html).
+> **Commercial licences available.** Simquence is free and open source under GPL-3.0, with its interface layer under LGPL-3.0. If those terms do not suit what you are building, such as a closed-source product, a commercial licence can be bought from me separately. It covers my own code; PySide6 keeps its own LGPL-3.0 licence. See [commercial licensing](https://ernster.dev/commercial-licensing.html).
 
 ## The workflow
 
@@ -69,11 +69,11 @@ This excerpt from the shipped [Checkout example](examples/checkout.json) is a co
 
 ## Who this is for
 
-LatencyLab is for anyone making structural decisions about event-driven software: senior engineers, architects and CTOs, at the point where those decisions are still cheap to change. It is domain-agnostic: because it simulates the design rather than instrumenting code, the same tool models a web checkout, a desktop app's UI thread, a fan-out of microservice calls or an embedded event pipeline.
+Simquence is for anyone making structural decisions about event-driven software: senior engineers, architects and CTOs, at the point where those decisions are still cheap to change. It is domain-agnostic: because it simulates the design rather than instrumenting code, the same tool models a web checkout, a desktop app's UI thread, a fan-out of microservice calls or an embedded event pipeline.
 
 If you have ever said "we will profile it later", this is what later should have looked like.
 
-LatencyLab is not for tuning code.  
+Simquence is not for tuning code.  
 It is for validating architectural decisions before they harden.
 
 ## Who this is not for
@@ -85,17 +85,17 @@ It is for validating architectural decisions before they harden.
 
 ## Context
 
-LatencyLab exists to support design time reasoning about latency rather than post hoc analysis.
+Simquence exists to support design time reasoning about latency rather than post hoc analysis.
 
 The motivation, philosophy and trade offs behind the tool are described in more detail on its site:
 
-[Why LatencyLab exists](https://ernster.dev/latencylab/why.html)
+[Why Simquence exists](https://ernster.dev/Simquence/why.html)
 
 Reading that is not required to use the tool. It explains why the tool exists and what kinds of problems it is intended to make visible.
 
 ## What running it actually does
 
-LatencyLab executes the model as a simulation: the entry event fires, tasks run on their contexts, queues form where concurrency is exhausted and durations are drawn from the distributions you chose. It does this hundreds or thousands of times, each run seeded, so the whole experiment is reproducible bit for bit. One run tells you nothing; the spread across runs is the finding.
+Simquence executes the model as a simulation: the entry event fires, tasks run on their contexts, queues form where concurrency is exhausted and durations are drawn from the distributions you chose. It does this hundreds or thousands of times, each run seeded, so the whole experiment is reproducible bit for bit. One run tells you nothing; the spread across runs is the finding.
 
 For every run it records the **makespan** (how long the whole flow took, which is how long the user waited) and the **critical path** (the specific chain of tasks and waits that prevented the run finishing sooner; expensive work off that chain delayed nobody).
 
@@ -179,7 +179,7 @@ what the floor leaves out and how a test is written.
 
 The distributable is the headless CLI core. The desktop UI is deliberately left
 out of it (see the packaging notes in [ARCHITECTURE.md](ARCHITECTURE.md)), so a
-built wheel contains `latencylab/` and nothing else.
+built wheel contains `simquence/` and nothing else.
 
 ```bash
 python -m pip install build
@@ -219,11 +219,11 @@ What each build does in order, the generated icons and cutting a release are in
 - [TESTING.md](TESTING.md): the checks, what the gate holds and how a test is written.
 - [TECH_DEBT.md](TECH_DEBT.md): the standing reference to what is still open, what is
   deliberately left and what only looks like debt.
-- [`DECISIONS-TRADEOFFS.md`](DECISIONS-TRADEOFFS.md) sets out the decisions LatencyLab rests on, with what each one gains and what it costs.
+- [`DECISIONS-TRADEOFFS.md`](DECISIONS-TRADEOFFS.md) sets out the decisions Simquence rests on, with what each one gains and what it costs.
 
 ## UI (GUI)
 
-The GUI lives in [`latencylab_ui/`](latencylab_ui/__init__.py:1).
+The GUI lives in [`simquence_ui/`](simquence_ui/__init__.py:1).
 
 Note: the UI is intentionally **not packaged** into the published distribution (see the
 packaging notes in [`ARCHITECTURE.md`](ARCHITECTURE.md)). Run it from a clone of this
@@ -232,7 +232,7 @@ repository or install one of the desktop builds above.
 Launch via the module entry point:
 
 ```bash
-python -m latencylab_ui
+python -m simquence_ui
 ```
 
 There is also a small repo-root convenience shim, which is what the frozen build
@@ -247,25 +247,25 @@ If you see an error about `PySide6` missing, install the GUI dependency via
 
 ## Supporting the project
 
-LatencyLab is free and stays free. There is no paid tier, no licence key and no
+Simquence is free and stays free. There is no paid tier, no licence key and no
 feature held back behind a donation. If it has saved you time or simply been
 useful, a donation supports its maintenance and continued development.
 
 The same link sits in the app's top bar, just left of the light and dark
-toggle. Pressing it hands the address to your browser; LatencyLab itself sends
+toggle. Pressing it hands the address to your browser; Simquence itself sends
 nothing and opens no connection of its own.
 
-<a href="https://www.paypal.com/ncp/payment/Y275VZ7R2NUNW"><img src="docs/donate.png" alt="Donate to LatencyLab" width="120"></a>
+<a href="https://www.paypal.com/ncp/payment/Y275VZ7R2NUNW"><img src="docs/donate.png" alt="Donate to Simquence" width="120"></a>
 
 ## Licence
 
 Licensed by component, which is what the running application shows under
 Help:
 
-- The simulation core in `latencylab/` (and therefore the published
+- The simulation core in `simquence/` (and therefore the published
   distribution) is **GPL-3.0**. The full text is in [LICENSE](LICENSE).
-- The PySide6 desktop front end in `latencylab_ui/` is **LGPL-3.0**. The full
-  text is in [`latencylab_ui/LGPL3.txt`](latencylab_ui/LGPL3.txt).
+- The PySide6 desktop front end in `simquence_ui/` is **LGPL-3.0**. The full
+  text is in [`simquence_ui/LGPL3.txt`](simquence_ui/LGPL3.txt).
 
 A commercial licence for my own code is also available, separately from the
 open-source licences: see

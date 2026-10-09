@@ -4,9 +4,9 @@ import pytest
 
 from PySide6.QtWidgets import QApplication
 
-from latencylab_ui.model_composer_contexts_editor import ContextsEditor
-from latencylab_ui.model_composer_tasks_editor import TasksEditor
-from latencylab_ui.model_composer_types import (
+from simquence_ui.model_composer_contexts_editor import ContextsEditor
+from simquence_ui.model_composer_tasks_editor import TasksEditor
+from simquence_ui.model_composer_types import (
     DEFAULT_VERSION,
     read_schema_version,
     wiring_edges_from_raw,

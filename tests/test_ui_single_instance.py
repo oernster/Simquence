@@ -4,15 +4,15 @@ import pytest
 
 from PySide6.QtWidgets import QApplication, QMainWindow
 
-from latencylab_ui import windows_identity
-from latencylab_ui.single_instance import (
+from simquence_ui import windows_identity
+from simquence_ui.single_instance import (
     InstanceServer,
     another_instance_is_running,
     raise_window,
 )
 
-# Per test, so a run never collides with a real LatencyLab on the same machine.
-TEST_SERVER = "latencylab-single-instance-tests"
+# Per test, so a run never collides with a real Simquence on the same machine.
+TEST_SERVER = "simquence-single-instance-tests"
 
 
 @pytest.fixture()
@@ -51,7 +51,7 @@ def test_a_second_instance_is_turned_away_and_wakes_the_first(
 
 
 def test_a_stale_name_does_not_lock_the_application_out(app: QApplication) -> None:
-    """A crash must not leave the machine unable to start LatencyLab again.
+    """A crash must not leave the machine unable to start Simquence again.
 
     The first server here stands in for one left behind by a process that
     died; the second must still be able to take the name.

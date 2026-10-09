@@ -1,0 +1,88 @@
+from __future__ import annotations
+
+from dataclasses import dataclass
+from typing import Protocol
+
+from simquence.cancellation import CancellationSignal
+from simquence.model import Model
+from simquence.types import RunResult, TaskInstance
+
+
+class RunExecutor(Protocol):
+    def execute(
+        self,
+        *,
+        model: Model,
+        runs: int,
+        seed: int,
+        max_tasks_per_run: int,
+        want_trace: bool,
+        cancel: CancellationSignal | None = None,
+    ) -> tuple[list[RunResult], list[TaskInstance]]:
+        raise NotImplementedError
+
+
+@dataclass(frozen=True)
+class LegacyNumpyExecutor:
+    def execute(
+        self,
+        *,
+        model: Model,
+        runs: int,
+        seed: int,
+        max_tasks_per_run: int,
+        want_trace: bool,
+        cancel: CancellationSignal | None = None,
+    ) -> tuple[list[RunResult], list[TaskInstance]]:
+        from simquence.sim_legacy import simulate_many
+
+        return simulate_many(
+            model=model,
+            runs=runs,
+            seed=seed,
+            max_tasks_per_run=max_tasks_per_run,
+            want_trace=want_trace,
+            cancel=cancel,
+        )
+
+
+@dataclass(frozen=True)
+class StdlibV2Executor:
+    def execute(
+        self,
+        *,
+        model: Model,
+        runs: int,
+        seed: int,
+        max_tasks_per_run: int,
+        want_trace: bool,
+        cancel: CancellationSignal | None = None,
+    ) -> tuple[list[RunResult], list[TaskInstance]]:
+        from simquence.sim_v2 import simulate_many
+
+        return simulate_many(
+            model=model,
+            runs=runs,
+            seed=seed,
+            max_tasks_per_run=max_tasks_per_run,
+            want_trace=want_trace,
+            cancel=cancel,
+        )
+
+
+def default_executor_for_model(model: Model) -> RunExecutor:
+    """Select an execution strategy for a parsed model.
+
+    Dispatch policy:
+    - schema_version == 1 -> legacy NumPy-backed executor (frozen oracle path)
+    - schema_version >= 2 -> v2 stdlib executor (default for new models)
+
+    Note: validation currently only accepts schema_version in {1, 2}. The >= 2
+    rule is intentionally future-proof for in-memory Models constructed by code.
+    """
+
+    if model.version == 1:
+        return LegacyNumpyExecutor()
+    if model.version >= 2:
+        return StdlibV2Executor()
+    raise ValueError(f"Unsupported model version: {model.version}")

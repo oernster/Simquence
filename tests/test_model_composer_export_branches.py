@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from latencylab_ui import model_composer_export as export_mod
+from simquence_ui import model_composer_export as export_mod
 
 
 def _ensure_qapp():
@@ -19,7 +19,7 @@ def test_model_composer_export_and_stress_branches(tmp_path: Path, monkeypatch) 
 
     from PySide6.QtWidgets import QMessageBox, QWidget
 
-    from latencylab_ui.model_composer_dialog import ModelComposerDialog
+    from simquence_ui.model_composer_dialog import ModelComposerDialog
 
     # Prevent modal dialogs from blocking/hanging.
     monkeypatch.setattr(QMessageBox, "critical", lambda *_a, **_k: None)

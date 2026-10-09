@@ -24,8 +24,8 @@ def test_every_bundled_example_gets_its_own_action() -> None:
 
     from PySide6.QtWidgets import QMainWindow
 
-    from latencylab_ui.example_models import ExampleModel
-    from latencylab_ui.main_window_menus import EXAMPLES_MENU_TITLE, build_examples_menu
+    from simquence_ui.example_models import ExampleModel
+    from simquence_ui.main_window_menus import EXAMPLES_MENU_TITLE, build_examples_menu
 
     window = QMainWindow()
     opened: list[Path] = []
@@ -48,8 +48,8 @@ def test_each_action_opens_its_own_model_not_the_last_one() -> None:
 
     from PySide6.QtWidgets import QMainWindow
 
-    from latencylab_ui.example_models import ExampleModel
-    from latencylab_ui.main_window_menus import EXAMPLES_MENU_TITLE, build_examples_menu
+    from simquence_ui.example_models import ExampleModel
+    from simquence_ui.main_window_menus import EXAMPLES_MENU_TITLE, build_examples_menu
 
     window = QMainWindow()
     opened: list[Path] = []
@@ -76,7 +76,7 @@ def test_an_empty_bundle_explains_itself_with_a_disabled_item() -> None:
 
     from PySide6.QtWidgets import QMainWindow
 
-    from latencylab_ui.main_window_menus import (
+    from simquence_ui.main_window_menus import (
         EXAMPLES_MENU_TITLE,
         NO_EXAMPLES_TEXT,
         build_examples_menu,
@@ -103,7 +103,7 @@ def test_the_menu_falls_back_to_the_bundled_examples_on_disk() -> None:
 
     from PySide6.QtWidgets import QMainWindow
 
-    from latencylab_ui.main_window_menus import EXAMPLES_MENU_TITLE, build_examples_menu
+    from simquence_ui.main_window_menus import EXAMPLES_MENU_TITLE, build_examples_menu
 
     window = QMainWindow()
     opened: list[Path] = []
@@ -122,9 +122,9 @@ def test_the_main_window_loads_the_example_the_menu_asks_for() -> None:
 
     from PySide6.QtCore import QObject, Signal
 
-    from latencylab_ui.example_models import find_examples_dir
-    from latencylab_ui.main_window import MainWindow
-    from latencylab_ui.main_window_menus import EXAMPLES_MENU_TITLE
+    from simquence_ui.example_models import find_examples_dir
+    from simquence_ui.main_window import MainWindow
+    from simquence_ui.main_window_menus import EXAMPLES_MENU_TITLE
 
     class _Controller(QObject):
         started = Signal(int)

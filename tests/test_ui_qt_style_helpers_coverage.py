@@ -4,7 +4,7 @@ from __future__ import annotations
 def test_harden_combobox_popup_handles_missing_view_gracefully(monkeypatch) -> None:
     """Cover the `view is None` early-return branch."""
 
-    from latencylab_ui.qt_style_helpers import harden_combobox_popup
+    from simquence_ui.qt_style_helpers import harden_combobox_popup
 
     class _Combo:
         def setEditable(self, _b):
@@ -28,7 +28,7 @@ def test_harden_combobox_popup_handles_missing_view_gracefully(monkeypatch) -> N
 def test_apply_combo_model_roles_handles_model_none() -> None:
     """Cover the `model is None` early return."""
 
-    import latencylab_ui.qt_style_helpers as qsh
+    import simquence_ui.qt_style_helpers as qsh
 
     class _Combo:
         def model(self):
@@ -40,7 +40,7 @@ def test_apply_combo_model_roles_handles_model_none() -> None:
 def test_apply_combo_model_roles_handles_rowcount_exception(monkeypatch) -> None:
     """Cover the `rowCount()` exception branch."""
 
-    import latencylab_ui.qt_style_helpers as qsh
+    import simquence_ui.qt_style_helpers as qsh
 
     class _BadModel:
         def rowCount(self):
@@ -56,7 +56,7 @@ def test_apply_combo_model_roles_handles_rowcount_exception(monkeypatch) -> None
 def test_apply_combo_model_roles_handles_setdata_exception() -> None:
     """Cover the `setData()` exception branch."""
 
-    import latencylab_ui.qt_style_helpers as qsh
+    import simquence_ui.qt_style_helpers as qsh
 
     class _Model:
         def rowCount(self):
@@ -88,7 +88,7 @@ def test_apply_combo_model_roles_handles_setdata_exception() -> None:
 def test_bind_combo_popup_palette_handles_missing_view_gracefully() -> None:
     """Cover the `view is None` branch."""
 
-    import latencylab_ui.qt_style_helpers as qsh
+    import simquence_ui.qt_style_helpers as qsh
 
     class _Combo:
         def view(self):
@@ -104,7 +104,7 @@ def test_combo_popup_hardener_filter_executes_show_path() -> None:
     from PySide6.QtGui import QPalette
     from PySide6.QtCore import QEvent
 
-    import latencylab_ui.qt_style_helpers as qsh
+    import simquence_ui.qt_style_helpers as qsh
 
     _ = QApplication.instance() or QApplication([])
 
@@ -128,7 +128,7 @@ def test_harden_combobox_popup_hooks_model_signals_branch() -> None:
 
     from PySide6.QtWidgets import QApplication, QComboBox
 
-    import latencylab_ui.qt_style_helpers as qsh
+    import simquence_ui.qt_style_helpers as qsh
 
     app = QApplication.instance() or QApplication([])
     _ = app
@@ -151,7 +151,7 @@ def test_harden_combobox_popup_model_signal_hook_try_except_branch(monkeypatch) 
 
     from PySide6.QtWidgets import QApplication, QComboBox
 
-    import latencylab_ui.qt_style_helpers as qsh
+    import simquence_ui.qt_style_helpers as qsh
 
     _ = QApplication.instance() or QApplication([])
 

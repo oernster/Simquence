@@ -1,8 +1,8 @@
 from __future__ import annotations
 
 
-from latencylab.executors import LegacyNumpyExecutor, StdlibV2Executor
-from latencylab.model import Model
+from simquence.executors import LegacyNumpyExecutor, StdlibV2Executor
+from simquence.model import Model
 
 
 def _oracle_model_json(*, schema_version: int) -> dict:

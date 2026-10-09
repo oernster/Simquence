@@ -6,8 +6,8 @@ from PySide6.QtCore import Qt
 from PySide6.QtGui import QColor
 from PySide6.QtWidgets import QApplication, QPushButton
 
-from latencylab_ui import attention_flash
-from latencylab_ui.attention_flash import (
+from simquence_ui import attention_flash
+from simquence_ui.attention_flash import (
     FLASH_COUNT,
     FLASH_INTERVAL_MS,
     FLASH_OFF_MS,
@@ -15,7 +15,7 @@ from latencylab_ui.attention_flash import (
     FLASH_PROPERTY,
     AttentionFlash,
 )
-from latencylab_ui.theme import Theme, apply_theme, tokens_for
+from simquence_ui.theme import Theme, apply_theme, tokens_for
 
 
 @pytest.fixture()
@@ -164,8 +164,8 @@ def test_the_flash_paints_the_same_green_as_the_ring(
 def test_the_stylesheet_selects_on_the_property_the_flash_sets() -> None:
     """The two halves are written in different files, so they are pinned here."""
 
-    from latencylab_ui.theme_stylesheet import build_stylesheet
-    from latencylab_ui.theme_tokens import DARK_TOKENS
+    from simquence_ui.theme_stylesheet import build_stylesheet
+    from simquence_ui.theme_tokens import DARK_TOKENS
 
     sheet = build_stylesheet(DARK_TOKENS)
 

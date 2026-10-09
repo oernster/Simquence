@@ -4,7 +4,7 @@ from pathlib import Path
 
 import pytest
 
-from latencylab_ui import icon_resolver
+from simquence_ui import icon_resolver
 
 
 def test_candidates_put_the_override_first_and_the_source_tree_last() -> None:

@@ -4,7 +4,7 @@ from pathlib import Path
 
 import pytest
 
-from latencylab_ui import packaged_dir
+from simquence_ui import packaged_dir
 
 
 class _FakeCompiled:
@@ -16,7 +16,7 @@ class _FakeCompiled:
 
 def test_source_root_is_the_repository_root() -> None:
     root = packaged_dir.source_root()
-    assert (root / "latencylab_ui" / "packaged_dir.py").is_file()
+    assert (root / "simquence_ui" / "packaged_dir.py").is_file()
 
 
 def test_compiled_dir_is_none_when_running_from_source() -> None:
@@ -36,7 +36,7 @@ def test_executable_dir_is_none_unless_frozen(monkeypatch: pytest.MonkeyPatch) -
 def test_executable_dir_is_the_exe_directory_when_frozen(
     monkeypatch: pytest.MonkeyPatch, tmp_path: Path
 ) -> None:
-    exe = tmp_path / "LatencyLab.exe"
+    exe = tmp_path / "Simquence.exe"
     exe.write_text("", encoding="utf-8")
     monkeypatch.setattr("sys.frozen", True, raising=False)
     monkeypatch.setattr("sys.executable", str(exe))

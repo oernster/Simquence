@@ -31,8 +31,8 @@ def _write_model(tmp_path: Path, *, concurrency: int = 1) -> Path:
 def test_run_worker_success_and_error_paths(monkeypatch, tmp_path: Path) -> None:
     _ensure_qapp()
 
-    import latencylab_ui.run_controller as rc
-    from latencylab.validate import ModelValidationError
+    import simquence_ui.run_controller as rc
+    from simquence.validate import ModelValidationError
 
     req = rc.RunRequest(model_path=_write_model(tmp_path), runs=1, seed=1)
 
@@ -85,7 +85,7 @@ def test_run_worker_success_and_error_paths(monkeypatch, tmp_path: Path) -> None
 
 def test_run_controller_lifecycle_paths(monkeypatch, tmp_path: Path) -> None:
     _ensure_qapp()
-    import latencylab_ui.run_controller as rc
+    import simquence_ui.run_controller as rc
 
     req = rc.RunRequest(model_path=_write_model(tmp_path), runs=1, seed=1)
 

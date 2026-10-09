@@ -3,31 +3,31 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Why LatencyLab exists: latency answered before the code is written</title>
-<meta name="description" content="Why LatencyLab was built: latency arguments run on intuition and confidence until it is too late to change the architecture. LatencyLab makes delay and coordination visible at design time, deterministically.">
+<title>Why Simquence exists: latency answered before the code is written</title>
+<meta name="description" content="Why Simquence was built: latency arguments run on intuition and confidence until it is too late to change the architecture. Simquence makes delay and coordination visible at design time, deterministically.">
 <meta name="author" content="Oliver Ernster">
 <meta name="robots" content="index, follow">
 <meta name="theme-color" content="#181818">
-<link rel="canonical" href="https://ernster.dev/latencylab/why.html">
+<link rel="canonical" href="https://ernster.dev/Simquence/why.html">
 <meta property="og:type" content="website">
-<meta property="og:site_name" content="LatencyLab">
-<meta property="og:title" content="Why LatencyLab exists: latency answered before the code is written">
-<meta property="og:description" content="Latency arguments run on intuition and confidence until it is too late to change the architecture. LatencyLab makes delay and coordination visible at design time.">
-<meta property="og:url" content="https://ernster.dev/latencylab/why.html">
-<meta property="og:image" content="https://ernster.dev/latencylab/assets/latencylab-ui.png">
-<meta property="og:image:alt" content="The LatencyLab UI showing a makespan distribution, critical-path frequencies and percentiles">
+<meta property="og:site_name" content="Simquence">
+<meta property="og:title" content="Why Simquence exists: latency answered before the code is written">
+<meta property="og:description" content="Latency arguments run on intuition and confidence until it is too late to change the architecture. Simquence makes delay and coordination visible at design time.">
+<meta property="og:url" content="https://ernster.dev/Simquence/why.html">
+<meta property="og:image" content="https://ernster.dev/Simquence/assets/simquence-ui.png">
+<meta property="og:image:alt" content="The Simquence UI showing a makespan distribution, critical-path frequencies and percentiles">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Why LatencyLab exists">
-<meta name="twitter:description" content="Latency arguments run on intuition and confidence until it is too late to change the architecture. LatencyLab makes delay and coordination visible at design time.">
-<meta name="twitter:image" content="https://ernster.dev/latencylab/assets/latencylab-ui.png">
-<link rel="icon" type="image/svg+xml" href="assets/latencylab.svg">
+<meta name="twitter:title" content="Why Simquence exists">
+<meta name="twitter:description" content="Latency arguments run on intuition and confidence until it is too late to change the architecture. Simquence makes delay and coordination visible at design time.">
+<meta name="twitter:image" content="https://ernster.dev/Simquence/assets/simquence-ui.png">
+<link rel="icon" type="image/png" href="assets/simquence.png">
 <link rel="stylesheet" href="styles.css?v=7b847c4937">
 </head>
 <body>
 <header class="nav">
   <div class="container nav-inner">
     <a class="brand" href="./">
-      <img src="assets/latencylab.svg" alt="LatencyLab icon">LatencyLab</a>
+      <img src="assets/simquence.png" alt="Simquence icon">Simquence</a>
     <nav class="nav-links">
       <a href="features.html">Features</a>
       <a href="why.html">Why</a>
@@ -40,45 +40,25 @@
     <div class="container prose">
       <div class="eyebrow">The reasoning</div>
       <h2 class="section-title">Why this exists</h2>
-      <p>First, what it is. LatencyLab is a design-time latency simulator: you
-        describe a planned or existing architecture as a small explicit model
-        (the units of work, the events that trigger them and the shared
-        resources they queue behind) and LatencyLab executes that model
-        thousands of times with realistic timing variation. Out come the numbers
-        a whiteboard cannot give you: how long the flow takes across
-        percentiles, which chain of work actually held each run up and how often
-        each chain is the culprit. It works on the design rather than the code,
-        so it applies to any event-driven software: web backends, desktop and
-        mobile UIs, microservices and embedded pipelines.</p>
       <p>Latency discussions are dominated by intuition, confidence and post hoc profiling. By the
-        time a real system can be measured, the decisions about concurrency, feedback, sequencing
-        and delay have already hardened and are expensive to undo. Profilers explain where the time
-        went in a running system; they rarely explain why the user waited.</p>
-      <p>LatencyLab moves the question to design time. You write an explicit model (tasks, events,
-        queues, delays, resource contention: everything named, nothing inferred) and the engine
-        executes it with deterministic scheduling and seeded randomness, thousands of times. Out
-        come concrete critical paths that name the work, queue-wait figures and percentiles split
-        between UI events and overall makespan, because those answer different questions: UI-event
-        percentiles describe when the interface responded to the user; makespan percentiles
-        describe when the whole piece of work finished. When
-        numbers change it is because the model changed, never because the measurement drifted.</p>
+        time a real system can be measured, the decisions about concurrency, sequencing and delay
+        have hardened and are expensive to undo. Profilers explain where the time went; they rarely
+        explain why the user waited.</p>
+      <p>Simquence moves the question to design time. Everything is named in the model and nothing
+        is inferred; scheduling is deterministic and randomness is seeded. When the numbers change,
+        it is because the model changed, never because the measurement drifted.</p>
       <p>The results routinely betray intuition. In the shipped checkout model most people predict
-        the slowest back end dominates perceived latency; instead a short debounce, added so the
-        interface would feel calm, is the critical path in most runs. The same
-        engine is one of the two instruments behind
+        the slowest back end dominates; instead a short debounce, added so the interface would feel
+        calm, is the critical path in most runs. The same engine produced the hierarchy-depth and
+        authority-placement numbers in
         <a href="https://www.crankthecode.com/books">Relativistic Decision Architecture</a>
-        (the author's book on organisational structure): it produced
-        the book's hierarchy-depth and authority-placement numbers from published models and seeds,
-        so every quantitative claim there can be rerun.</p>
-      <p>What works now is a local Python CLI reading a JSON execution model, with a desktop UI as
-        a client of the same headless core and plain-file outputs you can plot or diff. Fully
-        keyboard navigable, 100% coverage gated, no account and no server. Your models and
-        results never leave your machine; the desktop app's only outbound call is an anonymous
-        daily ask to GitHub releases for whether a newer version exists. It does not tune code
-        and it does not reassure; it exists so the latency problem
-        is found before it is politically expensive.</p>
+        from published models and seeds, so every quantitative claim there can be rerun.</p>
+      <p>It is a local Python CLI with a desktop UI over the same headless core: keyboard navigable,
+        100% coverage gated, no account and no server. Your models never leave your machine; the
+        only outbound call is an anonymous daily check of GitHub for a newer release. It exists so
+        the latency problem is found before it is politically expensive.</p>
       <div class="cta" style="justify-content:flex-start;margin-top:30px;">
-        <a class="btn btn-primary" href="https://github.com/oernster/latencylab">View on GitHub</a>
+        <a class="btn btn-primary" href="https://github.com/oernster/Simquence">View on GitHub</a>
         <a class="btn btn-ghost" href="./">Back to overview</a>
       </div>
     </div>
@@ -94,7 +74,7 @@
         <a class="btn btn-panel" href="who.html">Who it's for</a>
         <a class="btn btn-panel" href="features.html">Features</a>
         <a class="btn btn-panel" href="download.html">Download</a>
-        <a class="btn btn-panel" href="https://github.com/oernster/latencylab">GitHub</a>
+        <a class="btn btn-panel" href="https://github.com/oernster/Simquence">GitHub</a>
       </div>
     </div>
   </section>
@@ -102,7 +82,7 @@
 <footer>
   <div class="container footer-inner">
     <div>
-      <strong>LatencyLab</strong>: design-time latency exploration for event-driven systems<br>
+      <strong>Simquence</strong>: design-time latency exploration for event-driven systems<br>
       (c) Oliver Ernster · Local-first · GPL-3.0 + LGPL-3.0 · v<!--VERSION-->3.3.2<!--/VERSION-->
     </div>
     <div class="footer-links">
@@ -110,8 +90,8 @@
       <a href="features.html">Features</a>
       <a href="why.html">Why</a>
       <a href="download.html">Download</a>
-      <a href="https://github.com/oernster/latencylab/releases">Releases</a>
-      <a href="https://github.com/oernster/latencylab">GitHub</a>
+      <a href="https://github.com/oernster/Simquence/releases">Releases</a>
+      <a href="https://github.com/oernster/Simquence">GitHub</a>
       <a href="https://ernster.dev/">More of my work</a>
     </div>
   </div>

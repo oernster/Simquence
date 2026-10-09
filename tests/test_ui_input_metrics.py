@@ -18,9 +18,9 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from latencylab_ui.model_composer_dialog import ModelComposerDialog
-from latencylab_ui.model_composer_load import load_raw_model
-from latencylab_ui.theme import Theme, apply_theme
+from simquence_ui.model_composer_dialog import ModelComposerDialog
+from simquence_ui.model_composer_load import load_raw_model
+from simquence_ui.theme import Theme, apply_theme
 
 # Everything a person types or chooses in. They do the same job, so the
 # stylesheet is the one place that decides how tall they stand.

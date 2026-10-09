@@ -1,6 +1,6 @@
-# LatencyLab: Technical Debt
+# Simquence: Technical Debt
 
-A standing reference to the project's outstanding technical debt. It records what is still open, weighs whether each item is worth doing and gives the rationale. Every item is a behaviour-preserving internal concern: nothing here proposes reverting a feature or changing any UI or UX behaviour. Scope is the whole repository (the Qt-free core in `latencylab/`, the PySide6 front end in `latencylab_ui/` and the packaging metadata) read against `ARCHITECTURE.md` and the tests it names.
+A standing reference to the project's outstanding technical debt. It records what is still open, weighs whether each item is worth doing and gives the rationale. Every item is a behaviour-preserving internal concern: nothing here proposes reverting a feature or changing any UI or UX behaviour. Scope is the whole repository (the Qt-free core in `simquence/`, the PySide6 front end in `simquence_ui/` and the packaging metadata) read against `ARCHITECTURE.md` and the tests it names.
 
 ---
 
@@ -10,7 +10,7 @@ Nothing is open. The two sections below record the standing decisions that keep 
 
 ## Looks like debt, not worth touching
 
-- The fourteen `except Exception` blocks in `latencylab_ui`, including the one in the update-check worker where a failed check must stay silent. Each carries a `# noqa: BLE001` and most sit on Qt style, dialog or file-dialog paths where an exception is worse than a degraded widget. Narrowing them individually is churn on the least valuable surface in the repo. The ones worth narrowing have been: the main window catches nothing it cannot name.
+- The fourteen `except Exception` blocks in `simquence_ui`, including the one in the update-check worker where a failed check must stay silent. Each carries a `# noqa: BLE001` and most sit on Qt style, dialog or file-dialog paths where an exception is worse than a degraded widget. Narrowing them individually is churn on the least valuable surface in the repo. The ones worth narrowing have been: the main window catches nothing it cannot name.
 - The `main_window_*.py` family (`actions`, `dock_switching`, `editing`, `file_io`, `menus`, `panels`, `run`, `top_bar`) and the `model_composer_*.py` family look like two classes shattered across many files. That is the 400-line cap doing its job and each part is cohesive.
 - The `test_*_coverage.py` and `test_*_remaining_coverage.py` files are named after the gate rather than after behaviour. Ugly, honest and harmless; renaming them changes nothing that runs.
 - `sim.py` at 32 lines is a facade that only dispatches. That is the executor seam working, not an anaemic module.
@@ -20,7 +20,7 @@ Nothing is open. The two sections below record the standing decisions that keep 
 
 These look like candidates but are correct as they stand; changing them would regress or add cost for nothing.
 
-- **The `latencylab` / `latencylab_ui` two-package split.** It is the Qt-free boundary, it is enforced by `test_ui_dependency_boundaries.py` and it is the single most important structural property the repo has.
+- **The `simquence` / `simquence_ui` two-package split.** It is the Qt-free boundary, it is enforced by `test_ui_dependency_boundaries.py` and it is the single most important structural property the repo has.
 - **`test_codebase_size_limits.py` scanning the whole repo, plus a named exemption for the delivery scripts.** The exempt set is listed by name in `BUILD_SCRIPTS` and matched only at the repository root; a companion test fails if any of those names stops existing, so a rename cannot leave a hole behind. The line between exempt and not is deliberate: the recipe that invokes Nuitka is a script and the window it produces is a program. `installer/` is application code and is held to the cap like everything else.
 - **The golden v1 snapshot in `test_determinism.py`.** The frozen-output assertion is what makes the tool's determinism claim checkable.
 - **`sim_legacy.py` and the optional NumPy dependency.** This reads as an old engine kept alive to satisfy a snapshot test. It is not: `default_executor_for_model` dispatches any model declaring `schema_version == 1` to `LegacyNumpyExecutor`, so `sim_legacy.py` is a live execution path and deleting it would remove a feature rather than retire a fixture. The cost is already contained: the project's runtime `dependencies` are empty, NumPy is confined to the `legacy` and `dev` extras and `sim_legacy.py` raises a `ModuleNotFoundError` naming the extra to install. What the arrangement lacks is documentation, not a redesign.

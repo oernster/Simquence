@@ -13,7 +13,7 @@ def _ensure_qapp():
 def test_apply_theme_dark_and_light() -> None:
     app = _ensure_qapp()
 
-    from latencylab_ui.theme import Theme, apply_theme
+    from simquence_ui.theme import Theme, apply_theme
 
     apply_theme(app, Theme.DARK)
     dark_hl = app.palette().color(app.palette().ColorRole.Highlight).name()
@@ -29,8 +29,8 @@ def test_apply_theme_dark_and_light() -> None:
 def test_theme_toggle_emits() -> None:
     _ensure_qapp()
 
-    from latencylab_ui.theme import Theme
-    from latencylab_ui.theme_toggle import ThemeToggle
+    from simquence_ui.theme import Theme
+    from simquence_ui.theme_toggle import ThemeToggle
 
     t = ThemeToggle(default=Theme.DARK)
     seen: list[Theme] = []
@@ -56,8 +56,8 @@ def test_theme_toggle_is_one_button_that_is_never_disabled() -> None:
 
     from PySide6.QtWidgets import QPushButton
 
-    from latencylab_ui.theme import Theme
-    from latencylab_ui.theme_toggle import ThemeToggle
+    from simquence_ui.theme import Theme
+    from simquence_ui.theme_toggle import ThemeToggle
 
     t = ThemeToggle(default=Theme.DARK)
 
@@ -80,7 +80,7 @@ def test_sun_asks_for_emoji_presentation_and_moon_does_not_need_to() -> None:
     no font families at all.
     """
 
-    from latencylab_ui import theme_toggle
+    from simquence_ui import theme_toggle
 
     assert [hex(ord(c)) for c in theme_toggle.SUN] == ["0x2600", "0xfe0f"]
     assert [hex(ord(c)) for c in theme_toggle.MOON] == ["0x1f319"]
@@ -92,8 +92,8 @@ def test_theme_toggle_names_the_theme_it_will_switch_to() -> None:
 
     _ensure_qapp()
 
-    from latencylab_ui.theme import Theme
-    from latencylab_ui.theme_toggle import MOON, SUN, ThemeToggle
+    from simquence_ui.theme import Theme
+    from simquence_ui.theme_toggle import MOON, SUN, ThemeToggle
 
     t = ThemeToggle(default=Theme.DARK)
     assert t.theme() == Theme.DARK
@@ -113,8 +113,8 @@ def test_theme_toggle_space_switches_and_switches_back() -> None:
     from PySide6.QtCore import Qt
     from PySide6.QtTest import QTest
 
-    from latencylab_ui.theme import Theme
-    from latencylab_ui.theme_toggle import ThemeToggle
+    from simquence_ui.theme import Theme
+    from simquence_ui.theme_toggle import ThemeToggle
 
     t = ThemeToggle(default=Theme.DARK)
     t.show()

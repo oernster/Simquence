@@ -4,9 +4,9 @@ from PySide6.QtCore import QEvent, QPointF, Qt
 from PySide6.QtGui import QKeyEvent, QMouseEvent
 from PySide6.QtWidgets import QApplication, QMainWindow
 
-from latencylab_ui.model_composer_dialog import ModelComposerDialog
-from latencylab_ui.model_composer_tasks_editor import TasksEditor
-from latencylab_ui.model_composer_wiring_editor import WiringEditor
+from simquence_ui.model_composer_dialog import ModelComposerDialog
+from simquence_ui.model_composer_tasks_editor import TasksEditor
+from simquence_ui.model_composer_wiring_editor import WiringEditor
 
 
 def _ensure_qapp():

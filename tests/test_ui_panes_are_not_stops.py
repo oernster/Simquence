@@ -43,7 +43,7 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from latencylab_ui.first_stop_dialog import FirstStopDialog, is_reading_pane_class
+from simquence_ui.first_stop_dialog import FirstStopDialog, is_reading_pane_class
 
 INSTALLER_DIR = Path(__file__).resolve().parents[1] / "installer"
 _LONG_TEXT = "\n".join(f"line {n}" for n in range(400))
@@ -188,20 +188,20 @@ def surface_offences(surfaces: list[QWidget]) -> list[str]:
 
 
 def _app_surfaces() -> list[QWidget]:
-    from latencylab.version import __version__
-    from latencylab_ui.about_dialog import AboutDialog, AboutDialogContent
-    from latencylab_ui.critical_path_frequency_widget import (
+    from simquence.version import __version__
+    from simquence_ui.about_dialog import AboutDialog, AboutDialogContent
+    from simquence_ui.critical_path_frequency_widget import (
         CriticalPathFrequencyWidget,
     )
-    from latencylab_ui.distributions_agg import CriticalPathBar
-    from latencylab_ui.guide_dialog import GuideDialog
-    from latencylab_ui.how_to_read_dialog import HowToReadDialog
-    from latencylab_ui.licence_dialog import LicenceDialog
-    from latencylab_ui.main_licence_dialog import MainLicenceDialog
-    from latencylab_ui.main_window import MainWindow
-    from latencylab_ui.main_window_menus import _about_text
-    from latencylab_ui.model_composer_dialog import ModelComposerDialog
-    from latencylab_ui.update_check import UpdatePromptDialog
+    from simquence_ui.distributions_agg import CriticalPathBar
+    from simquence_ui.guide_dialog import GuideDialog
+    from simquence_ui.how_to_read_dialog import HowToReadDialog
+    from simquence_ui.licence_dialog import LicenceDialog
+    from simquence_ui.main_licence_dialog import MainLicenceDialog
+    from simquence_ui.main_window import MainWindow
+    from simquence_ui.main_window_menus import _about_text
+    from simquence_ui.model_composer_dialog import ModelComposerDialog
+    from simquence_ui.update_check import UpdatePromptDialog
 
     empty = MainWindow(run_controller=_IdleController())
     full = MainWindow(run_controller=_IdleController())
@@ -260,8 +260,8 @@ def test_no_installer_surface_offers_a_pane_as_a_stop(
 
 
 def test_the_composer_still_opens_on_its_section_tree(app: QApplication) -> None:
-    from latencylab_ui.model_composer_dialog import ModelComposerDialog
-    from latencylab_ui.model_composer_tree import ComposerTree
+    from simquence_ui.model_composer_dialog import ModelComposerDialog
+    from simquence_ui.model_composer_tree import ComposerTree
 
     del app
     holder = QMainWindow()
@@ -313,7 +313,7 @@ class _NoReadingPaneSkip(FirstStopDialog):
 def test_a_dialog_opens_on_its_control_never_on_its_pane(app: QApplication) -> None:
     """Without the skip a dialog opens on its page; with it, on its control."""
 
-    from latencylab_ui.pane_focus import follow_overflow
+    from simquence_ui.pane_focus import follow_overflow
 
     del app
     found = {}

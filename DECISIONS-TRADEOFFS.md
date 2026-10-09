@@ -1,6 +1,6 @@
 # Decisions and trade-offs
 
-The deliberate choices LatencyLab rests on: what was chosen, what was given up
+The deliberate choices Simquence rests on: what was chosen, what was given up
 for it and why. Each entry is the decision as the product makes it today.
 The detail behind each one, with the tests that hold it, lives in
 [ARCHITECTURE.md](ARCHITECTURE.md); [TECH_DEBT.md](TECH_DEBT.md) records what
@@ -10,7 +10,7 @@ only looks like debt and is deliberately left as it is.
 
 ### Simulate the design, not the code
 
-LatencyLab runs a small written model of an architecture: the work, the events
+Simquence runs a small written model of an architecture: the work, the events
 that trigger it and the resources it queues behind. It never reads, instruments
 or profiles a running program.
 
@@ -412,7 +412,7 @@ build strips loose executables out of an included folder.
 - **Rather than:** a generic installer; shipping the folder unzipped.
 - **Gains:** a build that dies on start fails the build rather than reaching a
   user; the setup program wears the application's own look.
-- **Costs:** the setup program is LatencyLab's own to maintain.
+- **Costs:** the setup program is Simquence's own to maintain.
 
 ### Installed for one user, without administrator rights
 

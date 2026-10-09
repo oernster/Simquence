@@ -13,9 +13,9 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from latencylab_ui import focus_cycle_widgets as ring
-from latencylab_ui.main_window import MainWindow
-from latencylab_ui.model_composer_tree import CONTEXTS, SYSTEM, TASKS, WIRING
+from simquence_ui import focus_cycle_widgets as ring
+from simquence_ui.main_window import MainWindow
+from simquence_ui.model_composer_tree import CONTEXTS, SYSTEM, TASKS, WIRING
 
 
 class _IdleController(QObject):

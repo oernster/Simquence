@@ -3,7 +3,7 @@
 
 The repository keeps exactly one real version string: the ``VERSION`` file at
 the project root. Python code reads it at runtime through
-``latencylab.version`` and the packaging metadata reads it as a dynamic field.
+``simquence.version`` and the packaging metadata reads it as a dynamic field.
 Static files cannot read ``VERSION`` at render time, so they instead carry a
 delimited token::
 
@@ -33,7 +33,7 @@ import hashlib
 import re
 from pathlib import Path
 
-from latencylab.version import read_version
+from simquence.version import read_version
 
 PROJECT_ROOT = Path(__file__).resolve().parent
 DOCS_DIR = PROJECT_ROOT / "docs"

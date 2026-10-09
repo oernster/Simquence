@@ -28,7 +28,7 @@ def _ensure_qapp():
 
 
 def test_a_heavy_tail_cannot_ask_for_more_bins_than_the_ceiling() -> None:
-    from latencylab_ui.distributions_agg import (
+    from simquence_ui.distributions_agg import (
         MAX_HISTOGRAM_BINS,
         freedman_diaconis_bins,
     )
@@ -45,7 +45,7 @@ def test_a_heavy_tail_cannot_ask_for_more_bins_than_the_ceiling() -> None:
 
 
 def test_an_ordinary_spread_still_gets_the_freedman_diaconis_count() -> None:
-    from latencylab_ui.distributions_agg import freedman_diaconis_bins
+    from simquence_ui.distributions_agg import freedman_diaconis_bins
 
     values = [float(i) for i in range(1000)]
     # IQR 499.5, n^(1/3) 10: width 99.9, span 999, so ten bins.
@@ -69,8 +69,8 @@ def test_a_percentile_marker_sits_over_the_bar_that_holds_its_value() -> None:
     _ensure_qapp()
     from PySide6.QtWidgets import QWidget
 
-    from latencylab_ui.distributions_agg import HistogramBin
-    from latencylab_ui.distributions_dock import _MakespanHistogramWidget, _Marker
+    from simquence_ui.distributions_agg import HistogramBin
+    from simquence_ui.distributions_dock import _MakespanHistogramWidget, _Marker
 
     bin_count = 27
     target = 20
@@ -112,8 +112,8 @@ def test_more_bins_than_pixels_are_still_drawn_and_stay_on_the_plot() -> None:
     _ensure_qapp()
     from PySide6.QtWidgets import QWidget
 
-    from latencylab_ui.distributions_agg import HistogramBin
-    from latencylab_ui.distributions_dock import _MakespanHistogramWidget
+    from simquence_ui.distributions_agg import HistogramBin
+    from simquence_ui.distributions_dock import _MakespanHistogramWidget
 
     bins = [HistogramBin(lo=float(i), hi=float(i + 1), count=1) for i in range(700)]
     host = QWidget()
@@ -148,7 +148,7 @@ def test_the_run_worker_refuses_a_duplicated_key_with_a_message(
     tmp_path: Path,
 ) -> None:
     _ensure_qapp()
-    import latencylab_ui.run_controller as rc
+    import simquence_ui.run_controller as rc
 
     path = tmp_path / "dup.json"
     path.write_text(_DUPLICATE_TASK, encoding="utf-8")
@@ -183,7 +183,7 @@ class _FakeWindow:
 def test_opening_a_model_with_a_duplicated_key_is_reported_invalid(
     tmp_path: Path,
 ) -> None:
-    from latencylab_ui.main_window_file_io import load_model
+    from simquence_ui.main_window_file_io import load_model
 
     path = tmp_path / "dup.json"
     path.write_text(_DUPLICATE_TASK, encoding="utf-8")
@@ -197,7 +197,7 @@ def test_opening_a_model_with_a_duplicated_key_is_reported_invalid(
 
 
 def test_opening_a_clean_model_still_succeeds(tmp_path: Path) -> None:
-    from latencylab_ui.main_window_file_io import load_model
+    from simquence_ui.main_window_file_io import load_model
 
     path = tmp_path / "ok.json"
     path.write_text(json.dumps(json.loads(_DUPLICATE_TASK)), encoding="utf-8")

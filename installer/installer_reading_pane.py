@@ -1,11 +1,11 @@
 """The installer's reading pane: the licence text reads itself and takes no click.
 
-A STANDALONE COPY of the application's `latencylab_ui/auto_scroller.py` and
-`latencylab_ui/pane_focus.py`, as Fulcrum's installer carries its own copy of
+A STANDALONE COPY of the application's `simquence_ui/auto_scroller.py` and
+`simquence_ui/pane_focus.py`, as Fulcrum's installer carries its own copy of
 Fulcrum's scroller. It cannot import them: the installer's modules are flat and
 top level, run with only `installer/` on the path; the editable install maps
-`latencylab` alone (`latencylab_ui` is excluded from the distribution), so
-`import latencylab_ui` from here raises ModuleNotFoundError (measured). The
+`simquence` alone (`simquence_ui` is excluded from the distribution), so
+`import simquence_ui` from here raises ModuleNotFoundError (measured). The
 constants and the cycle are the application's; change both copies together.
 
 Only pixel-scrolling surfaces may wear the scroller: the licence is a QTextEdit,

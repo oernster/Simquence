@@ -3,31 +3,31 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>How to read LatencyLab output: percentiles, critical paths and dominant behaviour</title>
-<meta name="description" content="LatencyLab does not tell you what is slow, it tells you why the user waited. How to read makespan distributions, percentiles, critical paths, dominant paths and the long tail.">
+<title>How to read Simquence output: percentiles, critical paths and dominant behaviour</title>
+<meta name="description" content="Simquence does not tell you what is slow, it tells you why the user waited. How to read makespan distributions, percentiles, critical paths, dominant paths and the long tail.">
 <meta name="author" content="Oliver Ernster">
 <meta name="robots" content="index, follow">
 <meta name="theme-color" content="#181818">
-<link rel="canonical" href="https://ernster.dev/latencylab/reading.html">
+<link rel="canonical" href="https://ernster.dev/Simquence/reading.html">
 <meta property="og:type" content="website">
-<meta property="og:site_name" content="LatencyLab">
-<meta property="og:title" content="How to read LatencyLab output">
-<meta property="og:description" content="LatencyLab does not tell you what is slow, it tells you why the user waited. Percentiles, critical paths, dominant behavioural modes and the long tail.">
-<meta property="og:url" content="https://ernster.dev/latencylab/reading.html">
-<meta property="og:image" content="https://ernster.dev/latencylab/assets/latencylab-ui.png">
-<meta property="og:image:alt" content="The LatencyLab UI showing a makespan distribution, critical-path frequencies and percentiles">
+<meta property="og:site_name" content="Simquence">
+<meta property="og:title" content="How to read Simquence output">
+<meta property="og:description" content="Simquence does not tell you what is slow, it tells you why the user waited. Percentiles, critical paths, dominant behavioural modes and the long tail.">
+<meta property="og:url" content="https://ernster.dev/Simquence/reading.html">
+<meta property="og:image" content="https://ernster.dev/Simquence/assets/simquence-ui.png">
+<meta property="og:image:alt" content="The Simquence UI showing a makespan distribution, critical-path frequencies and percentiles">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="How to read LatencyLab output">
-<meta name="twitter:description" content="LatencyLab does not tell you what is slow, it tells you why the user waited.">
-<meta name="twitter:image" content="https://ernster.dev/latencylab/assets/latencylab-ui.png">
-<link rel="icon" type="image/svg+xml" href="assets/latencylab.svg">
+<meta name="twitter:title" content="How to read Simquence output">
+<meta name="twitter:description" content="Simquence does not tell you what is slow, it tells you why the user waited.">
+<meta name="twitter:image" content="https://ernster.dev/Simquence/assets/simquence-ui.png">
+<link rel="icon" type="image/png" href="assets/simquence.png">
 <link rel="stylesheet" href="styles.css?v=7b847c4937">
 </head>
 <body>
 <header class="nav">
   <div class="container nav-inner">
     <a class="brand" href="./">
-      <img src="assets/latencylab.svg" alt="LatencyLab icon">LatencyLab</a>
+      <img src="assets/simquence.png" alt="Simquence icon">Simquence</a>
     <nav class="nav-links">
       <a href="features.html">Features</a>
       <a href="why.html">Why</a>
@@ -41,32 +41,29 @@
   <section id="reading">
     <div class="container prose">
       <div class="eyebrow">Reading the output</div>
-      <h2 class="section-title">How to read LatencyLab output</h2>
+      <h2 class="section-title">How to read Simquence output</h2>
 
-      <p class="section-sub">LatencyLab does not tell you what is slow.<br>
+      <p class="section-sub">Simquence does not tell you what is slow.<br>
         It tells you why the user waited.</p>
 
-      <p>This is the application's own information panel, shortened. The full version ships
-        in the app, under the info button.</p>
+      <p>The app's own information panel, shortened. The full version ships in the app,
+        under the info button.</p>
 
       <h3>The screen, element by element</h3>
       <ul>
-        <li><b>The histogram (makespan distribution).</b> Each bar counts runs by
-          how long the whole flow took. Read the shape: a tight cluster means
-          predictable latency; a long right tail means some runs go badly; two
-          humps mean the system has two distinct behavioural modes, which is a
-          structural fact worth explaining before you optimise anything.</li>
+        <li><b>The histogram (makespan distribution).</b> Runs counted by how long
+          the whole flow took. A tight cluster is predictable; a long right tail
+          means some runs go badly; two humps mean two behavioural modes, worth
+          explaining before you optimise anything.</li>
         <li><b>The percentiles (p50 / p90 / p95 / p99).</b> p50 is the typical
           experience; p99 is what 1 in 100 users hits. They describe exposure,
-          not targets to game.</li>
-        <li><b>The critical path.</b> The named chain of tasks, queue waits and
-          delays that set the finish time of a run. Read it left to right as
-          "this is literally why the user waited". Critical does not mean slow:
-          a fast task on the path matters and a slow task off it does not.</li>
-        <li><b>The critical-path frequency chart.</b> How often each distinct
-          chain was the bottleneck across all runs. A path dominating, say more
-          than a fifth of runs, is how your design behaves rather than a fluke:
-          that is the thing to design against. This chart is the tool's real
+          not targets; lowering one blind usually shifts the cost elsewhere.</li>
+        <li><b>The critical path.</b> The chain of tasks, queue waits and delays
+          that set a run's finish time: literally why the user waited. Critical
+          does not mean slow; a slow task off the path delayed nobody.</li>
+        <li><b>The critical-path frequency chart.</b> How often each chain was
+          the bottleneck. A path dominating more than about a fifth of runs is
+          how your design behaves rather than a fluke. This chart is the real
           answer; the histogram is context for it.</li>
       </ul>
 
@@ -80,44 +77,29 @@
         delay sits on the wiring to <code>net.fetch_promotions</code>: a
         debounce, added for politeness.</p>
       <p>Intuition says the slowest backend, the shipping quote around
-        165&nbsp;ms, dominates. Now read the screen: the histogram shows where
-        the runs landed, the percentiles say what typical and unlucky users got
-        and the frequency chart says the chain through the 150&nbsp;ms debounce
-        and the totals render is the critical path in most runs. A politeness
-        feature owns the median latency; no profiler could have told you
-        that before the system existed. That is the kind of finding the tool
-        exists to produce.</p>
-
-      <h3>Six things the output means</h3>
-      <ul>
-        <li><b>Many runs, because one run is not evidence.</b> Contention, scheduling and
-          coordination delays are not noise to be averaged away. They are the system.</li>
-        <li><b>Percentiles describe exposure, not goals.</b> p50 is what typically happens;
-          p90, p95 and p99 are how often it goes badly. The shape behind them matters more
-          than any one of them; lowering one blind usually shifts the cost elsewhere.</li>
-        <li><b>A critical path is not what was slow.</b> It is the chain that prevented
-          progress in one run. Expensive work that was not on it delayed nobody, however bad
-          it looks in isolation.</li>
-        <li><b>A dominant path is structure, not a bug.</b> A path holding things up in a
-          large share of runs, conventionally more than a fifth, is a behavioural mode: how
-          the system usually behaves.</li>
-        <li><b>The long tail can usually be left alone</b>, unless you are designing to a
-          strict worst case. Optimising rare worst cases is how systems get complicated
-          without getting faster.</li>
-        <li><b>A representative run</b> is one run chosen to make a dominant mode concrete,
-          commonly its median or p95. It illustrates; it does not explain every outcome.</li>
-      </ul>
+        165&nbsp;ms, dominates. The frequency chart says the chain through the
+        150&nbsp;ms debounce is the critical path in most runs. A politeness
+        feature owns the median; no profiler could have told you that before
+        the system existed.</p>
 
       <h3>How to use it</h3>
-      <p>Do not read every run. Name the dominant behaviour before proposing any fix. If a
-        task never appears on a dominant path, making it faster changes nothing anybody
-        experiences.</p>
+      <ul>
+        <li><b>One run is not evidence.</b> Contention and coordination delays are not noise
+          to average away; they are the system.</li>
+        <li><b>Name the dominant behaviour before proposing any fix.</b> A task that never
+          appears on a dominant path changes nothing when you speed it up.</li>
+        <li><b>The long tail can usually be left alone</b> unless you design to a strict
+          worst case. Optimising rare worst cases is how systems get complicated without
+          getting faster.</li>
+        <li><b>A representative run</b> (commonly the median or p95 of a dominant mode)
+          illustrates; it does not explain every outcome.</li>
+      </ul>
 
-      <p class="section-sub">LatencyLab does not optimise systems.<br>
+      <p class="section-sub">Simquence does not optimise systems.<br>
         It exposes structure.</p>
 
       <div class="cta" style="justify-content:flex-start;margin-top:30px;">
-        <a class="btn btn-primary" href="guide.html">Using LatencyLab</a>
+        <a class="btn btn-primary" href="guide.html">Using Simquence</a>
         <a class="btn btn-ghost" href="./">Back to overview</a>
       </div>
     </div>
@@ -139,7 +121,7 @@
 <footer>
   <div class="container footer-inner">
     <div>
-      <strong>LatencyLab</strong>: design-time latency exploration for event-driven systems<br>
+      <strong>Simquence</strong>: design-time latency exploration for event-driven systems<br>
       (c) Oliver Ernster · Local-first · GPL-3.0 + LGPL-3.0 · v<!--VERSION-->3.3.2<!--/VERSION-->
     </div>
     <div class="footer-links">
@@ -147,8 +129,8 @@
       <a href="features.html">Features</a>
       <a href="why.html">Why</a>
       <a href="download.html">Download</a>
-      <a href="https://github.com/oernster/latencylab/releases">Releases</a>
-      <a href="https://github.com/oernster/latencylab">GitHub</a>
+      <a href="https://github.com/oernster/Simquence/releases">Releases</a>
+      <a href="https://github.com/oernster/Simquence">GitHub</a>
       <a href="https://ernster.dev/">More of my work</a>
     </div>
   </div>

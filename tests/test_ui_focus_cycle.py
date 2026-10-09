@@ -15,7 +15,7 @@ def test_focus_cycle_ensure_initial_state_clears_child_focus() -> None:
 
     from PySide6.QtWidgets import QMainWindow, QPushButton, QVBoxLayout, QWidget
 
-    from latencylab_ui.focus_cycle import FocusCycleController
+    from simquence_ui.focus_cycle import FocusCycleController
 
     w = QMainWindow()
     root = QWidget()
@@ -53,7 +53,7 @@ def test_focus_cycle_collects_only_interactive_widgets_in_layout_order() -> None
         QWidget,
     )
 
-    from latencylab_ui.focus_cycle import FocusCycleController
+    from simquence_ui.focus_cycle import FocusCycleController
 
     w = QMainWindow()
     root = QWidget()
@@ -80,7 +80,7 @@ def test_focus_cycle_collects_only_interactive_widgets_in_layout_order() -> None
     w.show()
 
     c = FocusCycleController(w)
-    from latencylab_ui.focus_cycle_widgets import (
+    from simquence_ui.focus_cycle_widgets import (
         collect_interactive_widgets_in_layout_order,
     )
 
@@ -100,7 +100,7 @@ def test_focus_cycle_current_index_prefers_active_menu_action() -> None:
 
     from PySide6.QtWidgets import QMainWindow
 
-    from latencylab_ui.focus_cycle import FocusCycleController
+    from simquence_ui.focus_cycle import FocusCycleController
 
     w = QMainWindow()
     w.menuBar().addMenu("File")
@@ -123,7 +123,7 @@ def test_focus_cycle_current_index_when_no_focused_widget(monkeypatch) -> None:
 
     from PySide6.QtWidgets import QApplication, QMainWindow
 
-    from latencylab_ui.focus_cycle import FocusCycleController
+    from simquence_ui.focus_cycle import FocusCycleController
 
     w = QMainWindow()
     c = FocusCycleController(w)
@@ -138,7 +138,7 @@ def test_focus_cycle_event_filter_runtimeerror_on_window_is_visible(
 ) -> None:
     _ensure_qapp()
 
-    from latencylab_ui.focus_cycle import FocusCycleController
+    from simquence_ui.focus_cycle import FocusCycleController
 
     class _BrokenWindow:
         def isVisible(self):
@@ -164,7 +164,7 @@ def test_focus_cycle_event_filter_runtimeerror_uninstall_raises_is_swallowed(
 
     from PySide6.QtWidgets import QMainWindow
 
-    from latencylab_ui.focus_cycle import FocusCycleController
+    from simquence_ui.focus_cycle import FocusCycleController
 
     class _BrokenWindow:
         def isVisible(self):
@@ -185,7 +185,7 @@ def test_focus_cycle_advance_when_started_but_current_index_is_none(
 
     from PySide6.QtWidgets import QApplication, QMainWindow
 
-    from latencylab_ui.focus_cycle import FocusCycleController
+    from simquence_ui.focus_cycle import FocusCycleController
 
     w = QMainWindow()
     w.menuBar().addMenu("File")
@@ -212,7 +212,7 @@ def test_focus_cycle_current_index_walks_up_from_subcontrol() -> None:
 
     from PySide6.QtWidgets import QLineEdit, QMainWindow, QSpinBox, QVBoxLayout, QWidget
 
-    from latencylab_ui.focus_cycle import FocusCycleController
+    from simquence_ui.focus_cycle import FocusCycleController
 
     w = QMainWindow()
     root = QWidget()
@@ -249,7 +249,7 @@ def test_focus_cycle_event_filter_irrelevant_key_returns_false() -> None:
     from PySide6.QtGui import QKeyEvent
     from PySide6.QtWidgets import QMainWindow
 
-    from latencylab_ui.focus_cycle import FocusCycleController
+    from simquence_ui.focus_cycle import FocusCycleController
 
     w = QMainWindow()
     w.show()
@@ -276,13 +276,13 @@ def test_focus_cycle_event_filter_covered_in_split_file() -> None:
 
 
 def test_focus_cycle_event_filter_missing_internal_attributes_returns_false() -> None:
-    """Cover the AttributeError guard in [`FocusCycleController.eventFilter()`](latencylab_ui/focus_cycle.py:76)."""
+    """Cover the AttributeError guard in [`FocusCycleController.eventFilter()`](simquence_ui/focus_cycle.py:76)."""
 
     _ensure_qapp()
 
     from PySide6.QtWidgets import QMainWindow
 
-    from latencylab_ui.focus_cycle import FocusCycleController
+    from simquence_ui.focus_cycle import FocusCycleController
 
     c = FocusCycleController(QMainWindow())
     delattr(c, "_window")
@@ -292,14 +292,14 @@ def test_focus_cycle_event_filter_missing_internal_attributes_returns_false() ->
 
 
 def test_focus_cycle_current_index_executes_parent_walk_step() -> None:
-    """Cover the parentWidget() walk step in [`FocusCycleController._current_index()`](latencylab_ui/focus_cycle.py:258)."""
+    """Cover the parentWidget() walk step in [`FocusCycleController._current_index()`](simquence_ui/focus_cycle.py:258)."""
 
     app = _ensure_qapp()
 
     from PySide6.QtCore import Qt
     from PySide6.QtWidgets import QLabel, QMainWindow, QVBoxLayout, QWidget
 
-    from latencylab_ui.focus_cycle import FocusCycleController
+    from simquence_ui.focus_cycle import FocusCycleController
 
     w = QMainWindow()
     root = QWidget()
@@ -328,7 +328,7 @@ def test_focus_cycle_walk_widget_none_is_ok() -> None:
 
     from PySide6.QtWidgets import QMainWindow
 
-    from latencylab_ui.focus_cycle import FocusCycleController
+    from simquence_ui.focus_cycle import FocusCycleController
 
     w = QMainWindow()
     c = FocusCycleController(w)
@@ -343,7 +343,7 @@ def test_focus_cycle_nearest_ancestor_helper() -> None:
 
     from PySide6.QtWidgets import QMainWindow, QPushButton, QWidget
 
-    from latencylab_ui.focus_cycle_keys import nearest_ancestor
+    from simquence_ui.focus_cycle_keys import nearest_ancestor
 
     w = QMainWindow()
     parent = QWidget(w)
@@ -362,7 +362,7 @@ def test_focus_cycle_focus_within_any_helper() -> None:
 
     from PySide6.QtWidgets import QComboBox, QMainWindow
 
-    from latencylab_ui.focus_cycle_keys import focus_within_any
+    from simquence_ui.focus_cycle_keys import focus_within_any
 
     w = QMainWindow()
     combo = QComboBox(w)

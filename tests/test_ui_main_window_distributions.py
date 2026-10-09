@@ -17,10 +17,10 @@ def test_distributions_button_disabled_until_success_then_finished_enables_and_a
 
     from PySide6.QtCore import QObject, Signal
 
-    from latencylab.model import Model
-    from latencylab.types import RunResult
-    from latencylab_ui.main_window import MainWindow
-    from latencylab_ui.run_controller import RunOutputs
+    from simquence.model import Model
+    from simquence.types import RunResult
+    from simquence_ui.main_window import MainWindow
+    from simquence_ui.run_controller import RunOutputs
 
     class _Controller(QObject):
         started = Signal(int)
@@ -144,9 +144,9 @@ def test_distributions_button_click_gate_and_manual_open() -> None:
 
     from PySide6.QtCore import QObject, Signal
 
-    from latencylab.model import Model
-    from latencylab_ui.main_window import MainWindow
-    from latencylab_ui.run_controller import RunOutputs
+    from simquence.model import Model
+    from simquence_ui.main_window import MainWindow
+    from simquence_ui.run_controller import RunOutputs
 
     class _Controller(QObject):
         started = Signal(int)
@@ -200,7 +200,7 @@ def test_distributions_visibility_change_sets_closed_during_run_flag() -> None:
 
     from PySide6.QtCore import QObject, Signal
 
-    from latencylab_ui.main_window import MainWindow
+    from simquence_ui.main_window import MainWindow
 
     class _Controller(QObject):
         started = Signal(int)

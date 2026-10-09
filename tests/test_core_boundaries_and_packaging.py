@@ -28,7 +28,7 @@ PURE_CORE_MODULES = ("model", "types", "validate")
 # tempfile`, `import subprocess` and `importlib`, because nobody had thought to
 # name them. Anything new here has to be added on purpose.
 ALLOWED_IMPORTS = frozenset(
-    {"__future__", "dataclasses", "typing", "math", "latencylab.model"}
+    {"__future__", "dataclasses", "typing", "math", "simquence.model"}
 )
 
 # Builtins that reach a file or import a module by string, which no import
@@ -90,21 +90,21 @@ def test_the_purity_guard_bites_on_each_planted_escape(
 
 def test_the_purity_guard_passes_the_modules_as_they_stand() -> None:
     for module in PURE_CORE_MODULES:
-        path = REPO_ROOT / "latencylab" / f"{module}.py"
+        path = REPO_ROOT / "simquence" / f"{module}.py"
         assert _violations(path) == [], module
 
 
 def test_pure_core_modules_do_not_touch_the_filesystem() -> None:
     offenders: list[str] = []
     for module in PURE_CORE_MODULES:
-        path = REPO_ROOT / "latencylab" / f"{module}.py"
+        path = REPO_ROOT / "simquence" / f"{module}.py"
         assert path.is_file(), f"{path} is missing, so this test checks nothing"
         for problem in _violations(path):
-            offenders.append(f"- latencylab/{module}.py {problem}")
+            offenders.append(f"- simquence/{module}.py {problem}")
 
     assert not offenders, (
         "The model layer must stay free of I/O. Loading belongs in "
-        "latencylab/io.py.\n" + "\n".join(offenders)
+        "simquence/io.py.\n" + "\n".join(offenders)
     )
 
 
@@ -114,9 +114,9 @@ def test_io_is_still_the_module_that_does_the_loading() -> None:
     If `io.py` ever stops reading files, the forbidden list has been satisfied
     by moving the problem rather than by keeping the boundary.
     """
-    io_imports = _imported_names(REPO_ROOT / "latencylab" / "io.py")
+    io_imports = _imported_names(REPO_ROOT / "simquence" / "io.py")
     assert io_imports & {"json", "pathlib", "os"}, (
-        "latencylab/io.py no longer imports anything that reads a file, so the "
+        "simquence/io.py no longer imports anything that reads a file, so the "
         "purity rule above may be checking an empty boundary"
     )
 
@@ -124,7 +124,7 @@ def test_io_is_still_the_module_that_does_the_loading() -> None:
 def test_the_wheel_contains_only_the_headless_core() -> None:
     """What setuptools would ship, checked rather than described.
 
-    `latencylab*` also globs `latencylab_ui`, so the Qt front end is excluded by
+    `simquence*` also globs `simquence_ui`, so the Qt front end is excluded by
     name in pyproject.toml. That exclusion is the difference between a GPL wheel
     and one carrying LGPL code, so it is worth a test rather than a comment.
     """
@@ -133,12 +133,12 @@ def test_the_wheel_contains_only_the_headless_core() -> None:
     discovered = sorted(
         find_packages(
             where=str(REPO_ROOT),
-            include=["latencylab*"],
-            exclude=["plans*", "examples*", "tests*", "latencylab_ui*"],
+            include=["simquence*"],
+            exclude=["plans*", "examples*", "tests*", "simquence_ui*"],
         )
     )
 
-    assert discovered == ["latencylab"], (
+    assert discovered == ["simquence"], (
         "The distributable must be the headless core alone. Discovered: "
         f"{discovered}"
     )

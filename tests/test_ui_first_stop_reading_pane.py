@@ -20,7 +20,7 @@ from PySide6.QtWidgets import (
     QTreeWidget,
 )
 
-from latencylab_ui.first_stop_dialog import is_reading_pane_class
+from simquence_ui.first_stop_dialog import is_reading_pane_class
 
 
 def test_text_and_page_scroll_areas_are_reading_panes() -> None:

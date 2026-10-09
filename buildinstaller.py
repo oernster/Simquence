@@ -1,10 +1,10 @@
-"""Wrap the built bundle into the LatencyLab setup program.
+"""Wrap the built bundle into the Simquence setup program.
 
 Run `python buildexe.py` first. This zips the bundle it produced, then builds
 the bespoke PySide6 installer as a single onefile executable carrying that zip
 as opaque data.
 
-    python buildinstaller.py   ->   dist-installer/LatencyLabSetup.exe
+    python buildinstaller.py   ->   dist-installer/SimquenceSetup.exe
 
 Why a zip rather than the directory: a Nuitka onefile build strips loose
 executables and DLLs out of an `--include-data-dir`, so a payload staged as
@@ -36,7 +36,7 @@ from build_utils import (
     section,
 )
 
-APP_DISPLAY_NAME = "LatencyLab"
+APP_DISPLAY_NAME = "Simquence"
 APP_AUTHOR = "Oliver Ernster"
 INSTALLER_NAME = f"{APP_DISPLAY_NAME}Setup"
 
@@ -49,7 +49,7 @@ PAYLOAD_DIR = PROJECT_ROOT / "installer" / "payload"
 BUNDLE_DIR = PAYLOAD_DIR / APP_DISPLAY_NAME
 PAYLOAD_ZIP = PAYLOAD_DIR / f"{APP_DISPLAY_NAME}.zip"
 
-ICON_FILE = PROJECT_ROOT / "assets" / "latencylab.ico"
+ICON_FILE = PROJECT_ROOT / "assets" / "simquence.ico"
 
 # Staged beside the zip so the installer window can show them before the user
 # commits to anything. The UI licence is copied out of the package it belongs
@@ -57,7 +57,7 @@ ICON_FILE = PROJECT_ROOT / "assets" / "latencylab.ico"
 STAGED_FILES: tuple[tuple[Path, str], ...] = (
     (VERSION_FILE, "VERSION"),
     (PROJECT_ROOT / "LICENSE", "LICENSE"),
-    (PROJECT_ROOT / "latencylab_ui" / "LGPL3.txt", "LGPL3.txt"),
+    (PROJECT_ROOT / "simquence_ui" / "LGPL3.txt", "LGPL3.txt"),
     (PROJECT_ROOT / "INSTALLER_LICENSE", "INSTALLER_LICENSE"),
 )
 

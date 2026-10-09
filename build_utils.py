@@ -24,7 +24,7 @@ from pathlib import Path
 PROJECT_ROOT = Path(__file__).resolve().parent
 VERSION_FILE = PROJECT_ROOT / "VERSION"
 
-# Matches latencylab/version.py, so a packaging accident produces the same
+# Matches simquence/version.py, so a packaging accident produces the same
 # obviously-wrong number everywhere rather than a different one per script.
 FALLBACK_VERSION = "0.0.0-dev"
 

@@ -13,7 +13,7 @@ def _ensure_qapp():
 def test_focus_cycle_collects_interactive_inside_qscrollarea() -> None:
     """Cover the QScrollArea traversal branch.
 
-    [`latencylab_ui.focus_cycle_widgets.walk_widget_for_interactive()`](latencylab_ui/focus_cycle_widgets.py:66)
+    [`simquence_ui.focus_cycle_widgets.walk_widget_for_interactive()`](simquence_ui/focus_cycle_widgets.py:66)
     must descend into a QScrollArea's inner widget.
     """
 
@@ -27,7 +27,7 @@ def test_focus_cycle_collects_interactive_inside_qscrollarea() -> None:
         QVBoxLayout,
     )
 
-    from latencylab_ui.focus_cycle_widgets import (
+    from simquence_ui.focus_cycle_widgets import (
         collect_interactive_widgets_in_layout_order,
     )
 

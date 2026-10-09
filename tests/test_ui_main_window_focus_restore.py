@@ -27,7 +27,7 @@ def _load_a_model(window) -> None:
 
     from pathlib import Path as _Path
 
-    from latencylab.model import Model
+    from simquence.model import Model
 
     window._set_model_load_ok(
         _Path("model.json"),
@@ -54,7 +54,7 @@ def test_tab_after_mouse_focus_does_not_restart_at_menu() -> None:
     from PySide6.QtTest import QTest
     from PySide6.QtWidgets import QApplication
 
-    from latencylab_ui.main_window import MainWindow
+    from simquence_ui.main_window import MainWindow
 
     class _Controller(QObject):
         started = Signal(int)
@@ -105,7 +105,7 @@ def test_run_button_focus_restored_after_run_finishes_when_requested() -> None:
     from PySide6.QtCore import QObject, Signal
     from PySide6.QtWidgets import QApplication
 
-    from latencylab_ui.main_window import MainWindow
+    from simquence_ui.main_window import MainWindow
 
     class _Controller(QObject):
         started = Signal(int)

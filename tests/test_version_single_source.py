@@ -5,21 +5,21 @@ from pathlib import Path
 
 import pytest
 
-import latencylab
-from latencylab.version import FALLBACK_VERSION, VERSION_FILE, read_version
+import simquence
+from simquence.version import FALLBACK_VERSION, VERSION_FILE, read_version
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 
 
 def test_version_file_is_the_only_declared_version() -> None:
-    import latencylab_ui
+    import simquence_ui
 
     recorded = (REPO_ROOT / "VERSION").read_text(encoding="utf-8").strip()
 
     assert recorded
     assert VERSION_FILE == REPO_ROOT / "VERSION"
-    assert latencylab.__version__ == recorded
-    assert latencylab_ui.__version__ == recorded
+    assert simquence.__version__ == recorded
+    assert simquence_ui.__version__ == recorded
 
 
 def test_read_version_falls_back_when_the_file_is_absent(tmp_path: Path) -> None:
@@ -92,7 +92,7 @@ def test_main_defaults_to_the_version_file(tmp_path: Path, capsys) -> None:
     docs = _site(tmp_path, "<p>no token here</p>")
 
     assert stamp_version.main(docs) == 0
-    assert f"VERSION = {latencylab.__version__}" in capsys.readouterr().out
+    assert f"VERSION = {simquence.__version__}" in capsys.readouterr().out
 
 
 def _linked_site(tmp_path: Path, css: bytes) -> Path:

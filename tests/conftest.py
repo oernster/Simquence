@@ -23,7 +23,7 @@ def _add_repo_root_to_syspath() -> None:
     """Make local packages importable when running tests from `tests/`.
 
     Some Windows/PyTest invocations end up with `tests/` as the import root.
-    Ensure the repo root is on `sys.path` so `import latencylab_ui` works.
+    Ensure the repo root is on `sys.path` so `import simquence_ui` works.
     """
 
     root = Path(__file__).resolve().parents[1]

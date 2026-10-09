@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from latencylab_ui import model_composer_export as export_mod
+from simquence_ui import model_composer_export as export_mod
 
 
 def _ensure_qapp():
@@ -24,13 +24,13 @@ def test_model_composer_editors_and_dock_branches(tmp_path: Path, monkeypatch) -
     from PySide6.QtWidgets import QFileDialog, QMessageBox
     from PySide6.QtWidgets import QWidget
 
-    from latencylab.model import Model
+    from simquence.model import Model
 
-    from latencylab_ui.model_composer_contexts_editor import ContextsEditor
-    from latencylab_ui.model_composer_dialog import ModelComposerDialog
-    from latencylab_ui.model_composer_system_editor import SystemEditor
-    from latencylab_ui.model_composer_tasks_editor import TasksEditor
-    from latencylab_ui.model_composer_wiring_editor import WiringEditor
+    from simquence_ui.model_composer_contexts_editor import ContextsEditor
+    from simquence_ui.model_composer_dialog import ModelComposerDialog
+    from simquence_ui.model_composer_system_editor import SystemEditor
+    from simquence_ui.model_composer_tasks_editor import TasksEditor
+    from simquence_ui.model_composer_wiring_editor import WiringEditor
 
     # Prevent modal dialogs from blocking/hanging the test runner.
     monkeypatch.setattr(QMessageBox, "critical", lambda *_a, **_k: None)
@@ -141,7 +141,7 @@ def test_model_composer_editors_and_dock_branches(tmp_path: Path, monkeypatch) -
     assert dock._valid_label.text() == "Valid"  # noqa: SLF001
 
     # Validate: TypeError branch.
-    import latencylab_ui.model_composer_dialog as _dock_mod
+    import simquence_ui.model_composer_dialog as _dock_mod
 
     monkeypatch.setattr(
         _dock_mod,

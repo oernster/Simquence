@@ -17,8 +17,8 @@ from pathlib import Path
 
 import pytest
 
-from latencylab.model import Model
-from latencylab.validate import ModelValidationError, validate_model
+from simquence.model import Model
+from simquence.validate import ModelValidationError, validate_model
 
 
 def _model(version: int = 2) -> dict:
@@ -43,7 +43,7 @@ def _validate(raw: dict) -> None:
 
 
 def _cli(tmp_path: Path, model_text: str) -> int:
-    from latencylab.cli import main
+    from simquence.cli import main
 
     model_path = tmp_path / "m.json"
     model_path.write_text(model_text, encoding="utf-8")
@@ -132,8 +132,8 @@ def test_the_v2_engine_reports_an_overflowing_draw_as_v1_does() -> None:
     """A huge sigma can still overflow one draw; v2 must not raise where v1 gives inf."""
     import random
 
-    from latencylab.model import DurationDist
-    from latencylab.sim_v2 import _sample_ms
+    from simquence.model import DurationDist
+    from simquence.sim_v2 import _sample_ms
 
     class _HugeDraw(random.Random):
         def gauss(self, mu: float = 0.0, sigma: float = 1.0) -> float:
@@ -209,7 +209,7 @@ def test_the_cli_refuses_a_model_with_a_duplicated_key(
 
 
 def test_the_shared_loader_refuses_a_duplicated_key_at_any_depth() -> None:
-    from latencylab.io import parse_model_json
+    from simquence.io import parse_model_json
 
     with pytest.raises(ModelValidationError, match="duplicate key 'wiring'"):
         parse_model_json('{"wiring": {"go": ["t"]}, "wiring": {"go": []}}')
@@ -217,7 +217,7 @@ def test_the_shared_loader_refuses_a_duplicated_key_at_any_depth() -> None:
 
 
 def test_the_shared_loader_reads_a_file(tmp_path: Path) -> None:
-    from latencylab.io import read_model_json
+    from simquence.io import read_model_json
 
     path = tmp_path / "m.json"
     path.write_text(json.dumps(_model()), encoding="utf-8")
@@ -250,7 +250,7 @@ def test_the_cli_reports_a_malformed_model_without_a_traceback(
 def test_the_cli_reports_a_missing_model_file(
     tmp_path: Path, capsys: pytest.CaptureFixture[str]
 ) -> None:
-    from latencylab.cli import main
+    from simquence.cli import main
 
     missing = tmp_path / "nope.json"
     rc = main(
@@ -273,7 +273,7 @@ def test_the_cli_reports_a_missing_model_file(
 
 
 def test_every_shipped_example_still_validates_under_the_tighter_rules() -> None:
-    from latencylab.io import read_model_json
+    from simquence.io import read_model_json
 
     examples = sorted(Path("examples").glob("*.json"))
     assert examples

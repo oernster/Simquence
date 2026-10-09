@@ -7,7 +7,7 @@ out live in installer_ops.py and the screen that presents them lives in
 installer_window.py, so this module is exercised by the test suite exactly like
 the application layer of the app it installs.
 
-Nothing here imports from the `latencylab` packages: the installer stays
+Nothing here imports from the `simquence` packages: the installer stays
 standalone. Nothing here reads `__file__` either. The bundle root is passed in
 by the entry point, whose location is the one the onefile bootstrap defines.
 """
@@ -17,31 +17,31 @@ from __future__ import annotations
 from dataclasses import dataclass
 from pathlib import Path
 
-APP_NAME = "LatencyLab"
-APP_DISPLAY_NAME = "LatencyLab"
+APP_NAME = "Simquence"
+APP_DISPLAY_NAME = "Simquence"
 APP_TAGLINE = "Design-time latency exploration for event-driven systems"
 APP_PUBLISHER = "Oliver Ernster"
-APP_URL = "https://ernster.dev/latencylab/"
+APP_URL = "https://ernster.dev/Simquence/"
 
-# Payload layout produced by buildinstaller.py: payload/LatencyLab/ holds the
-# bundle's non-binary files (read by the installer window), payload/LatencyLab.zip
+# Payload layout produced by buildinstaller.py: payload/Simquence/ holds the
+# bundle's non-binary files (read by the installer window), payload/Simquence.zip
 # the full bundle for deployment and the licence texts sit beside them.
 PAYLOAD_DIR_NAME = "payload"
 MODEL_LICENSE_FILE_NAME = "LICENSE"
 UI_LICENSE_FILE_NAME = "LGPL3.txt"
 INSTALLER_LICENSE_FILE_NAME = "INSTALLER_LICENSE"
 VERSION_FILE_NAME = "VERSION"
-EXE_NAME = "LatencyLab.exe"
+EXE_NAME = "Simquence.exe"
 
 # The bundle ships as a single zip because Nuitka's onefile build drops loose
 # executables and DLLs from an included data directory; the installer extracts it.
-PAYLOAD_ARCHIVE_NAME = "LatencyLab.zip"
+PAYLOAD_ARCHIVE_NAME = "Simquence.zip"
 
 # The application's icon resolver looks inside an assets directory beside the
 # executable, so the installer reads its badge from the same place.
 ASSETS_DIR_NAME = "assets"
-ICON_FILE_NAME = "latencylab_icon_256.png"
-SHORTCUT_ICON_FILE_NAME = "latencylab.ico"
+ICON_FILE_NAME = "simquence_icon_256.png"
+SHORTCUT_ICON_FILE_NAME = "simquence.ico"
 
 # Per-user locations. No administrator rights are required anywhere here.
 ENV_LOCALAPPDATA = "LOCALAPPDATA"
@@ -55,7 +55,7 @@ _SHORTCUT_EXT = ".lnk"
 # The registered uninstaller is a copy of this installer placed under the
 # install root, so Apps and features can re-run it with --uninstall.
 UNINSTALLER_SUBDIR = "_uninstall"
-UNINSTALLER_NAME = "LatencyLabSetup.exe"
+UNINSTALLER_NAME = "SimquenceSetup.exe"
 UNINSTALL_FLAG = "--uninstall"
 
 # Under a Nuitka onefile build sys.executable is the unpacked temporary
@@ -63,14 +63,14 @@ UNINSTALL_FLAG = "--uninstall"
 NUITKA_ONEFILE_ENV = "NUITKA_ONEFILE_BINARY"
 _EXE_SUFFIX = ".exe"
 
-UNINSTALL_KEY = r"Software\Microsoft\Windows\CurrentVersion\Uninstall\LatencyLab"
+UNINSTALL_KEY = r"Software\Microsoft\Windows\CurrentVersion\Uninstall\Simquence"
 
 # So Windows groups the taskbar button and the shortcut under one identity.
-APP_AUMID = "uk.codecrafter.latencylab"
+APP_AUMID = "uk.codecrafter.simquence"
 
 # A console-disabled onefile shows no traceback when it dies, so unhandled
 # exceptions are appended here for the user to send back.
-INSTALLER_LOG_NAME = "latencylab-installer.log"
+INSTALLER_LOG_NAME = "simquence-installer.log"
 
 LICENSE_FALLBACK = "The licence text was not bundled with this installer."
 INSTALLER_LICENSE_FALLBACK = (

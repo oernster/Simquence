@@ -14,7 +14,7 @@ def test_theme_stylesheet_mentions_combobox_popup_view() -> None:
     - We harden each QComboBox programmatically to bind its popup view palette.
     """
 
-    from latencylab_ui import theme_stylesheet
+    from simquence_ui import theme_stylesheet
 
     # Both themes render from ONE template, so asserting the template asserts
     # every theme there will ever be. The rendered pair is checked too, cheaply,
@@ -39,7 +39,7 @@ def test_model_composer_combobox_popup_view_uses_combo_palette() -> None:
 
     from PySide6.QtWidgets import QApplication
 
-    from latencylab_ui.model_composer_wiring_editor import WiringEditor
+    from simquence_ui.model_composer_wiring_editor import WiringEditor
 
     app = QApplication.instance() or QApplication([])
     _ = app  # keep reference in local scope
@@ -76,7 +76,7 @@ def test_combobox_popup_hardener_filter_installed_without_debug_env() -> None:
     """Regression: show-time hardening must be always-on (not debug-only)."""
     from PySide6.QtWidgets import QApplication
 
-    from latencylab_ui.model_composer_wiring_editor import WiringEditor
+    from simquence_ui.model_composer_wiring_editor import WiringEditor
 
     app = QApplication.instance() or QApplication([])
     _ = app

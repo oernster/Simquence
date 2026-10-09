@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import json
 
-from latencylab_ui.update_settings import UpdateSettingsStore, default_settings_path
+from simquence_ui.update_settings import UpdateSettingsStore, default_settings_path
 
 
 def test_fresh_install_has_nothing_skipped(tmp_path) -> None:
@@ -67,4 +67,4 @@ def test_unwritable_path_fails_silently(tmp_path) -> None:
 def test_default_path_is_per_user() -> None:
     path = default_settings_path()
     assert path.name == "settings.json"
-    assert path.parent.name == ".latencylab"
+    assert path.parent.name == ".simquence"

@@ -4,7 +4,7 @@ from pathlib import Path
 
 import pytest
 
-from latencylab_ui import example_models
+from simquence_ui import example_models
 
 
 def _write(directory: Path, name: str) -> Path:

@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-"""Repo-root convenience shim for launching the LatencyLab UI.
+"""Repo-root convenience shim for launching the Simquence UI.
 
 This keeps the most common local workflow short:
 
@@ -8,14 +8,14 @@ This keeps the most common local workflow short:
 
 It delegates to the canonical UI entry point:
 
-    python -m latencylab_ui
+    python -m simquence_ui
 """
 
 
 def main() -> int:
-    """Launch the LatencyLab UI.
+    """Launch the Simquence UI.
 
-    Arguments are forwarded exactly as in `python -m latencylab_ui`.
+    Arguments are forwarded exactly as in `python -m simquence_ui`.
 
     `sys.argv` is left exactly as the operating system supplied it. It used to
     be rewritten here so `argv[0]` read as the module name, which was cosmetic
@@ -27,9 +27,9 @@ def main() -> int:
     because the release build has no console to print the traceback to.
     """
 
-    # `latencylab_ui.__main__.main()` is responsible for printing the friendly
+    # `simquence_ui.__main__.main()` is responsible for printing the friendly
     # PySide6-missing message if the GUI dependency is not installed.
-    from latencylab_ui.__main__ import main as ui_main
+    from simquence_ui.__main__ import main as ui_main
 
     return ui_main()
 

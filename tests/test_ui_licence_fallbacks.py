@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import pytest
 
-from latencylab_ui import licence_dialog, main_licence_dialog
+from simquence_ui import licence_dialog, main_licence_dialog
 
 
 def test_ui_licence_reads_the_bundled_text() -> None:
@@ -37,4 +37,4 @@ def test_a_missing_licence_text_explains_itself(read, monkeypatch) -> None:
 
     text = read()
     assert text == licence_dialog.LICENCE_UNAVAILABLE
-    assert "github.com/oernster/latencylab" in text
+    assert "github.com/oernster/Simquence" in text

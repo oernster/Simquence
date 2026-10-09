@@ -19,8 +19,8 @@ def test_about_dialog_shows_the_generated_icon_beside_the_title() -> None:
 
     from PySide6.QtWidgets import QLabel, QWidget
 
-    from latencylab_ui.about_dialog import _BADGE_PX, AboutDialog, AboutDialogContent
-    from latencylab_ui.icon_resolver import get_app_icon_png_path
+    from simquence_ui.about_dialog import _BADGE_PX, AboutDialog, AboutDialogContent
+    from simquence_ui.icon_resolver import get_app_icon_png_path
 
     if get_app_icon_png_path(_BADGE_PX) is None:
         pytest.skip("generate_icons.py has not been run in this checkout")
@@ -29,7 +29,7 @@ def test_about_dialog_shows_the_generated_icon_beside_the_title() -> None:
     dlg = AboutDialog(
         parent,
         content=AboutDialogContent(
-            title="LatencyLab",
+            title="Simquence",
             body="Version: 0.0.0\nAuthor: Oliver Ernster",
         ),
     )
@@ -69,8 +69,8 @@ def test_about_dialog_opens_without_a_badge_when_the_assets_are_absent(
 
     from PySide6.QtWidgets import QLabel, QWidget
 
-    from latencylab_ui import icon_resolver
-    from latencylab_ui.about_dialog import AboutDialog, AboutDialogContent
+    from simquence_ui import icon_resolver
+    from simquence_ui.about_dialog import AboutDialog, AboutDialogContent
 
     empty = tmp_path / "assets"
     empty.mkdir()
@@ -95,10 +95,10 @@ def test_about_dialog_is_tall_enough_to_show_its_whole_text() -> None:
 
     from PySide6.QtWidgets import QTextBrowser, QWidget
 
-    from latencylab_ui.about_dialog import AboutDialog, AboutDialogContent
-    from latencylab_ui.main_window_menus import _about_text
-    from latencylab_ui.theme import Theme, tokens_for
-    from latencylab_ui.theme_stylesheet import build_stylesheet
+    from simquence_ui.about_dialog import AboutDialog, AboutDialogContent
+    from simquence_ui.main_window_menus import _about_text
+    from simquence_ui.theme import Theme, tokens_for
+    from simquence_ui.theme_stylesheet import build_stylesheet
 
     previous = app.styleSheet()
     # The real sheet: its min-height used to replace the body's own minimum.

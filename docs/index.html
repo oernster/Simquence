@@ -3,32 +3,32 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>LatencyLab: Design-Time Latency Exploration for Event-Driven Systems</title>
-<meta name="description" content="LatencyLab simulates explicit models of your software architecture (tasks, events, queues, contention) thousands of times, to show where users would wait and why, before the code exists.">
+<title>Simquence: Design-Time Latency Exploration for Event-Driven Systems</title>
+<meta name="description" content="Simquence simulates explicit models of your software architecture (tasks, events, queues, contention) thousands of times, to show where users would wait and why, before the code exists.">
 <meta name="author" content="Oliver Ernster">
 <meta name="robots" content="index, follow">
 <meta name="theme-color" content="#181818">
-<link rel="canonical" href="https://ernster.dev/latencylab/">
+<link rel="canonical" href="https://ernster.dev/Simquence/">
 <meta property="og:type" content="website">
-<meta property="og:site_name" content="LatencyLab">
-<meta property="og:title" content="LatencyLab: Design-Time Latency Exploration for Event-Driven Systems">
-<meta property="og:description" content="LatencyLab simulates explicit models of your software architecture (tasks, events, queues, contention) thousands of times, to show where users would wait and why, before the code exists.">
-<meta property="og:url" content="https://ernster.dev/latencylab/">
-<meta property="og:image" content="https://ernster.dev/latencylab/assets/latencylab-ui.png">
-<meta property="og:image:alt" content="The LatencyLab UI showing a makespan distribution, critical-path frequencies and percentiles">
+<meta property="og:site_name" content="Simquence">
+<meta property="og:title" content="Simquence: Design-Time Latency Exploration for Event-Driven Systems">
+<meta property="og:description" content="Simquence simulates explicit models of your software architecture (tasks, events, queues, contention) thousands of times, to show where users would wait and why, before the code exists.">
+<meta property="og:url" content="https://ernster.dev/Simquence/">
+<meta property="og:image" content="https://ernster.dev/Simquence/assets/simquence-ui.png">
+<meta property="og:image:alt" content="The Simquence UI showing a makespan distribution, critical-path frequencies and percentiles">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="LatencyLab: Design-Time Latency Exploration">
+<meta name="twitter:title" content="Simquence: Design-Time Latency Exploration">
 <meta name="twitter:description" content="Simulate your architecture's latency before you build it. Models of tasks, events, queues and contention, run thousands of times to show where users would wait and why.">
-<meta name="twitter:image" content="https://ernster.dev/latencylab/assets/latencylab-ui.png">
-<link rel="icon" type="image/svg+xml" href="assets/latencylab.svg">
+<meta name="twitter:image" content="https://ernster.dev/Simquence/assets/simquence-ui.png">
+<link rel="icon" type="image/png" href="assets/simquence.png">
 <link rel="stylesheet" href="styles.css?v=7b847c4937">
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "SoftwareApplication", "name": "LatencyLab", "applicationCategory": "DeveloperApplication", "operatingSystem": "Windows, macOS, Linux", "description": "LatencyLab simulates explicit models of your software architecture (tasks, events, queues, contention) thousands of times, to show where users would wait and why, before the code exists.", "url": "https://ernster.dev/latencylab/", "image": "https://ernster.dev/latencylab/assets/latencylab-ui.png", "isAccessibleForFree": true, "offers": {"@type": "Offer", "price": "0", "priceCurrency": "GBP"}, "author": {"@type": "Person", "name": "Oliver Ernster", "url": "https://www.crankthecode.com/"}, "audience": {"@type": "Audience", "audienceType": "Senior engineers, software architects, CTOs and technical leaders"}, "keywords": "latency, simulation, design-time, event-driven systems, architecture, critical path, percentiles, deterministic scheduling", "license": "https://www.gnu.org/licenses/gpl-3.0.html"}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "SoftwareApplication", "name": "Simquence", "applicationCategory": "DeveloperApplication", "operatingSystem": "Windows, macOS, Linux", "description": "Simquence simulates explicit models of your software architecture (tasks, events, queues, contention) thousands of times, to show where users would wait and why, before the code exists.", "url": "https://ernster.dev/Simquence/", "image": "https://ernster.dev/Simquence/assets/simquence-ui.png", "isAccessibleForFree": true, "offers": {"@type": "Offer", "price": "0", "priceCurrency": "GBP"}, "author": {"@type": "Person", "name": "Oliver Ernster", "url": "https://www.crankthecode.com/"}, "audience": {"@type": "Audience", "audienceType": "Senior engineers, software architects, CTOs and technical leaders"}, "keywords": "latency, simulation, design-time, event-driven systems, architecture, critical path, percentiles, deterministic scheduling", "license": "https://www.gnu.org/licenses/gpl-3.0.html"}</script>
 </head>
 <body>
 <header class="nav">
   <div class="container nav-inner">
     <a class="brand" href="#top">
-      <img src="assets/latencylab.svg" alt="LatencyLab icon">LatencyLab</a>
+      <img src="assets/simquence.png" alt="Simquence icon">Simquence</a>
     <nav class="nav-links">
       <a href="features.html">Features</a>
       <a href="why.html">Why</a>
@@ -39,22 +39,18 @@
 <main id="top">
   <section class="hero">
     <div class="container">
-      <img class="logo" src="assets/latencylab.svg" alt="LatencyLab icon">
-      <h1>LatencyLab</h1>
+      <img class="logo" src="assets/simquence.png" alt="Simquence icon">
+      <h1>Simquence</h1>
       <div class="tagline">Design-Time Latency Exploration</div>
       <p class="lede">Simulate your architecture's latency before you build it.
-        Describe the design as a small explicit model, run it thousands of
-        simulated times and see which chain of work users would actually wait
-        on. It is not a profiler, tracer or runtime observer: it works on the
-        design rather than the code, so it applies to any event-driven software.
-        It exists to prevent confident people from shipping bad
-        architecture.</p>
+        Describe the design as a small explicit model, run it thousands of times
+        and see which chain of work users would actually wait on. Not a
+        profiler: it works on the design rather than the code.</p>
       <div class="cta">
         <a class="btn btn-primary" href="download.html">Download</a>
         <a class="btn btn-ghost" href="guide.html">How to use it</a>
       </div>
-      <p class="release-note">Windows, macOS and Linux. Builds are published on the
-        <a href="https://github.com/oernster/latencylab/releases">releases page</a> as they ship.</p>
+      <p class="release-note">Windows, macOS and Linux.</p>
       <div class="badges">
         <span>Local-first</span>·<span>No cloud, no account</span>
         ·<span>Deterministic, seeded runs</span>·<span>GPL-3.0 + LGPL-3.0</span>
@@ -66,40 +62,31 @@
     <div class="container">
       <div class="eyebrow">What it is, in one pass</div>
       <h2 class="section-title">A design-time latency simulator</h2>
-      <p class="section-sub">You describe a planned or existing architecture as
-        a small, explicit model: the units of work, the events that trigger them
-        and the shared resources they queue behind. LatencyLab executes that
-        model thousands of times with realistic timing variation and out come
-        the numbers a whiteboard cannot give you: how long the flow takes across
-        percentiles, which chain of work actually held each run up and how often
-        each chain is the culprit. The whole workflow is a loop:</p>
+      <p class="section-sub">The whole workflow is a loop:</p>
       <div class="features">
-        <div class="feature"><div class="fnum">01</div><h3>Model</h3><p>Write the architecture down small enough to argue about: tasks, the events that trigger them and the resources they queue behind. Plain JSON, written by hand or built in the composer with no JSON at all. A useful model is often 10 to 20 tasks.</p></div>
-        <div class="feature"><div class="fnum">02</div><h3>Run</h3><p>The entry event fires, tasks run on their contexts, queues form where concurrency is exhausted and durations are drawn from the distributions you chose. Hundreds or thousands of times, every run seeded and reproducible.</p></div>
-        <div class="feature"><div class="fnum">03</div><h3>Read</h3><p>Every run records the makespan (how long the user waited) and the critical path (the chain of tasks and waits that set the finish time). One run tells you nothing; the spread across runs is the finding.</p></div>
-        <div class="feature"><div class="fnum">04</div><h3>Change one thing</h3><p>Raise a context's concurrency, remove a debounce, split a queue. One change at a time, because two changes and a different answer tells you nothing about which one did it.</p></div>
-        <div class="feature"><div class="fnum">05</div><h3>Compare</h3><p>Run again on the same seed. The randomness is identical, so a shift in the percentiles or the dominant path is the cost or benefit of the design change, isolated from luck.</p></div>
+        <div class="feature"><div class="fnum">01</div><h3>Model</h3><p>Tasks, the events that trigger them and the resources they queue behind. Plain JSON or the composer; 10 to 20 tasks is often enough.</p></div>
+        <div class="feature"><div class="fnum">02</div><h3>Run</h3><p>Queues form where concurrency runs out; durations are drawn from your distributions. Thousands of times, every run seeded.</p></div>
+        <div class="feature"><div class="fnum">03</div><h3>Read</h3><p>Each run records the makespan (how long the user waited) and the critical path (the chain that set the finish time). The spread is the finding.</p></div>
+        <div class="feature"><div class="fnum">04</div><h3>Change one thing</h3><p>Raise a concurrency, remove a debounce, split a queue. Two changes at once tell you nothing about which one did it.</p></div>
+        <div class="feature"><div class="fnum">05</div><h3>Compare</h3><p>Run again on the same seed. The randomness is identical, so any shift is the design change rather than luck.</p></div>
       </div>
       <div class="split">
         <div class="panel">
           <h3>What a model is</h3>
           <ul>
-            <li><b>System.</b> A name and the entry event that kicks off a run, such as "user clicks Pay".</li>
-            <li><b>Contexts.</b> The things work runs on: a thread pool, a database connection, a browser main thread. Each has one property, <b>concurrency</b>: how many things it can genuinely do at once. Concurrency 1 means everything sent to it waits in line, which is exactly what a single database connection or a UI thread is. This is where queueing (and therefore most surprising latency) comes from.</li>
-            <li><b>Tasks.</b> The units of work: which context each runs on, how long it takes (as a distribution, because real durations vary) and which event it emits when it finishes.</li>
-            <li><b>Wiring.</b> Which events trigger which tasks, optionally after a delay: debounces, retry backoffs, poll intervals. The wiring is the architecture.</li>
+            <li><b>System:</b> a name and the entry event that starts a run, such as "user clicks Pay".</li>
+            <li><b>Contexts:</b> what work runs on (a thread pool, a database connection, a UI thread), each with a <b>concurrency</b>. Concurrency 1 means everything waits in line; that is where most surprising latency comes from.</li>
+            <li><b>Tasks:</b> units of work, each with a context, a duration distribution and the event it emits.</li>
+            <li><b>Wiring:</b> which events trigger which tasks, optionally after a delay. The wiring is the architecture.</li>
           </ul>
-          <p>You are not modelling your code. You are modelling the shape of the design: what happens, what waits for what and what competes for what.</p>
         </div>
         <div class="panel">
           <h3>Any event-driven software</h3>
           <ul>
-            <li>Because it simulates the <b>design rather than the code</b>, the domain does not matter.</li>
-            <li>The same tool models a <b>web checkout</b> calling four backends, a <b>desktop app's UI thread</b>, a <b>fan-out of microservice calls</b>, a <b>mobile flow</b> behind a debounce or an <b>embedded event pipeline</b>.</li>
-            <li>It is for anyone making <b>structural decisions</b> about such software: senior engineers, architects, tech leads, at the point where those decisions are still cheap to change.</li>
-            <li>If it can be described as <b>work triggered by events, competing for shared resources</b>, it can be modelled.</li>
+            <li>It simulates the <b>design rather than the code</b>, so the domain does not matter.</li>
+            <li>A <b>web checkout</b>, a <b>desktop UI thread</b>, a <b>microservice fan-out</b>, a <b>mobile flow</b> or an <b>embedded pipeline</b>.</li>
+            <li>If it is <b>work triggered by events, competing for shared resources</b>, it can be modelled.</li>
           </ul>
-          <p>Change the model, run again on the same seed and you can see exactly what an architectural decision costs before a line of it is written.</p>
         </div>
       </div>
     </div>
@@ -109,42 +96,28 @@
     <div class="container">
       <div class="eyebrow">The rest of the site</div>
       <h2 class="section-title">One page per question</h2>
-      <p class="section-sub">Everything else lives on its own page, one question
-        each, so nothing here is a wall.</p>
       <div class="split">
         <div class="panel is-for">
           <h3>Who it's for</h3>
-          <ul>
-            <li>The roles that make <b>structural decisions</b> which are expensive to undo.</li>
-            <li>Stated both ways: <b>for you if</b> and <b>not for you if</b>.</li>
-          </ul>
-          <p><a class="btn btn-panel" href="who.html">Read Who it's for &rarr;</a></p>
+          <p>The roles that make <b>structural decisions</b> which are expensive to undo; and who it is not for.</p>
+          <p><a class="btn btn-panel" href="who.html">Who it's for &rarr;</a></p>
         </div>
         <div class="panel not-for">
           <h3>Features</h3>
-          <ul>
-            <li>A page each for <b>the application</b>, <b>using it</b> and <b>reading the output</b>.</li>
-            <li>Screenshots of a real run, <b>your first run in six steps</b> and the screen <b>element by element</b>.</li>
-          </ul>
-          <p><a class="btn btn-panel" href="features.html">See the features &rarr;</a></p>
+          <p>The application, <b>your first run in six steps</b> and how to read the output.</p>
+          <p><a class="btn btn-panel" href="features.html">Features &rarr;</a></p>
         </div>
       </div>
       <div class="split">
         <div class="panel is-for">
           <h3>Why</h3>
-          <ul>
-            <li>The <b>reasoning</b>: latency answered at design time, while the architecture is still cheap to change.</li>
-            <li>The same engine produced the numbers in <b>Relativistic Decision Architecture</b>, rerunnable from published seeds.</li>
-          </ul>
-          <p><a class="btn btn-panel" href="why.html">Read Why it exists &rarr;</a></p>
+          <p>Latency answered at design time, while the architecture is still cheap to change.</p>
+          <p><a class="btn btn-panel" href="why.html">Why it exists &rarr;</a></p>
         </div>
         <div class="panel not-for">
           <h3>Download</h3>
-          <ul>
-            <li><b>One installer per platform</b>: Windows, macOS and Linux, always the newest release.</li>
-            <li>Free, local-first, <b>no cloud and no account</b>.</li>
-          </ul>
-          <p><a class="btn btn-panel" href="download.html">Go to Download &rarr;</a></p>
+          <p><b>One installer per platform</b>; free, local-first, no account.</p>
+          <p><a class="btn btn-panel" href="download.html">Download &rarr;</a></p>
         </div>
       </div>
     </div>
@@ -152,11 +125,10 @@
   <section id="support">
     <div class="container">
       <div class="eyebrow">Support</div>
-      <h2 class="section-title">Supporting LatencyLab</h2>
-      <p class="section-sub">LatencyLab is free and stays free. There is no paid tier, no licence key and no
-        feature held back behind a donation. If it has saved you time or simply been useful, a
-        contribution supports its maintenance and continued development. The same link sits in
-        the app's own top bar, beside the light and dark toggle.</p>
+      <h2 class="section-title">Supporting Simquence</h2>
+      <p class="section-sub">Simquence is free with no paid tier and nothing held back. If it
+        has saved you time, a contribution supports its maintenance. The same link sits in the
+        app's top bar.</p>
       <div class="cta">
         <a class="btn btn-ghost btn-donate" href="https://www.paypal.com/ncp/payment/Y275VZ7R2NUNW"><img src="donate.png" alt="">Donate</a>
       </div>
@@ -166,7 +138,7 @@
 <footer>
   <div class="container footer-inner">
     <div>
-      <strong>LatencyLab</strong>: design-time latency exploration for event-driven systems<br>
+      <strong>Simquence</strong>: design-time latency exploration for event-driven systems<br>
       (c) Oliver Ernster · Local-first · GPL-3.0 + LGPL-3.0 · v<!--VERSION-->3.3.2<!--/VERSION--><br>
       A commercial licence for my own code is also available, separately from the open-source licences: see <a href="https://ernster.dev/commercial-licensing.html">commercial licensing</a>.
     </div>
@@ -175,8 +147,8 @@
       <a href="features.html">Features</a>
       <a href="why.html">Why</a>
       <a href="download.html">Download</a>
-      <a href="https://github.com/oernster/latencylab/releases">Releases</a>
-      <a href="https://github.com/oernster/latencylab">GitHub</a>
+      <a href="https://github.com/oernster/Simquence/releases">Releases</a>
+      <a href="https://github.com/oernster/Simquence">GitHub</a>
       <a href="https://ernster.dev/">More of my work</a>
     </div>
   </div>

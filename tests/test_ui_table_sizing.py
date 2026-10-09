@@ -10,8 +10,8 @@ from PySide6.QtWidgets import (
     QTableWidgetItem,
 )
 
-from latencylab_ui.model_composer_contexts_editor import NAME_COLUMN, ContextsEditor
-from latencylab_ui.qt_style_helpers import (
+from simquence_ui.model_composer_contexts_editor import NAME_COLUMN, ContextsEditor
+from simquence_ui.qt_style_helpers import (
     MAX_VISIBLE_TABLE_ROWS,
     fit_rows_to_contents,
     size_table_to_rows,

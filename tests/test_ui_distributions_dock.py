@@ -25,10 +25,10 @@ def test_distributions_dock_renders_and_paints_with_data() -> None:
 
     from PySide6.QtWidgets import QMainWindow
 
-    from latencylab.model import Model
-    from latencylab.types import RunResult
-    from latencylab_ui.distributions_dock import DistributionsDock
-    from latencylab_ui.run_controller import RunOutputs
+    from simquence.model import Model
+    from simquence.types import RunResult
+    from simquence_ui.distributions_dock import DistributionsDock
+    from simquence_ui.run_controller import RunOutputs
 
     host = QMainWindow()
     dock = DistributionsDock(host)
@@ -121,9 +121,9 @@ def test_distributions_dock_renders_and_paints_empty() -> None:
 
     from PySide6.QtWidgets import QMainWindow
 
-    from latencylab.model import Model
-    from latencylab_ui.distributions_dock import DistributionsDock
-    from latencylab_ui.run_controller import RunOutputs
+    from simquence.model import Model
+    from simquence_ui.distributions_dock import DistributionsDock
+    from simquence_ui.run_controller import RunOutputs
 
     host = QMainWindow()
     dock = DistributionsDock(host)

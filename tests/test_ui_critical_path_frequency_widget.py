@@ -25,10 +25,10 @@ def test_critical_path_frequency_widget_set_data_twice_clears_rows() -> None:
 
     from PySide6.QtWidgets import QMainWindow
 
-    from latencylab_ui.critical_path_frequency_widget import (
+    from simquence_ui.critical_path_frequency_widget import (
         CriticalPathFrequencyWidget,
     )
-    from latencylab_ui.distributions_agg import CriticalPathBar
+    from simquence_ui.distributions_agg import CriticalPathBar
 
     host = QMainWindow()
     w = CriticalPathFrequencyWidget(host)
@@ -66,10 +66,10 @@ def test_critical_path_frequency_widget_clears_empty_placeholder_widget() -> Non
 
     from PySide6.QtWidgets import QMainWindow
 
-    from latencylab_ui.critical_path_frequency_widget import (
+    from simquence_ui.critical_path_frequency_widget import (
         CriticalPathFrequencyWidget,
     )
-    from latencylab_ui.distributions_agg import CriticalPathBar
+    from simquence_ui.distributions_agg import CriticalPathBar
 
     host = QMainWindow()
     w = CriticalPathFrequencyWidget(host)
@@ -97,10 +97,10 @@ def test_critical_path_frequency_widget_zero_count_bar_paints_safely() -> None:
 
     from PySide6.QtWidgets import QMainWindow
 
-    from latencylab_ui.critical_path_frequency_widget import (
+    from simquence_ui.critical_path_frequency_widget import (
         CriticalPathFrequencyWidget,
     )
-    from latencylab_ui.distributions_agg import CriticalPathBar
+    from simquence_ui.distributions_agg import CriticalPathBar
 
     host = QMainWindow()
     w = CriticalPathFrequencyWidget(host)

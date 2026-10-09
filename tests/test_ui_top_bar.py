@@ -6,8 +6,8 @@ from PySide6.QtCore import QObject, QSize, Qt, Signal
 from PySide6.QtGui import QColor, QIcon
 from PySide6.QtWidgets import QApplication, QWidget
 
-from latencylab_ui.main_window import MainWindow
-from latencylab_ui.theme import Theme, apply_theme, tokens_for
+from simquence_ui.main_window import MainWindow
+from simquence_ui.theme import Theme, apply_theme, tokens_for
 
 # Widths chosen either side of the default so centring is shown to be a property
 # of the layout rather than of one lucky size.
@@ -166,7 +166,7 @@ def test_compose_button_is_reachable_and_is_not_a_toggle(window: MainWindow) -> 
 def _band_stops(window: MainWindow) -> list:
     """The ring's stops that live on the top bar, in ring order."""
 
-    from latencylab_ui.focus_cycle_widgets import (
+    from simquence_ui.focus_cycle_widgets import (
         collect_interactive_widgets_in_layout_order,
     )
 
@@ -242,7 +242,7 @@ def test_the_declared_order_holds_every_control_on_the_bar(
     """A hand-written order is one forgotten line from dropping a new button off
     the ring entirely, so it is checked against the band's real children."""
 
-    from latencylab_ui.focus_cycle_widgets import is_interactive_widget
+    from simquence_ui.focus_cycle_widgets import is_interactive_widget
 
     _enable_every_bar_control(window, app)
     band = window._top_bar

@@ -58,16 +58,16 @@ def test_every_reading_surface_scrolls_in_pixels(qt_app) -> None:
     widget becomes a whole line jumping; the fast rewind becomes fifteen lines
     a tick. That is how three of these dialogs once shipped, reported as jerky.
     """
-    from latencylab_ui.about_dialog import AboutDialog, AboutDialogContent
-    from latencylab_ui.how_to_read_dialog import HowToReadDialog
-    from latencylab_ui.licence_dialog import LicenceDialog
-    from latencylab_ui.main_licence_dialog import MainLicenceDialog
+    from simquence_ui.about_dialog import AboutDialog, AboutDialogContent
+    from simquence_ui.how_to_read_dialog import HowToReadDialog
+    from simquence_ui.licence_dialog import LicenceDialog
+    from simquence_ui.main_licence_dialog import MainLicenceDialog
 
     host = QWidget()
     QVBoxLayout(host)
     host.show()
     qt_app.processEvents()
-    content = AboutDialogContent(title="LatencyLab", body="<p>x</p>")
+    content = AboutDialogContent(title="Simquence", body="<p>x</p>")
     dialogs = [
         HowToReadDialog(host),
         LicenceDialog(host),

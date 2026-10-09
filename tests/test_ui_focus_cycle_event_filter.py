@@ -17,7 +17,7 @@ def test_focus_cycle_event_filter_swallow_key_release_for_tab() -> None:
     from PySide6.QtGui import QKeyEvent
     from PySide6.QtWidgets import QMainWindow
 
-    from latencylab_ui.focus_cycle import FocusCycleController
+    from simquence_ui.focus_cycle import FocusCycleController
 
     w = QMainWindow()
     w.menuBar().addMenu("File")
@@ -55,7 +55,7 @@ def test_focus_cycle_event_filter_menu_active_escape_path(monkeypatch) -> None:
     from PySide6.QtGui import QKeyEvent
     from PySide6.QtWidgets import QMainWindow, QWidget
 
-    from latencylab_ui.focus_cycle import FocusCycleController
+    from simquence_ui.focus_cycle import FocusCycleController
 
     w = QMainWindow()
     w.menuBar().addMenu("File")
@@ -118,7 +118,7 @@ def test_focus_cycle_ignores_keys_from_an_unrelated_window() -> None:
     from PySide6.QtGui import QKeyEvent
     from PySide6.QtWidgets import QLineEdit, QMainWindow
 
-    from latencylab_ui.focus_cycle import FocusCycleController
+    from simquence_ui.focus_cycle import FocusCycleController
 
     w = QMainWindow()
     w.menuBar().addMenu("File")
@@ -160,7 +160,7 @@ def test_menu_hover_does_not_open_without_click(monkeypatch) -> None:
     from PySide6.QtCore import QEvent
     from PySide6.QtWidgets import QMainWindow
 
-    from latencylab_ui.focus_cycle import FocusCycleController
+    from simquence_ui.focus_cycle import FocusCycleController
 
     w = QMainWindow()
     w.menuBar().addMenu("File")
@@ -202,7 +202,7 @@ def test_menu_hover_does_not_clear_when_popup_is_open(monkeypatch) -> None:
     from PySide6.QtCore import QEvent
     from PySide6.QtWidgets import QMainWindow, QWidget
 
-    from latencylab_ui.focus_cycle import FocusCycleController
+    from simquence_ui.focus_cycle import FocusCycleController
 
     w = QMainWindow()
     w.menuBar().addMenu("File")
@@ -238,7 +238,7 @@ def test_focus_cycle_uninstall_ignores_menubar_remove_event_filter_errors() -> N
 
     from PySide6.QtWidgets import QMainWindow
 
-    from latencylab_ui.focus_cycle import FocusCycleController
+    from simquence_ui.focus_cycle import FocusCycleController
 
     w = QMainWindow()
     w.menuBar().addMenu("File")

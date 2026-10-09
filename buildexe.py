@@ -1,11 +1,11 @@
-"""Build the LatencyLab Windows bundle with Nuitka.
+"""Build the Simquence Windows bundle with Nuitka.
 
-Produces `installer/payload/LatencyLab/LatencyLab.exe` and everything beside it.
+Produces `installer/payload/Simquence/Simquence.exe` and everything beside it.
 `buildinstaller.py` then wraps that directory into the setup program, so this
 script never produces something a user installs directly.
 
     python buildexe.py            # release, no console
-    set LATENCYLAB_BUILD_DEBUG=1  # keep a console attached for tracebacks
+    set SIMQUENCE_BUILD_DEBUG=1  # keep a console attached for tracebacks
     python buildexe.py
 
 This is a build script. It is exempt from the size cap and from the coverage
@@ -33,20 +33,20 @@ from build_utils import (
     section,
 )
 
-APP_DISPLAY_NAME = "LatencyLab"
-EXE_NAME = "LatencyLab"
+APP_DISPLAY_NAME = "Simquence"
+EXE_NAME = "Simquence"
 APP_AUTHOR = "Oliver Ernster"
 
 # What Windows shows as the process name in Task Manager and in the "open with"
 # dialog. It is the application's NAME, never its tagline: a marketing sentence
 # here is what Windows then lists the program as.
-FILE_DESCRIPTION = "LatencyLab"
+FILE_DESCRIPTION = "Simquence"
 
 # The repo-root shim is already the canonical launcher, so the frozen build and
 # `python runner.py` enter through exactly the same code.
 ENTRY_SCRIPT = PROJECT_ROOT / "runner.py"
 
-ICON_FILE = PROJECT_ROOT / "assets" / "latencylab.ico"
+ICON_FILE = PROJECT_ROOT / "assets" / "simquence.ico"
 
 # Loose files the bundle needs at the paths the running app looks for them:
 # version.py reads VERSION from the bundle root, main_licence_dialog.py reads
@@ -56,8 +56,8 @@ DATA_FILES: tuple[tuple[Path, str], ...] = (
     (VERSION_FILE, "VERSION"),
     (PROJECT_ROOT / "LICENSE", "LICENSE"),
     (
-        PROJECT_ROOT / "latencylab_ui" / "LGPL3.txt",
-        "latencylab_ui/LGPL3.txt",
+        PROJECT_ROOT / "simquence_ui" / "LGPL3.txt",
+        "simquence_ui/LGPL3.txt",
     ),
 )
 
@@ -77,7 +77,7 @@ BUNDLE_DIR = PAYLOAD_DIR / APP_DISPLAY_NAME
 NUITKA_OUTPUT_DIR = PAYLOAD_DIR / f"{ENTRY_SCRIPT.stem}.dist"
 NUITKA_SCRATCH_DIR = PAYLOAD_DIR / f"{ENTRY_SCRIPT.stem}.build"
 
-DEBUG_ENV_VAR = "LATENCYLAB_BUILD_DEBUG"
+DEBUG_ENV_VAR = "SIMQUENCE_BUILD_DEBUG"
 CONSOLE_MODE_RELEASE = "disable"
 CONSOLE_MODE_DEBUG = "attach"
 

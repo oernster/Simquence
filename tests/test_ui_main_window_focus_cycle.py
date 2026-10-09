@@ -1,7 +1,7 @@
 from __future__ import annotations
 
-from latencylab_ui.donate_button import DONATE_BUTTON_NAME
-from latencylab_ui.theme_toggle import SUN
+from simquence_ui.donate_button import DONATE_BUTTON_NAME
+from simquence_ui.theme_toggle import SUN
 
 
 def _ensure_qapp():
@@ -23,7 +23,7 @@ def _load_a_model(window) -> None:
 
     from pathlib import Path as _Path
 
-    from latencylab.model import Model
+    from simquence.model import Model
 
     window._set_model_load_ok(
         _Path("model.json"),
@@ -46,7 +46,7 @@ def test_focus_cycle_tab_order_and_arrow_keys(monkeypatch) -> None:
     from PySide6.QtTest import QTest
     from PySide6.QtWidgets import QApplication, QPushButton
 
-    from latencylab_ui.main_window import MainWindow
+    from simquence_ui.main_window import MainWindow
 
     class _Controller(QObject):
         started = Signal(int)
@@ -241,7 +241,7 @@ def test_enter_key_activates_focused_button_but_not_spinbox() -> None:
     from PySide6.QtCore import QObject, Qt, Signal
     from PySide6.QtTest import QTest
 
-    from latencylab_ui.main_window import MainWindow
+    from simquence_ui.main_window import MainWindow
 
     class _Controller(QObject):
         started = Signal(int)
@@ -292,10 +292,10 @@ def test_current_run_selection_keeps_focus_until_tab() -> None:
     from PySide6.QtTest import QTest
     from PySide6.QtWidgets import QApplication
 
-    from latencylab.model import Model
-    from latencylab.types import RunResult
-    from latencylab_ui.main_window import MainWindow
-    from latencylab_ui.run_controller import RunOutputs
+    from simquence.model import Model
+    from simquence.types import RunResult
+    from simquence_ui.main_window import MainWindow
+    from simquence_ui.run_controller import RunOutputs
 
     class _Controller(QObject):
         started = Signal(int)

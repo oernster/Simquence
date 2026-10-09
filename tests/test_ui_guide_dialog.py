@@ -6,12 +6,12 @@ from PySide6.QtCore import QObject, Signal
 from PySide6.QtGui import QColor
 from PySide6.QtWidgets import QApplication, QMenu, QPushButton, QTextBrowser
 
-from latencylab_ui.auto_scroller import AutoScroller
-from latencylab_ui.guide_dialog import GuideDialog
-from latencylab_ui.guide_text import GUIDE_HTML, GUIDE_TITLE
-from latencylab_ui.main_window import MainWindow
-from latencylab_ui.main_window_menus import show_guide_dialog
-from latencylab_ui.theme import Theme, apply_theme, tokens_for
+from simquence_ui.auto_scroller import AutoScroller
+from simquence_ui.guide_dialog import GuideDialog
+from simquence_ui.guide_text import GUIDE_HTML, GUIDE_TITLE
+from simquence_ui.main_window import MainWindow
+from simquence_ui.main_window_menus import show_guide_dialog
+from simquence_ui.theme import Theme, apply_theme, tokens_for
 
 # Rasterising blends the ink against transparency at every edge, so an exact
 # match would only hold in the middle of a stroke.
@@ -116,7 +116,7 @@ def test_the_guide_is_html_on_a_pixel_scrolling_surface(
     assert isinstance(body, QTextBrowser)
     # Rendered as a document rather than shown as markup.
     assert "<h3>" not in body.toPlainText()
-    assert "Guide to LatencyLab" in body.toPlainText()
+    assert "Guide to Simquence" in body.toPlainText()
 
     dialog.close()
     dialog.deleteLater()
@@ -177,7 +177,7 @@ def test_the_guide_is_on_the_help_menu_above_how_to_read(
     labels = [action.text() for action in help_menu.actions()]
 
     assert GUIDE_TITLE in labels
-    assert labels.index(GUIDE_TITLE) < labels.index("How to Read LatencyLab Output")
+    assert labels.index(GUIDE_TITLE) < labels.index("How to Read Simquence Output")
 
 
 def test_showing_the_guide_keeps_it_alive(

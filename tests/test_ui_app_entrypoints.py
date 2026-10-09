@@ -2,7 +2,7 @@ from __future__ import annotations
 
 
 def test_ui_app_run_app_no_event_loop(monkeypatch) -> None:
-    import latencylab_ui.app as ui_app
+    import simquence_ui.app as ui_app
 
     calls = {
         "apply_theme": 0,
@@ -96,7 +96,7 @@ def test_ui_app_starts_without_a_generated_icon(monkeypatch, tmp_path) -> None:
     a default window icon, not a failure to launch.
     """
 
-    import latencylab_ui.app as ui_app
+    import simquence_ui.app as ui_app
 
     shown = {"count": 0}
 
@@ -158,7 +158,7 @@ def test_a_second_copy_hands_over_and_exits_without_building_a_window(
     before any of that.
     """
 
-    import latencylab_ui.app as ui_app
+    import simquence_ui.app as ui_app
 
     built = {"windows": 0}
 
@@ -183,8 +183,8 @@ class _FakeQApp:
 
 
 def test_ui_main_delegates(monkeypatch) -> None:
-    import latencylab_ui.__main__ as ui_main
-    import latencylab_ui.app as ui_app
+    import simquence_ui.__main__ as ui_main
+    import simquence_ui.app as ui_app
 
     def _fake_run_app(argv):
         return 0
@@ -196,12 +196,12 @@ def test_ui_main_delegates(monkeypatch) -> None:
 def test_ui_main_import_error_path(monkeypatch) -> None:
     import builtins
 
-    import latencylab_ui.__main__ as ui_main
+    import simquence_ui.__main__ as ui_main
 
     real_import = builtins.__import__
 
     def _raising_import(name, *args, **kwargs):
-        if name == "latencylab_ui.app":
+        if name == "simquence_ui.app":
             raise ImportError("no pyside")
         return real_import(name, *args, **kwargs)
 
@@ -210,6 +210,6 @@ def test_ui_main_import_error_path(monkeypatch) -> None:
 
 
 def test_ui_package_version() -> None:
-    import latencylab_ui
+    import simquence_ui
 
-    assert isinstance(latencylab_ui.__version__, str)
+    assert isinstance(simquence_ui.__version__, str)

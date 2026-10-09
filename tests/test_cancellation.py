@@ -2,9 +2,9 @@ from __future__ import annotations
 
 import pytest
 
-from latencylab.cancellation import RunCancelled, should_stop
-from latencylab.model import Model
-from latencylab.sim import simulate_many
+from simquence.cancellation import RunCancelled, should_stop
+from simquence.model import Model
+from simquence.sim import simulate_many
 
 MANY_RUNS = 50
 STOP_AFTER = 7
@@ -58,7 +58,7 @@ def qapp_window():
     from PySide6.QtCore import QObject, Signal
     from PySide6.QtWidgets import QApplication
 
-    from latencylab_ui.main_window import MainWindow
+    from simquence_ui.main_window import MainWindow
 
     class _IdleController(QObject):
         started = Signal(int)
@@ -185,7 +185,7 @@ def test_the_legacy_executor_stops_at_the_same_boundary() -> None:
 def test_the_cancelled_status_counts_runs_and_gets_the_grammar_right() -> None:
     """It is the only number the user can act on, so it is worth saying well."""
 
-    from latencylab_ui import main_window_actions as actions
+    from simquence_ui import main_window_actions as actions
 
     assert actions.cancelled_status(1) == "Cancelled after 1 run"
     assert actions.cancelled_status(0) == "Cancelled after 0 runs"
@@ -193,7 +193,7 @@ def test_the_cancelled_status_counts_runs_and_gets_the_grammar_right() -> None:
 
 
 def test_the_window_reports_how_far_a_cancelled_run_got(qapp_window) -> None:
-    from latencylab_ui import main_window_actions as actions
+    from simquence_ui import main_window_actions as actions
 
     window = qapp_window
     window._auto_open_distributions_on_finish = True
@@ -207,7 +207,7 @@ def test_the_window_reports_how_far_a_cancelled_run_got(qapp_window) -> None:
 def test_cancelling_an_active_run_sets_the_flag_the_worker_reads() -> None:
     """Marking the token is not enough on its own: the flag is what stops it."""
 
-    from latencylab_ui.run_controller import RunController
+    from simquence_ui.run_controller import RunController
 
     controller = RunController()
     assert controller.cancel_active() is None, "no active run: nothing to do"
@@ -231,7 +231,7 @@ def test_a_worker_that_is_cancelled_reports_it_as_its_own_outcome(
 
     import json
 
-    import latencylab_ui.run_controller as rc
+    import simquence_ui.run_controller as rc
 
     model_path = tmp_path / "m.json"
     model_path.write_text(json.dumps(MODEL_JSON), encoding="utf-8")
@@ -254,7 +254,7 @@ def test_a_worker_that_is_cancelled_reports_it_as_its_own_outcome(
 def test_the_cancel_flag_crosses_the_thread_boundary() -> None:
     """Set on the interface thread, read on the worker thread."""
 
-    from latencylab_ui.run_controller import CancelFlag
+    from simquence_ui.run_controller import CancelFlag
 
     flag = CancelFlag()
     assert flag.is_cancelled() is False

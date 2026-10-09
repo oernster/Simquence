@@ -15,10 +15,10 @@ def test_outputs_view_render_and_switch() -> None:
 
     from PySide6.QtWidgets import QComboBox, QPlainTextEdit
 
-    from latencylab.model import Model
-    from latencylab.types import RunResult
-    from latencylab_ui.outputs_view import OutputsView
-    from latencylab_ui.run_controller import RunOutputs
+    from simquence.model import Model
+    from simquence.types import RunResult
+    from simquence_ui.outputs_view import OutputsView
+    from simquence_ui.run_controller import RunOutputs
 
     summary = QPlainTextEdit()
     run_select = QComboBox()
@@ -99,10 +99,10 @@ def test_outputs_view_formats_critical_path_for_display() -> None:
 
     from PySide6.QtWidgets import QComboBox, QPlainTextEdit
 
-    from latencylab.model import Model
-    from latencylab.types import RunResult
-    from latencylab_ui.outputs_view import OutputsView
-    from latencylab_ui.run_controller import RunOutputs
+    from simquence.model import Model
+    from simquence.types import RunResult
+    from simquence_ui.outputs_view import OutputsView
+    from simquence_ui.run_controller import RunOutputs
 
     summary = QPlainTextEdit()
     run_select = QComboBox()

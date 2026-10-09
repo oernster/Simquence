@@ -2,10 +2,10 @@ from __future__ import annotations
 
 import sys
 
-import latencylab_ui.__main__ as ui_main_module
+import simquence_ui.__main__ as ui_main_module
 
 
-def test_runner_delegates_to_latencylab_ui_main(monkeypatch):
+def test_runner_delegates_to_simquence_ui_main(monkeypatch):
     captured = {}
 
     def fake_ui_main() -> int:
@@ -41,9 +41,9 @@ def test_runner_leaves_argv_zero_alone(monkeypatch):
         return 0
 
     monkeypatch.setattr(ui_main_module, "main", fake_ui_main)
-    monkeypatch.setattr(sys, "argv", [r"C:\Programs\LatencyLab\LatencyLab.exe"])
+    monkeypatch.setattr(sys, "argv", [r"C:\Programs\Simquence\Simquence.exe"])
 
     import runner
 
     assert runner.main() == 0
-    assert captured["argv0"] == r"C:\Programs\LatencyLab\LatencyLab.exe"
+    assert captured["argv0"] == r"C:\Programs\Simquence\Simquence.exe"

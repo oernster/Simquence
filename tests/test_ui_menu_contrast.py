@@ -11,10 +11,10 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from latencylab_ui.main_window_menus import add_menu
-from latencylab_ui.qt_style_helpers import harden_combobox_popup
-from latencylab_ui.theme import Theme, apply_theme, tokens_for
-from latencylab_ui.theme_tokens import DARK_TOKENS, LIGHT_TOKENS
+from simquence_ui.main_window_menus import add_menu
+from simquence_ui.qt_style_helpers import harden_combobox_popup
+from simquence_ui.theme import Theme, apply_theme, tokens_for
+from simquence_ui.theme_tokens import DARK_TOKENS, LIGHT_TOKENS
 
 THEMES = (Theme.DARK, Theme.LIGHT)
 
@@ -114,7 +114,7 @@ def test_a_checked_button_repaints_its_glyph_in_the_accent_ink(
 
     from PySide6.QtGui import QIcon
 
-    from latencylab_ui.glyphs import compose_body, two_tone_icon
+    from simquence_ui.glyphs import compose_body, two_tone_icon
 
     tokens = tokens_for(Theme.DARK)
     icon = two_tone_icon(

@@ -9,12 +9,12 @@ import pytest
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QApplication, QDialog, QPushButton, QWidget
 
-from latencylab_ui.about_dialog import AboutDialog, AboutDialogContent
-from latencylab_ui.about_text import CREDITED_DISTRIBUTIONS, about_html
-from latencylab_ui.first_stop_dialog import FirstStopDialog
-from latencylab_ui.how_to_read_dialog import HowToReadDialog
-from latencylab_ui.licence_dialog import LicenceDialog
-from latencylab_ui.main_licence_dialog import MainLicenceDialog
+from simquence_ui.about_dialog import AboutDialog, AboutDialogContent
+from simquence_ui.about_text import CREDITED_DISTRIBUTIONS, about_html
+from simquence_ui.first_stop_dialog import FirstStopDialog
+from simquence_ui.how_to_read_dialog import HowToReadDialog
+from simquence_ui.licence_dialog import LicenceDialog
+from simquence_ui.main_licence_dialog import MainLicenceDialog
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 
@@ -70,7 +70,7 @@ def _declared_distributions() -> set[str]:
 def test_nothing_the_project_installs_goes_uncredited() -> None:
     """The credit list is pinned to the real dependency set, not to memory.
 
-    Both licences LatencyLab ships under oblige it to say what it is built on,
+    Both licences Simquence ships under oblige it to say what it is built on,
     and a credits list that drifts from the truth is worse than none. Adding a
     dependency without a credit fails here rather than being noticed by nobody.
     """
@@ -119,7 +119,7 @@ def test_a_dialog_opens_focused_on_its_first_stop(
 def test_the_about_dialog_opens_focused_too(app: QApplication, parent: QWidget) -> None:
     dialog = AboutDialog(
         parent,
-        content=AboutDialogContent(title="LatencyLab", body="<p>body</p>"),
+        content=AboutDialogContent(title="Simquence", body="<p>body</p>"),
     )
     dialog.show()
     app.processEvents()

@@ -13,7 +13,7 @@ def _ensure_qapp():
 def test_tasks_editor_row_height_is_fixed_and_consistent() -> None:
     _ensure_qapp()
 
-    from latencylab_ui.model_composer_tasks_editor import TasksEditor
+    from simquence_ui.model_composer_tasks_editor import TasksEditor
 
     te = TasksEditor()
     te._on_add()  # noqa: SLF001

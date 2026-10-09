@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import pytest
 
-from latencylab_ui.update_core import (
+from simquence_ui.update_core import (
     ReleaseAsset,
     ReleaseInfo,
     UpdateService,
@@ -14,9 +14,9 @@ from latencylab_ui.update_core import (
 )
 
 ASSETS = (
-    ReleaseAsset("LatencyLabSetup.exe", "https://example.com/LatencyLabSetup.exe"),
-    ReleaseAsset("latencylab.dmg", "https://example.com/latencylab.dmg"),
-    ReleaseAsset("latencylab.flatpak", "https://example.com/latencylab.flatpak"),
+    ReleaseAsset("SimquenceSetup.exe", "https://example.com/SimquenceSetup.exe"),
+    ReleaseAsset("simquence.dmg", "https://example.com/simquence.dmg"),
+    ReleaseAsset("simquence.flatpak", "https://example.com/simquence.flatpak"),
 )
 
 
@@ -31,7 +31,7 @@ class FakeReleaseSource:
 def release(version: str = "v3.1.0", assets=ASSETS) -> ReleaseInfo:
     return ReleaseInfo(
         version=version,
-        page_url="https://github.com/oernster/latencylab/releases/latest",
+        page_url="https://github.com/oernster/Simquence/releases/latest",
         assets=assets,
     )
 
@@ -75,7 +75,7 @@ def test_newer_release_offers_update_with_asset_and_page() -> None:
     assert status.update_available is True
     assert status.latest == "v3.1.0"
     assert status.current == "3.0.3"
-    assert status.download_url == "https://example.com/LatencyLabSetup.exe"
+    assert status.download_url == "https://example.com/SimquenceSetup.exe"
     assert status.page_url is not None
 
 
@@ -115,9 +115,9 @@ def test_no_matching_asset_falls_back_to_page_only() -> None:
 @pytest.mark.parametrize(
     "platform_key,expected",
     [
-        ("windows", "https://example.com/LatencyLabSetup.exe"),
-        ("macos", "https://example.com/latencylab.dmg"),
-        ("linux", "https://example.com/latencylab.flatpak"),
+        ("windows", "https://example.com/SimquenceSetup.exe"),
+        ("macos", "https://example.com/simquence.dmg"),
+        ("linux", "https://example.com/simquence.flatpak"),
     ],
 )
 def test_platform_asset_selection(platform_key: str, expected: str) -> None:
@@ -127,7 +127,7 @@ def test_platform_asset_selection(platform_key: str, expected: str) -> None:
 def test_asset_selection_edges() -> None:
     assert select_asset_url((), "windows") is None
     assert select_asset_url(ASSETS, "beos") is None
-    upper = (ReleaseAsset("LATENCYLABSETUP.EXE", "https://x/setup"),)
+    upper = (ReleaseAsset("SIMQUENCESETUP.EXE", "https://x/setup"),)
     assert select_asset_url(upper, "windows") == "https://x/setup"
 
 

@@ -4,15 +4,15 @@ requires = ["setuptools>=77", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "latencylab"
+name = "simquence"
 dynamic = ["version"]
 description = "Design-time latency exploration tool for event-driven interactive systems"
 readme = "README.md"
 requires-python = ">=3.10"
 # The published distribution is the headless core only (see the packages.find
 # rules below) and that code is GPL-3.0. The PySide6 front end under
-# latencylab_ui/ is LGPL-3.0 and is not distributed here; its text lives in
-# latencylab_ui/LGPL3.txt.
+# simquence_ui/ is LGPL-3.0 and is not distributed here; its text lives in
+# simquence_ui/LGPL3.txt.
 license = "GPL-3.0-only"
 license-files = ["LICENSE"]
 dependencies = []
@@ -22,7 +22,7 @@ dependencies = []
 version = {file = "VERSION"}
 
 [project.scripts]
-latencylab = "latencylab.__main__:main"
+simquence = "simquence.__main__:main"
 
 [project.optional-dependencies]
 dev = [
@@ -67,9 +67,9 @@ line-length = 88
 
 
 [tool.setuptools.packages.find]
-# The distributable is the CLI core. `latencylab*` also globs `latencylab_ui`,
+# The distributable is the CLI core. `simquence*` also globs `simquence_ui`,
 # so the GUI has to be excluded by name for the wheel to contain what every
 # other document says it contains.
-include = ["latencylab*"]
-exclude = ["plans*", "examples*", "tests*", "latencylab_ui*"]
+include = ["simquence*"]
+exclude = ["plans*", "examples*", "tests*", "simquence_ui*"]
 

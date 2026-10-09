@@ -23,10 +23,10 @@ def test_save_log_button_dumps_right_panel(monkeypatch, tmp_path: Path) -> None:
 
     from PySide6.QtCore import QObject, Signal
 
-    from latencylab_ui.main_window import MainWindow
-    from latencylab_ui.run_controller import RunOutputs
-    from latencylab.types import RunResult
-    from latencylab.model import Model
+    from simquence_ui.main_window import MainWindow
+    from simquence_ui.run_controller import RunOutputs
+    from simquence.types import RunResult
+    from simquence.model import Model
 
     class _Controller(QObject):
         started = Signal(int)

@@ -49,7 +49,7 @@ class FakeSettings:
 
 
 def _status(available=True, download_url="https://x/setup.exe", page_url="https://x/r"):
-    from latencylab_ui.update_core import UpdateStatus
+    from simquence_ui.update_core import UpdateStatus
 
     return UpdateStatus(
         current="3.0.3",
@@ -70,7 +70,7 @@ def _spin_until(app, condition, seconds=3.0) -> None:
 def _controller(service, settings=None):
     from PySide6.QtWidgets import QWidget
 
-    from latencylab_ui.update_check import UpdateCheckController
+    from simquence_ui.update_check import UpdateCheckController
 
     window = QWidget()
     controller = UpdateCheckController(window, service, settings or FakeSettings())
@@ -140,7 +140,7 @@ def test_prompt_download_opens_the_asset_url(monkeypatch) -> None:
     app = _ensure_qapp()
     opened: list[object] = []
     monkeypatch.setattr(
-        "latencylab_ui.update_check.QDesktopServices.openUrl",
+        "simquence_ui.update_check.QDesktopServices.openUrl",
         lambda url: opened.append(url) or True,
     )
     window, controller = _controller(FakeService(_status()))
@@ -156,7 +156,7 @@ def test_prompt_download_falls_back_to_the_release_page(monkeypatch) -> None:
     app = _ensure_qapp()
     opened: list[object] = []
     monkeypatch.setattr(
-        "latencylab_ui.update_check.QDesktopServices.openUrl",
+        "simquence_ui.update_check.QDesktopServices.openUrl",
         lambda url: opened.append(url) or True,
     )
     window, controller = _controller(FakeService(_status(download_url=None)))
@@ -172,7 +172,7 @@ def test_prompt_with_no_urls_opens_nothing(monkeypatch) -> None:
     app = _ensure_qapp()
     opened: list[object] = []
     monkeypatch.setattr(
-        "latencylab_ui.update_check.QDesktopServices.openUrl",
+        "simquence_ui.update_check.QDesktopServices.openUrl",
         lambda url: opened.append(url) or True,
     )
     window, controller = _controller(
@@ -208,8 +208,8 @@ def test_menu_gains_the_action_only_when_wired() -> None:
     _ensure_qapp()
     from PySide6.QtWidgets import QMainWindow
 
-    from latencylab_ui.main_window_menus import build_menus
-    from latencylab_ui.update_check import MENU_ITEM_TEXT
+    from simquence_ui.main_window_menus import build_menus
+    from simquence_ui.update_check import MENU_ITEM_TEXT
 
     def _texts(window) -> list[str]:
         texts = []
@@ -259,7 +259,7 @@ def test_manual_check_is_a_no_op_before_installation() -> None:
     _ensure_qapp()
     from PySide6.QtWidgets import QWidget
 
-    from latencylab_ui.update_check import manual_check
+    from simquence_ui.update_check import manual_check
 
     manual_check(QWidget())
 
@@ -268,8 +268,8 @@ def test_install_then_manual_check_reports() -> None:
     app = _ensure_qapp()
     from PySide6.QtWidgets import QWidget
 
-    from latencylab_ui.update_check import install_update_check, manual_check
-    from latencylab_ui.update_core import UpdateService
+    from simquence_ui.update_check import install_update_check, manual_check
+    from simquence_ui.update_core import UpdateService
 
     class NoSource:
         def latest_release(self):
@@ -311,7 +311,7 @@ def test_an_answer_whose_window_has_gone_is_dropped_not_raised(monkeypatch) -> N
     _ensure_qapp()
     import shiboken6
 
-    from latencylab_ui.update_core import UpdateService
+    from simquence_ui.update_core import UpdateService
 
     escaped: list[BaseException | None] = []
     monkeypatch.setattr(
@@ -332,7 +332,7 @@ def test_an_emit_failure_with_the_window_still_there_is_raised(monkeypatch) -> N
     """Only the answer with nowhere to go is dropped; any other failure shows."""
 
     _ensure_qapp()
-    from latencylab_ui.update_core import UpdateService
+    from simquence_ui.update_core import UpdateService
 
     class FailingSignal:
         def emit(self, *_args) -> None:

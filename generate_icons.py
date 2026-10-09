@@ -1,17 +1,18 @@
 """Derive every platform icon asset from the single master PNG.
 
-The master is `latencylab.png` at the repository root: a square 1024x1024 RGBA
-render of the stopwatch mark the site uses. Everything under `assets/`
-is generated from it and nothing else, so the Windows executable, the installer
-window, the macOS bundle and the Flatpak hicolor set cannot drift apart.
+The master is `assets/application-icon.png`: a square RGBA render of the mark
+on a transparent canvas. Every other icon under `assets/` is generated from it
+and nothing else, as is the site's logo under `docs/assets/`, so the Windows
+executable, the installer window, the About box, the macOS bundle, the Flatpak
+hicolor set and the site cannot drift apart.
 
 It also derives the donate mark from its own master, `donate.png` at the
 repository root. That mark is a wide picture rather than a square icon, so it
 skips the squaring the app icon takes: it is cropped to its artwork and scaled
 by height alone, then written into `assets/` for the app. The site's
 `docs/donate.png` is not written here: it is the small mark every project
-site shares byte for byte. Both masters stay at the root, because every build
-ships `assets/` whole.
+site shares byte for byte. The donate master stays at the root, because every
+build ships `assets/` whole and it is a hundred times the size of its render.
 
 Run it after changing either master:
 
@@ -28,12 +29,17 @@ from pathlib import Path
 
 from PIL import Image, ImageDraw
 
-from latencylab_ui.icon_resolver import DONATE_PNG_NAME
-from latencylab_ui.top_bar_buttons import GLYPH_PX
+from simquence_ui.icon_resolver import DONATE_PNG_NAME
+from simquence_ui.top_bar_buttons import GLYPH_PX
 
 PROJECT_ROOT = Path(__file__).resolve().parent
-MASTER_PNG = PROJECT_ROOT / "latencylab.png"
 ASSETS_DIR = PROJECT_ROOT / "assets"
+MASTER_PNG = ASSETS_DIR / "application-icon.png"
+
+# The site's header and hero logo. The hero draws it at 112 CSS pixels, so a
+# 256 pixel render stays sharp on a display at twice the density.
+SITE_ICON_PNG = PROJECT_ROOT / "docs" / "assets" / "simquence.png"
+SITE_ICON_SIZE = 256
 
 # The donate master and where its render goes. The top bar draws the mark at
 # its own glyph height; the render is this many times taller so it stays crisp
@@ -58,9 +64,9 @@ CANONICAL_PNG_SIZE = 256
 # macOS wants the largest square available as its source.
 ICNS_SIZE = 1024
 
-PNG_STEM = "latencylab_icon"
-ICO_NAME = "latencylab.ico"
-ICNS_NAME = "latencylab.icns"
+PNG_STEM = "simquence_icon"
+ICO_NAME = "simquence.ico"
+ICNS_NAME = "simquence.icns"
 CANONICAL_PNG_NAME = f"{PNG_STEM}.png"
 
 # macOS composites the Dock, Finder and disk-image icons straight onto the
@@ -253,6 +259,8 @@ def main() -> int:
     written.extend(write_mac_pngs(master, ASSETS_DIR))
     written.append(write_ico(master, ASSETS_DIR))
     written.append(write_icns(master, ASSETS_DIR))
+    _scaled(master, SITE_ICON_SIZE).save(SITE_ICON_PNG, format="PNG")
+    written.append(SITE_ICON_PNG)
     written.extend(write_donate_marks())
 
     for path in written:

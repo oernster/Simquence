@@ -1,7 +1,7 @@
 """Shared harness for the reading-cycle tests, over BOTH copies of the scroller.
 
 The application and the setup program each carry a copy, since the installer
-imports nothing from `latencylab_ui`; every cycle test runs against both, so
+imports nothing from `simquence_ui`; every cycle test runs against both, so
 the copies cannot drift (postal-gambit's pattern). Test modules load this as a
 pytest plugin, so the fixtures below are defined once.
 
@@ -22,7 +22,7 @@ from PySide6.QtCore import QEvent, QPoint, QPointF, Qt
 from PySide6.QtGui import QKeyEvent, QMouseEvent, QWheelEvent
 from PySide6.QtWidgets import QApplication, QDialog, QTextBrowser
 
-from latencylab_ui import auto_scroller as app_scroller
+from simquence_ui import auto_scroller as app_scroller
 
 INSTALLER_DIR = Path(__file__).resolve().parents[1] / "installer"
 if str(INSTALLER_DIR) not in sys.path:

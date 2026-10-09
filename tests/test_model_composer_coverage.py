@@ -17,7 +17,7 @@ def _ensure_qapp():
 
 
 def test_model_composer_types_build_raw_and_events_and_labels() -> None:
-    from latencylab_ui.model_composer_types import (
+    from simquence_ui.model_composer_types import (
         ComposerState,
         build_raw_model_dict,
         derive_events,
@@ -94,7 +94,7 @@ def test_model_composer_types_build_raw_and_events_and_labels() -> None:
 
 
 def test_model_composer_types_stress_variant() -> None:
-    from latencylab_ui.model_composer_types import (
+    from simquence_ui.model_composer_types import (
         ComposerState,
         build_stress_variant_state,
     )
@@ -151,7 +151,7 @@ def test_model_composer_types_stress_variant() -> None:
 def test_model_composer_widgets_duration_editor_roundtrip() -> None:
     _ensure_qapp()
 
-    from latencylab_ui.model_composer_widgets import DurationDistEditor
+    from simquence_ui.model_composer_widgets import DurationDistEditor
 
     w = DurationDistEditor()
 

@@ -5,9 +5,9 @@ import pytest
 from PySide6.QtGui import QColor
 from PySide6.QtWidgets import QApplication, QPushButton, QVBoxLayout, QWidget
 
-from latencylab_ui.theme import Theme, apply_theme, tokens_for
-from latencylab_ui.theme_stylesheet import build_stylesheet
-from latencylab_ui.theme_tokens import DARK_TOKENS, LIGHT_TOKENS
+from simquence_ui.theme import Theme, apply_theme, tokens_for
+from simquence_ui.theme_stylesheet import build_stylesheet
+from simquence_ui.theme_tokens import DARK_TOKENS, LIGHT_TOKENS
 
 THEMES = (Theme.DARK, Theme.LIGHT)
 

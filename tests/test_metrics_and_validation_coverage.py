@@ -4,10 +4,10 @@ import math
 
 import pytest
 
-from latencylab.metrics import add_task_metadata, aggregate_runs
-from latencylab.model import Model
-from latencylab.types import RunResult
-from latencylab.validate import ModelValidationError, validate_model
+from simquence.metrics import add_task_metadata, aggregate_runs
+from simquence.model import Model
+from simquence.types import RunResult
+from simquence.validate import ModelValidationError, validate_model
 
 
 def _base_model(*, version_key: str = "schema_version", version: int = 2) -> dict:
@@ -54,7 +54,7 @@ def test_metrics_percentiles_empty_values_are_nan() -> None:
 
 
 def test_metrics_percentile_edges_p0_p100_and_singleton() -> None:
-    from latencylab.metrics import _percentile_sorted
+    from simquence.metrics import _percentile_sorted
 
     assert math.isnan(_percentile_sorted([], 50))
     vals = [1.0, 2.0, 3.0]

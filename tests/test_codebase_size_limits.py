@@ -24,7 +24,6 @@ DANGER_BAND_FLOOR = LINE_CAP - (LINE_CAP * DANGER_BAND_PERCENT // 100)
 BUILD_SCRIPTS = frozenset(
     {
         "generate_icons.py",
-        "render_master_icon.py",
         "stamp_version.py",
         "buildexe.py",
         "buildinstaller.py",
@@ -87,7 +86,7 @@ def _line_counts(root: Path) -> list[tuple[str, int]]:
 def test_all_python_files_are_at_most_400_lines() -> None:
     """Maintainability guardrail.
 
-    LatencyLab intentionally keeps modules small and focused.
+    Simquence intentionally keeps modules small and focused.
     """
 
     root = Path(__file__).resolve().parents[1]
