@@ -21,7 +21,7 @@ APP_NAME = "Simquence"
 APP_DISPLAY_NAME = "Simquence"
 APP_TAGLINE = "Design-time latency exploration for event-driven systems"
 APP_PUBLISHER = "Oliver Ernster"
-APP_URL = "https://ernster.dev/Simquence/"
+APP_URL = "https://simquence.com/"
 
 # Payload layout produced by buildinstaller.py: payload/Simquence/ holds the
 # bundle's non-binary files (read by the installer window), payload/Simquence.zip

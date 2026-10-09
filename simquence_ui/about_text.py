@@ -25,7 +25,7 @@ APP_SUMMARY = (
     "users would wait and why, before the code exists."
 )
 APP_AUTHOR = "Oliver Ernster"
-APP_URL = "https://ernster.dev/Simquence/"
+APP_URL = "https://simquence.com/"
 
 # Where the donate button sends a browser. The only payment address the
 # application knows; it is handed to the desktop rather than fetched, so

@@ -2,7 +2,7 @@
 
 Simulate your architecture's latency before you build it.
 
-**Website:** [ernster.dev/Simquence](https://ernster.dev/Simquence/) · **Download:** [Windows, macOS and Linux](https://ernster.dev/Simquence/download.html)
+**Website:** [simquence.com](https://simquence.com/) · **Download:** [Windows, macOS and Linux](https://simquence.com/download.html)
 
 Simquence is a design-time latency simulator. You describe a software architecture as a small, explicit model: the units of work, the events that trigger them and the shared resources they queue behind. Simquence runs that model thousands of times with realistic timing variation and reports how long the flow takes across percentiles, which chain of work held each run up and how often each chain is the culprit. It works on the design rather than the code, so it applies to any event-driven software.
 
@@ -62,7 +62,7 @@ A useful model is often 10 to 20 tasks. Models are plain JSON; the desktop app's
 
 ## Who this is for
 
-Senior engineers, architects and CTOs making structural decisions about event-driven software while those decisions are still cheap to change: a web checkout, a desktop UI thread, a microservice fan-out, an embedded pipeline. If you have ever said "we will profile it later", this is what later should have looked like. The reasoning behind it is on the site: [Why Simquence exists](https://ernster.dev/Simquence/why.html).
+Senior engineers, architects and CTOs making structural decisions about event-driven software while those decisions are still cheap to change: a web checkout, a desktop UI thread, a microservice fan-out, an embedded pipeline. If you have ever said "we will profile it later", this is what later should have looked like. The reasoning behind it is on the site: [Why Simquence exists](https://simquence.com/why.html).
 
 ## Who this is not for
 
